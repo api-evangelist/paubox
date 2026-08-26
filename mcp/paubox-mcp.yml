@@ -1,0 +1,181 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.paubox.com/mcp-server/index
+description: >-
+  Paubox ships a first-party Model Context Protocol server exposing 30 tools across the
+  Email API, Forms API and Marketing API. It is offered over two transports: a hosted
+  streamable-HTTP endpoint at https://mcp.paubox.com/mcp and a stdio package invoked with
+  npx. Tool names and descriptions below were read verbatim from the provider's own tool
+  reference at https://docs.paubox.com/mcp-server/tools; the live tools/list manifest is
+  auth-gated, so per-tool inputSchema was NOT captured (see x-evidence).
+name: Paubox MCP Server
+docs: https://docs.paubox.com/mcp-server/index
+tools_reference: https://docs.paubox.com/mcp-server/tools
+authentication_docs: https://docs.paubox.com/mcp-server/authentication
+status: published
+
+deployment:
+  mode: both
+  endpoint: https://mcp.paubox.com/mcp
+  install: npx -y @paubox/mcp@latest
+  package: https://github.com/Paubox/paubox-mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    Remote transport confirmed by probe: POST tools/list to https://mcp.paubox.com/mcp
+    returned HTTP 401 {"error":"unauthorized"} — a live MCP endpoint that requires
+    credentials, not a 404. Anonymous OAuth discovery is served at
+    /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource
+    (both 200, saved under well-known/). The stdio package @paubox/mcp is documented by
+    the provider but was NOT resolvable on npm on 2026-08-26 (registry 404) — see
+    packages/paubox-packages.yml.
+
+x-evidence:
+  - url: https://mcp.paubox.com/mcp
+    method: POST tools/list
+    http_status: 401
+    body: '{"error":"unauthorized","error_description":"Authentication required."}'
+    fetched: '2026-08-26'
+  - url: https://mcp.paubox.com/.well-known/oauth-authorization-server
+    http_status: 200
+    fetched: '2026-08-26'
+  - url: https://mcp.paubox.com/.well-known/oauth-protected-resource
+    http_status: 200
+    fetched: '2026-08-26'
+
+authentication:
+  transports:
+    http:
+      - method: oauth
+        detail: >-
+          Add https://mcp.paubox.com as a connector; the client presents a "Configure
+          Paubox" form, stores a short-lived encrypted Bearer token, and sends it on every
+          request. Authorization server metadata: issuer https://mcp.paubox.com,
+          authorization_endpoint /oauth/authorize, token_endpoint /oauth/token, dynamic
+          client registration at /register, response_types [code], grant_types
+          [authorization_code, refresh_token], PKCE S256, token_endpoint_auth_methods
+          [none].
+      - method: header
+        detail: 'x-paubox-api-key: <your Paubox API key>'
+      - method: tool-parameter
+        detail: >-
+          An optional apiKey parameter accepted on every tool. HTTP transport only —
+          highest runtime priority.
+    stdio:
+      - method: environment
+        detail: PAUBOX_API_KEY environment variable. The apiKey tool parameter is not accepted over stdio.
+  credential_matrix:
+    send_secure_email: Paubox Email API key with send access
+    check_email_status: Paubox Email API key with read access
+    validate_credentials: any valid Paubox Email API key
+    get_form: none (public Forms endpoint)
+    submit_form: none (public Forms endpoint)
+
+conventions:
+  parameter_case: >-
+    Tool parameters use camelCase (formId, subscriptionListId) even where the underlying
+    REST API uses snake_case.
+  phi_warning: >-
+    Provider states that sending or referencing PHI through the MCP connector in a
+    third-party AI client requires a BAA with that client's vendor; the Paubox
+    subscription covers email delivery only, not PHI processed in a model context window.
+
+tools:
+  - name: send_secure_email
+    category: email
+    description: Sends a single HIPAA compliant email through the Paubox Email API. The sender address must belong to a verified domain.
+  - name: check_email_status
+    category: email
+    description: Retrieves the current delivery status of a message sent via send_secure_email.
+  - name: validate_credentials
+    category: email
+    description: Verifies that the Paubox API credentials are present and valid with a live check against the Paubox API.
+  - name: get_form
+    category: forms
+    description: Retrieves the full definition of a Paubox Form, including title, description and field schema.
+  - name: submit_form
+    category: forms
+    description: Submits a completed response to a Paubox Form. No authentication required.
+  - name: list_forms
+    category: forms
+    description: Lists a customer's Paubox Forms with search, filtering, ordering and pagination.
+  - name: create_form
+    category: forms
+    description: Creates a new Paubox Form.
+  - name: update_form
+    category: forms
+    description: Updates an existing Paubox Form. Only supplied fields change.
+  - name: archive_form
+    category: forms
+    description: Archives a Paubox Form, setting archived true and active false.
+  - name: unarchive_form
+    category: forms
+    description: Restores a previously archived Paubox Form.
+  - name: copy_form
+    category: forms
+    description: Duplicates an existing Paubox Form under a new title.
+  - name: get_form_stats
+    category: forms
+    description: Returns active form count, total submission count and submissions in the last 7 days.
+  - name: list_form_submissions
+    category: forms
+    description: Lists a form's submissions with each form_data parsed into structured key/value pairs.
+  - name: export_submissions_csv
+    category: forms
+    description: Exports a form's submissions as CSV text.
+  - name: export_submission_pdf
+    category: forms
+    description: Exports a single form submission as a PDF.
+  - name: validate_marketing_access
+    category: marketing
+    description: Checks whether the account has Email Marketing provisioned and returns the marketing customer profile.
+  - name: list_subscribers
+    category: marketing
+    description: Lists Email Marketing subscribers; omit subscriptionListId to search the default "All contacts" list.
+  - name: get_subscriber
+    category: marketing
+    description: Retrieves one subscriber by UUID, including custom field values and list memberships.
+  - name: create_subscriber
+    category: marketing
+    description: Adds a subscriber. Requires an email address or a phone number.
+  - name: update_subscriber
+    category: marketing
+    description: Updates an existing subscriber by UUID. Only supplied fields change.
+  - name: get_subscribed_count
+    category: marketing
+    description: Counts currently subscribed contacts on a list, excluding unsubscribed and deleted contacts.
+  - name: list_subscriber_custom_fields
+    category: marketing
+    description: Lists the custom subscriber field types defined for the account.
+  - name: list_marketing_lists
+    category: marketing
+    description: Lists all audiences — static subscription lists and filter-based dynamic lists — with subscriber counts.
+  - name: list_subscription_lists
+    category: marketing
+    description: Lists static subscription lists with integer IDs, subscriber counts and the default list flag.
+  - name: create_subscription_list
+    category: marketing
+    description: Creates a new, empty subscription list.
+  - name: list_dynamic_lists
+    category: marketing
+    description: Lists dynamic lists — filter-based segments — with UUIDs, filter definitions and subscriber counts.
+  - name: list_campaign_sends
+    category: marketing
+    description: Lists campaign sends with per-send delivered, viewed, clicked, bounced and unsubscribed counts.
+  - name: list_campaign_deliveries
+    category: marketing
+    description: Lists individual deliveries, one row per recipient per campaign.
+  - name: get_campaign_analytics
+    category: marketing
+    description: Runs an Email Marketing analytics report.
+  - name: get_marketing_bulk_job
+    category: marketing
+    description: Checks the progress of an asynchronous bulk job by its job ID (jid or bid).
+
+tool_count: 30
+clients_documented:
+  - Claude (claude.ai Settings > Integrations)
+  - Claude Desktop
+  - Claude Code
+  - Cursor
+  - Windsurf

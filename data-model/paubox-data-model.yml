@@ -1,0 +1,218 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/paubox-email-api-openapi.yaml, openapi/paubox-forms-api-openapi.yaml and
+  openapi/paubox-marketing-api-openapi.yaml — $ref links and id-reference fields in
+  components.schemas — enriched from https://docs.paubox.com/marketing/parameter-values
+  and the Forms and Marketing object reference pages.
+description: >-
+  Entity graph across the three Paubox APIs. The three products do not share a data core:
+  the Email API is stateless message-and-receipt with no persistent entity graph beyond
+  templates, while Marketing and Forms each carry their own entity model. The only
+  crossing edge is Form -> SubscriptionList (a form can feed a marketing subscription
+  list), which is the single place the Forms and Marketing models touch.
+
+identifier_conventions:
+  email_api:
+    sourceTrackingId: >-
+      UUID-shaped string returned by sendMessage/sendBulkMessages. The sole handle on a
+      sent message; echoed in webhook payloads as source_tracking_id.
+    header_message_id: RFC 5322 Message-ID, angle-bracketed.
+  forms_api:
+    form_id: UUID. Also acts as the ACCESS CONTROL for the public respondent endpoints.
+    submission_id: identifier for a single submission.
+    customer_id: account-level identifier, required as a query parameter on listForms.
+  marketing_api:
+    subscriber_id: UUID.
+    subscription_id: UUID (Subscription carries both `id` and `uuid`).
+    subscription_list_id: integer.
+    dynamic_list_id: UUID — dynamic lists are keyed differently from static lists.
+    campaign_mailing_id: integer.
+    note: >-
+      The Marketing API mixes integer and UUID identifier types within one product —
+      static lists and campaign mailings are integers, subscribers, subscriptions and
+      dynamic lists are UUIDs. Provider publishes a whole page on where to find each
+      value: https://docs.paubox.com/marketing/parameter-values
+
+entities:
+  - name: Message
+    api: email
+    persisted: false
+    schema: Message
+    fields: [headers, content, attachments, recipients, allowNonTLS, forceSecureNotification]
+    note: A request-time object, not a retrievable resource. There is no GET /messages/{id}.
+  - name: MessageReceipt
+    api: email
+    schema: MessageReceiptResponse
+    key: sourceTrackingId
+    fields: [message, deliveryStatus, clickData]
+  - name: DynamicTemplate
+    api: email
+    schema: DynamicTemplateResponse
+    key: id
+    fields: [name, body]
+    note: Handlebars template. The only persistent Email API entity.
+  - name: Form
+    api: forms
+    schema: Form
+    key: id
+    fields: [customer_id, title, description, html, json_schema, css, active, archived, submission_count, vanity_url, old_form_id, subscription_list_id]
+  - name: FormSubmission
+    api: forms
+    schema: FormSubmission
+    key: id
+    fields: [form_id, form_data, created_at]
+    note: form_data is a JSON-ENCODED STRING, not a nested object.
+  - name: FormStats
+    api: forms
+    schema: FormStats
+    persisted: false
+    fields: [active_forms, total_submissions, submissions_last_7_days]
+  - name: Subscriber
+    api: marketing
+    schema: Subscriber / DetailedSubscriber
+    key: id (UUID)
+    fields: [email, phone, attributes.custom_fields, attributes.subscription_lists, attributes.statistics]
+  - name: SubscriptionList
+    api: marketing
+    schema: SubscriptionListsResponse
+    key: subscription_list_id (integer)
+    fields: [name, subscriber_count, default]
+  - name: DynamicList
+    api: marketing
+    key: dynamic_list_id (UUID)
+    fields: [filter definition, subscriber_count]
+    note: >-
+      Filter-based segment that recomputes membership. Readable through the MCP
+      list_dynamic_lists tool but has NO published REST operation.
+  - name: Subscription
+    api: marketing
+    schema: Subscription
+    key: id / uuid
+    fields: [subscriber_id, subscription_list_id, dynamic_list_id, unsubscribed_at]
+    note: >-
+      The join entity between Subscriber and SubscriptionList. Unsubscribing does not
+      delete it — it stamps unsubscribed_at and keeps the row.
+  - name: CampaignMailing
+    api: marketing
+    schema: CampaignMailing
+    key: id (integer)
+    fields: [attributes.subject, html_part, text_part, form_data, delivery counts]
+    note: >-
+      The list endpoint returns aggregate delivery counts; the single-fetch endpoint
+      returns html_part, text_part and form_data instead and omits the counts.
+  - name: CampaignMailingSend
+    api: marketing
+    key: campaign_mailing_send_id
+    fields: [campaign_mailing_id, sent_at, delivered, viewed, clicked, bounced, unsubscribed]
+  - name: CampaignMailingDelivery
+    api: marketing
+    fields: [campaign_mailing_send_id, recipient, outcome]
+    note: One row per recipient per campaign.
+  - name: DripCampaign
+    api: marketing
+    schema: DripCampaignResponse
+    key: id
+    fields: [attributes, state]
+    states: [started, paused]
+  - name: TrackingLink
+    api: marketing
+    schema: TrackingLinksDetailResponse
+    fields: [unique_link, campaign_mailing_send_id, campaign_mailing_delivery_id]
+  - name: BulkSubscriptionJob
+    api: marketing
+    schema: BulkSubscriptionJob
+    key: jid / bid
+    note: >-
+      Declared as a schema but NO job-polling operation is published. Status is retrievable
+      only through the MCP get_marketing_bulk_job tool.
+
+relationships:
+  - from: MessageReceipt
+    to: Message
+    type: has_one
+    via: sourceTrackingId
+  - from: TemplatedMessage
+    to: DynamicTemplate
+    type: belongs_to
+    via: template id
+  - from: FormSubmission
+    to: Form
+    type: belongs_to
+    via: form_id
+  - from: Form
+    to: FormSubmission
+    type: has_many
+    via: form_id
+  - from: Form
+    to: Form
+    type: belongs_to
+    via: old_form_id
+    note: Set on a form created by copyForm, pointing at the original.
+  - from: Form
+    to: SubscriptionList
+    type: belongs_to
+    via: subscription_list_id
+    note: >-
+      THE ONLY CROSS-PRODUCT EDGE. A Paubox Form can feed respondents into a Paubox
+      Marketing subscription list, linking the Forms model to the Marketing model.
+  - from: Subscription
+    to: Subscriber
+    type: belongs_to
+    via: subscriber_id
+  - from: Subscription
+    to: SubscriptionList
+    type: belongs_to
+    via: subscription_list_id
+  - from: Subscription
+    to: DynamicList
+    type: belongs_to
+    via: dynamic_list_id
+    note: A subscription joins to EITHER a static list or a dynamic list.
+  - from: Subscriber
+    to: Subscription
+    type: has_many
+    via: subscriber_id
+  - from: SubscriptionList
+    to: Subscription
+    type: has_many
+    via: subscription_list_id
+  - from: CampaignMailingSend
+    to: CampaignMailing
+    type: belongs_to
+    via: campaign_mailing_id
+  - from: CampaignMailingSend
+    to: SubscriptionList
+    type: belongs_to
+    via: subscription_list_id
+    note: Set at send/schedule time — a send targets one list.
+  - from: CampaignMailingSend
+    to: DynamicList
+    type: belongs_to
+    via: dynamic_list_id
+  - from: CampaignMailingDelivery
+    to: CampaignMailingSend
+    type: belongs_to
+    via: campaign_mailing_send_id
+  - from: CampaignMailing
+    to: CampaignMailingSend
+    type: has_many
+    via: campaign_mailing_id
+  - from: TrackingLink
+    to: CampaignMailingSend
+    type: belongs_to
+    via: campaign_mailing_send_id
+  - from: DripCampaign
+    to: SubscriptionList
+    type: belongs_to
+    via: subscription_list_id
+
+notes:
+  - >-
+    The Email API has effectively no entity graph. It is send-and-forget plus a receipt
+    lookup, with Handlebars templates as the one persistent object. Nothing sent through it
+    is addressable as a resource afterwards.
+  - >-
+    Marketing carries the deep model. The Subscriber/SubscriptionList/Subscription triangle
+    is where opt-in state lives, and unsubscribing is a stamp on the join row rather than a
+    deletion — which is what makes it reversible.

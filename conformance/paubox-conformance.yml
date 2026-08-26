@@ -1,0 +1,194 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://www.paubox.com/security, https://docs.paubox.com/email-api,
+  https://docs.paubox.com/email-api/webhooks, the three OpenAPI documents in openapi/,
+  and security/paubox-domain-security.yml (live DNS/TLS probe).
+description: >-
+  Standards and compliance posture for Paubox. The regulatory regime is US healthcare
+  (HIPAA / HITECH), and Paubox's compliance claims are strong and central to the product.
+  Its API-layer standards conformance is thinner: no OAuth on the REST APIs, no RFC 9457,
+  no RFC 8594, no RFC 9116.
+
+conformance:
+  - id: hipaa
+    conforms: true
+    evidence: >-
+      Core product claim across www.paubox.com and docs.paubox.com. Security page states
+      Paubox operates as a HIPAA business associate, encrypts PHI in accordance with HHS
+      guidance on rendering unsecured PHI unusable, and includes a Business Associate
+      Agreement with all accounts.
+    source: https://www.paubox.com/security
+  - id: hitech
+    conforms: true
+    evidence: >-
+      Security page addresses HITECH (2009) expansion of HIPAA alongside HIPAA itself.
+    source: https://www.paubox.com/security
+  - id: hitrust
+    conforms: true
+    evidence: >-
+      "HITRUST certified" is stated on the Email API pricing page feature list and in the
+      description of every first-party SDK repository under github.com/Paubox ("A HITRUST
+      certified solution"). This is Paubox's own certification, distinct from the AWS
+      platform certifications below.
+    source: https://www.paubox.com/pricing/paubox-email-api
+  - id: baa
+    conforms: true
+    evidence: Business Associate Agreement included with all accounts.
+    source: https://www.paubox.com/pricing/paubox-email-api
+  - id: soc2
+    conforms: inherited
+    evidence: >-
+      ATTRIBUTION CORRECTION. The security page attributes SOC 1/2/3, ISO 27001 and
+      FedRAMP to the AWS platform Paubox runs on, not to Paubox itself: "Paubox uses
+      Amazon Web Services (AWS) as its HIPAA compliant cloud platform. As such, the AWS
+      platform provides industry recognized certifications and audits such as ISO 27001,
+      FedRAMP, and the Service Organization Control Reports (SOC1, SOC2, and SOC3)."
+      Paubox does not claim its own SOC 2 report on any public page found.
+    source: https://www.paubox.com/security
+  - id: iso27001
+    conforms: inherited
+    evidence: Attributed to AWS, not to Paubox. See soc2 above.
+    source: https://www.paubox.com/security
+  - id: fedramp
+    conforms: inherited
+    evidence: Attributed to AWS, not to Paubox. See soc2 above.
+    source: https://www.paubox.com/security
+  - id: gdpr
+    conforms: inherited
+    evidence: >-
+      Security page cites the AWS GDPR-compliant Data Processing Addendum and CISPE Code
+      of Conduct adherence as the mechanism. No Paubox-issued DPA is linked from that page.
+    source: https://www.paubox.com/security
+  - id: tls12-13-only
+    conforms: true
+    evidence: >-
+      Pricing page states, citing NSA guidance, that only TLS 1.2 and 1.3 are supported
+      and SSL 2.0/3.0 and TLS 1.0/1.1 are not. Independently confirmed by live probe:
+      www.paubox.com and docs.paubox.com negotiate TLS 1.3, api.paubox.com TLS 1.2.
+    source: security/paubox-domain-security.yml
+  - id: spf
+    conforms: true
+    evidence: SPF record present on paubox.com (live DNS probe 2026-08-26).
+    source: security/paubox-domain-security.yml
+  - id: dmarc
+    conforms: true
+    evidence: 'DMARC record present with policy p=reject (live DNS probe 2026-08-26).'
+    source: security/paubox-domain-security.yml
+  - id: dkim
+    conforms: true
+    evidence: >-
+      Product feature — Paubox configures DKIM (with SPF and DMARC) on customer sending
+      domains as part of deliverability optimization.
+    source: https://www.paubox.com/pricing/paubox-email-api
+  - id: caa
+    conforms: true
+    evidence: >-
+      CAA records present on paubox.com restricting issuance to amazon.com,
+      letsencrypt.org and pki.goog, with an iodef contact of mailto:security@paubox.com.
+    source: security/paubox-domain-security.yml
+  - id: dnssec
+    conforms: false
+    evidence: DNSSEC not enabled on paubox.com (live probe 2026-08-26).
+    source: security/paubox-domain-security.yml
+  - id: hsts
+    conforms: partial
+    evidence: >-
+      HSTS present on www.paubox.com (max-age 31536000) and docs.paubox.com (max-age
+      63072000), but ABSENT on the API host api.paubox.com.
+    source: security/paubox-domain-security.yml
+  - id: openapi
+    conforms: true
+    evidence: >-
+      Three OpenAPI documents published and linked from the provider's own llms.txt —
+      Email API (3.0.0, 9 operations), Marketing API (3.0.3, 41 operations), Forms API
+      (3.0.0, 14 operations).
+    source: https://docs.paubox.com/llms.txt
+  - id: mcp
+    conforms: true
+    evidence: >-
+      First-party hosted MCP server at https://mcp.paubox.com/mcp exposing 30 tools, with
+      OAuth 2.1 discovery documents served anonymously at
+      /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource.
+    source: mcp/paubox-mcp.yml
+  - id: a2a
+    conforms: partial
+    evidence: >-
+      A2A agent card served at https://docs.paubox.com/.well-known/agent-card.json
+      declaring protocolVersion 0.3. Graded near-conformant — see a2a/paubox-a2a.yml.
+    source: a2a/paubox-a2a.yml
+  - id: oauth2
+    conforms: partial
+    evidence: >-
+      OAuth 2.1 with PKCE S256 and dynamic client registration is implemented ONLY on the
+      MCP server (issuer https://mcp.paubox.com). The three REST APIs use static API keys
+      with no OAuth flow, no scopes endpoint and no token endpoint.
+    source: well-known/paubox-mcp-oauth-authorization-server.json
+  - id: oidc
+    conforms: false
+    evidence: No /.well-known/openid-configuration on any Paubox host (all 404).
+    source: well-known/paubox-well-known.yml
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      No application/problem+json media type appears in any of the three OpenAPI
+      documents. Errors are a vendor JSON object with a free-text `errors` field.
+    source: errors/paubox-problem-types.yml
+  - id: rfc8594
+    conforms: false
+    evidence: No Sunset or Deprecation header, and no deprecation policy page.
+    source: lifecycle/paubox-lifecycle.yml
+  - id: rfc9116
+    conforms: false
+    evidence: >-
+      No /.well-known/security.txt on www.paubox.com, api.paubox.com or docs.paubox.com
+      (all 404). A security contact exists only as a CAA iodef record.
+    source: well-known/paubox-well-known.yml
+  - id: idempotency
+    conforms: false
+    evidence: No Idempotency-Key header or equivalent anywhere in the docs or specs.
+    source: conventions/paubox-conventions.yml
+  - id: pagination
+    conforms: partial
+    evidence: >-
+      Page-number pagination on the Forms and Marketing list operations; the Email API
+      list operation (listDynamicTemplates) has no pagination at all. No shared
+      convention across the three APIs.
+    source: conventions/paubox-conventions.yml
+  - id: webhooks
+    conforms: partial
+    evidence: >-
+      Four delivery events are published with a documented payload shape, but there is NO
+      signature verification and NO retry. Provider states plainly: "Webhook signature
+      verification is not currently supported" and "Paubox does not currently retry failed
+      webhook deliveries." Consumers are told to use IP allowlisting or a shared secret in
+      the URL path instead.
+    source: https://docs.paubox.com/email-api/webhooks
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      Webhooks are documented in prose and tables only; no AsyncAPI document is published
+      on any host and none is referenced from the llms.txt index.
+    source: asyncapi/paubox-email-webhooks.yml
+  - id: smtp
+    conforms: true
+    evidence: >-
+      Standards-based SMTP relay offered as an alternative transport at
+      smtp.paubox.com:587, username `apikey`.
+    source: https://docs.paubox.com/email-api/smtp
+
+domain_standards:
+  regime: us-healthcare
+  note: >-
+    REWARD-ONLY CHECK — recorded honestly as a miss, not invented. Paubox operates under
+    HIPAA/HITECH as a business associate and meets that regime's requirements at the
+    product level (encryption of PHI in transit and at rest, BAA, HITRUST certification).
+    But the healthcare interoperability data standards this check looks for in a contract
+    — HL7 v2 message types, FHIR resource shapes, X12 transaction sets, C-CDA documents —
+    are ABSENT from all three OpenAPI documents, and correctly so: Paubox is email and
+    forms infrastructure that carries PHI, not a clinical data exchange. The Forms API
+    returns a form's own JSON schema rather than a FHIR Questionnaire, and the Email API
+    carries opaque message bodies. No domain standard is declared and none is expected.
+  declared: []
+  probed_for: [hl7v2, fhir, x12, c-cda, ncpdp, dicom]
+  found: none

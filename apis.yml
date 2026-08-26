@@ -1,18 +1,133 @@
 aid: paubox
 name: Paubox
-description: 'Paubox is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Paubox is a HIPAA compliant, HITRUST certified email infrastructure company serving
+  healthcare organizations in the United States. Its products encrypt outbound email
+  without recipient portals, passwords, or plugins, and work alongside Google Workspace
+  and Microsoft 365. The developer surface is three REST APIs on api.paubox.com — the
+  Paubox Email API for transactional email (send, bulk send, message receipt, Handlebars
+  dynamic templates, templated messages) with an SMTP relay alternative at
+  smtp.paubox.com:587; the Paubox Marketing API for HIPAA compliant campaign mailings,
+  drip campaigns, subscribers, subscription lists, tracking links and campaign analytics;
+  and the Paubox Forms API for building, hosting and processing secure patient intake
+  forms with public respondent endpoints and scoped management endpoints. Paubox
+  publishes OpenAPI 3.0 definitions for all three, official SDKs for ten languages, a
+  Node-based CLI, delivery webhooks, an llms.txt, an A2A agent card, a published Agent
+  Skill, and a hosted MCP server at mcp.paubox.com exposing 30 tools across email,
+  forms and marketing.
+image: https://www.paubox.com/hubfs/Logos/Paubox_Primary_color.svg
 url: https://raw.githubusercontent.com/api-evangelist/paubox/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- Company
-apis: []
+- Email
+- HIPAA
+- Healthcare
+- Compliance
+- Transactional Email
+- Email Marketing
+- Forms
+- Security
+- Encryption
+- Messaging
+apis:
+- aid: paubox-email-api
+  name: Paubox Email API
+  description: >-
+    HIPAA compliant transactional email API. Send a single message, send bulk messages
+    (batches of 50 or fewer recommended), retrieve a message receipt with delivery, open
+    and click tracking, and manage Handlebars dynamic templates for templated sends.
+    Authenticates with an API key issued per verified sending domain, passed as
+    `Authorization: Bearer YOUR_API_KEY` (the legacy `Token token=` form is still
+    accepted). An SMTP relay is offered as an alternative transport.
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Email
+  - Transactional Email
+  - HIPAA
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-email-api-openapi.yaml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Overlay
+    url: overlays/paubox-email-api-overlay.yaml
+- aid: paubox-marketing-api
+  name: Paubox Marketing API
+  description: >-
+    HIPAA compliant email marketing API. Create, fetch, update, send, schedule, test and
+    bulk-delete campaign mailings; run drip campaigns; manage subscribers, subscriptions
+    and subscription lists including dynamic lists and global opt-out; list tracking
+    links; and read campaign, send, delivery and tracking-link analytics. Authenticates
+    with `Authorization: Token token=<API_KEY>`.
+  humanURL: https://docs.paubox.com/marketing
+  baseURL: https://api.paubox.com/v1/marketing
+  tags:
+  - Email Marketing
+  - Campaigns
+  - Subscribers
+  - Analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-marketing-api-openapi.yaml
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Overlay
+    url: overlays/paubox-marketing-api-overlay.yaml
+- aid: paubox-forms-api
+  name: Paubox Forms API
+  description: >-
+    HIPAA compliant online form API. Public respondent-facing endpoints retrieve a form
+    definition (HTML, JSON schema, CSS) and submit a response with no authentication —
+    the form UUID is the access control. Authenticated management endpoints, which
+    require an API key carrying the `forms` scope as a Bearer token, list, create,
+    update, copy, archive and unarchive forms, return form statistics, and list or
+    export submissions as CSV and PDF.
+  humanURL: https://docs.paubox.com/forms/index
+  baseURL: https://api.paubox.com/v1/forms
+  tags:
+  - Forms
+  - Submissions
+  - HIPAA
+  - Patient Intake
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-forms-api-openapi.yaml
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+  - type: Overlay
+    url: overlays/paubox-forms-api-overlay.yaml
+- aid: paubox-mcp-server
+  name: Paubox MCP Server
+  description: >-
+    Hosted Model Context Protocol server exposing 30 Paubox tools across email, forms and
+    email marketing to MCP-compatible AI clients. Reachable over streamable HTTP at
+    https://mcp.paubox.com/mcp with OAuth or an `x-paubox-api-key` header, and over stdio
+    via the `@paubox/mcp` package.
+  humanURL: https://docs.paubox.com/mcp-server/index
+  baseURL: https://mcp.paubox.com/mcp
+  tags:
+  - MCP
+  - Agents
+  - Email
+  properties:
+  - type: MCPServer
+    url: mcp/paubox-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/paubox-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.paubox.com/mcp-server/tools
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +135,77 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.paubox.com/
+- type: DeveloperPortal
+  url: https://docs.paubox.com/welcome
+- type: Documentation
+  url: https://docs.paubox.com/welcome
+- type: APIReference
+  url: https://docs.paubox.com/email-api
+- type: GettingStarted
+  url: https://docs.paubox.com/email-api/quickstart
+- type: Support
+  url: https://support.paubox.com/
+- type: HelpCenter
+  url: https://github.com/Paubox/community/discussions
+- type: Blog
+  url: https://www.paubox.com/blog
+- type: GitHubOrganization
+  url: https://github.com/Paubox
+- type: Pricing
+  url: https://www.paubox.com/pricing/paubox-email-api
+- type: SignUp
+  url: https://www.paubox.com/pricing/paubox-email-api
+- type: Login
+  url: https://next.paubox.com/users/sign_in
+- type: TermsOfService
+  url: https://www.paubox.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.paubox.com/privacy-policy
+- type: StatusPage
+  url: https://status.paubox.com/
+- type: Compliance
+  url: https://www.paubox.com/security
+- type: TrustCenter
+  url: security/paubox-trust-center.yml
+- type: LLMsTxt
+  url: llms/paubox-llms.txt
+- type: AgentCard
+  url: a2a/paubox-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: MCPServer
+  url: mcp/paubox-mcp.yml
+- type: Packages
+  url: packages/paubox-packages.yml
+- type: SDKs
+  url: packages/paubox-packages.yml
+- type: CLI
+  url: cli/paubox-cli.yml
+- type: Authentication
+  url: authentication/paubox-authentication.yml
+- type: Conventions
+  url: conventions/paubox-conventions.yml
+- type: ErrorCatalog
+  url: errors/paubox-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/paubox-lifecycle.yml
+- type: Conformance
+  url: conformance/paubox-conformance.yml
+- type: DomainSecurity
+  url: security/paubox-domain-security.yml
+- type: Plans
+  url: plans/paubox-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/paubox-rate-limits.yml
+- type: DataModel
+  url: data-model/paubox-data-model.yml
+- type: Webhooks
+  url: asyncapi/paubox-email-webhooks.yml
+- type: WellKnown
+  url: well-known/paubox-well-known.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 35
+  pass: local-v1

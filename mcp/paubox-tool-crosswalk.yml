@@ -1,0 +1,342 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  mcp/paubox-mcp.yml (tool names + descriptions read from
+  https://docs.paubox.com/mcp-server/tools) bound to operationIds in
+  openapi/paubox-email-api-openapi.yaml, openapi/paubox-forms-api-openapi.yaml and
+  openapi/paubox-marketing-api-openapi.yaml.
+description: >-
+  Binding of every Paubox MCP tool to the REST operation(s) behind it. The live
+  tools/list manifest is auth-gated (HTTP 401), so bindings were made by name and
+  documented semantics against the published OpenAPI, not by comparing inputSchemas.
+  Confidence is set accordingly: high where the tool name and the operation are an
+  unambiguous one-to-one match, medium where the tool composes or filters a REST
+  operation, low where the backing operation is inferred.
+
+surfaces:
+  openapi:
+    - file: openapi/paubox-email-api-openapi.yaml
+      base: https://api.paubox.com/v1/email
+      gated: false
+    - file: openapi/paubox-forms-api-openapi.yaml
+      base: https://api.paubox.com/v1/forms
+      gated: false
+    - file: openapi/paubox-marketing-api-openapi.yaml
+      base: https://api.paubox.com/v1/marketing
+      gated: false
+  graphql: null
+  mcp:
+    url: https://mcp.paubox.com/mcp
+    gated: true
+    note: POST tools/list returns 401 unauthorized; schemas require an authenticated introspection.
+
+crosswalk:
+  - tool: send_secure_email
+    category: email
+    rest: [sendMessage]
+    binding: one-to-one
+    confidence: high
+  - tool: check_email_status
+    category: email
+    rest: [getMessageReceipt]
+    binding: one-to-one
+    confidence: high
+  - tool: validate_credentials
+    category: email
+    rest: []
+    binding: composite
+    confidence: low
+    note: >-
+      Described as "a live check against the Paubox API". No dedicated credential-check
+      operation is published in any of the three OpenAPI documents, so the tool most
+      likely exercises an existing authenticated read. Not asserted against a specific
+      operationId.
+  - tool: get_form
+    category: forms
+    rest: [getPublicForm]
+    binding: one-to-one
+    confidence: high
+    note: Public respondent endpoint; requires no credential.
+  - tool: submit_form
+    category: forms
+    rest: [createFormSubmission]
+    binding: one-to-one
+    confidence: high
+    note: Public respondent endpoint; requires no credential.
+  - tool: list_forms
+    category: forms
+    rest: [listForms]
+    binding: one-to-one
+    confidence: high
+  - tool: create_form
+    category: forms
+    rest: [createForm]
+    binding: one-to-one
+    confidence: high
+  - tool: update_form
+    category: forms
+    rest: [updateForm]
+    binding: one-to-one
+    confidence: high
+  - tool: archive_form
+    category: forms
+    rest: [archiveForm]
+    binding: one-to-one
+    confidence: high
+  - tool: unarchive_form
+    category: forms
+    rest: [unarchiveForm]
+    binding: one-to-one
+    confidence: high
+  - tool: copy_form
+    category: forms
+    rest: [copyForm]
+    binding: one-to-one
+    confidence: high
+  - tool: get_form_stats
+    category: forms
+    rest: [getFormStats]
+    binding: one-to-one
+    confidence: high
+  - tool: list_form_submissions
+    category: forms
+    rest: [listFormSubmissions]
+    binding: one-to-one
+    confidence: high
+    note: >-
+      Tool adds a transformation the REST operation does not perform: it parses each
+      submission's form_data (a JSON-encoded string in the REST response) into structured
+      key/value pairs.
+  - tool: export_submissions_csv
+    category: forms
+    rest: [exportSubmissionsCsv, exportSubmissionCsv]
+    binding: composite
+    confidence: medium
+    note: >-
+      The REST surface splits full-form export and single-submission export into two
+      operations; the tool description names only "a form's submissions", so the
+      single-submission operation is included as a possible second binding.
+  - tool: export_submission_pdf
+    category: forms
+    rest: [exportSubmissionPdf]
+    binding: one-to-one
+    confidence: high
+  - tool: validate_marketing_access
+    category: marketing
+    rest: []
+    binding: composite
+    confidence: low
+    note: >-
+      No provisioning/profile operation is published in the Marketing OpenAPI. Recorded as
+      MCP-only in mcp_only[] as well, since no REST operationId backs it.
+  - tool: list_subscribers
+    category: marketing
+    rest: [getSubscribers]
+    binding: one-to-one
+    confidence: high
+  - tool: get_subscriber
+    category: marketing
+    rest: [getSubscriber]
+    binding: one-to-one
+    confidence: high
+  - tool: create_subscriber
+    category: marketing
+    rest: [createSubscriber]
+    binding: one-to-one
+    confidence: high
+  - tool: update_subscriber
+    category: marketing
+    rest: [updateSubscriberPatch, updateSubscriberPut]
+    binding: composite
+    confidence: medium
+    note: >-
+      "Only the fields you provide change" matches the PATCH operation; the REST surface
+      also exposes an equivalent PUT.
+  - tool: get_subscribed_count
+    category: marketing
+    rest: [getSubscriptionLists]
+    binding: derived-field
+    confidence: low
+    note: >-
+      Subscriber counts are carried on the subscription list objects returned by
+      getSubscriptionLists; no dedicated count operation is published.
+  - tool: list_subscriber_custom_fields
+    category: marketing
+    rest: []
+    binding: none
+    confidence: low
+    note: No custom-field-type listing operation is published in the Marketing OpenAPI.
+  - tool: list_marketing_lists
+    category: marketing
+    rest: [getSubscriptionLists]
+    binding: composite
+    confidence: medium
+    note: >-
+      Tool merges static subscription lists and filter-based dynamic lists into one view.
+      Only the static-list operation is published; the dynamic-list surface has no REST
+      operationId.
+  - tool: list_subscription_lists
+    category: marketing
+    rest: [getSubscriptionLists]
+    binding: one-to-one
+    confidence: high
+  - tool: create_subscription_list
+    category: marketing
+    rest: [createSubscriptionList]
+    binding: one-to-one
+    confidence: high
+  - tool: list_dynamic_lists
+    category: marketing
+    rest: []
+    binding: none
+    confidence: low
+    note: No dynamic-list listing operation is published in the Marketing OpenAPI.
+  - tool: list_campaign_sends
+    category: marketing
+    rest: [getCampaignTable]
+    binding: one-to-one
+    confidence: medium
+    note: >-
+      GET /analytics/campaign_mailing_sends_table is the published "campaign sends table"
+      operation and carries the per-send counts the tool describes.
+  - tool: list_campaign_deliveries
+    category: marketing
+    rest: [getCampaignDeliveriesTable]
+    binding: one-to-one
+    confidence: medium
+  - tool: get_campaign_analytics
+    category: marketing
+    rest: [getCampaignAnalytics]
+    binding: one-to-one
+    confidence: high
+  - tool: get_marketing_bulk_job
+    category: marketing
+    rest: []
+    binding: none
+    confidence: low
+    note: >-
+      The Marketing OpenAPI declares a BulkSubscriptionJob schema but publishes no
+      job-polling operation, so the async job status surface is reachable only through MCP.
+
+mcp_only:
+  - tool: validate_credentials
+    reason: No credential-validation operation is published in any Paubox OpenAPI.
+  - tool: validate_marketing_access
+    reason: No marketing provisioning/profile operation is published in the Marketing OpenAPI.
+  - tool: list_subscriber_custom_fields
+    reason: No custom-field-type listing operation is published.
+  - tool: list_dynamic_lists
+    reason: Dynamic lists are readable through MCP but have no published REST operation.
+  - tool: get_marketing_bulk_job
+    reason: >-
+      BulkSubscriptionJob is declared as a schema in the Marketing OpenAPI but no
+      job-status operation is exposed; the async result is only retrievable through MCP.
+
+rest_only:
+  - operation: sendBulkMessages
+    api: Email
+    reason: Bulk send (up to 50 messages per request) has no MCP tool; send_secure_email sends one message.
+  - operation: listDynamicTemplates
+    api: Email
+  - operation: createDynamicTemplate
+    api: Email
+  - operation: getDynamicTemplate
+    api: Email
+  - operation: updateDynamicTemplate
+    api: Email
+  - operation: deleteDynamicTemplate
+    api: Email
+  - operation: sendTemplatedMessage
+    api: Email
+    reason: >-
+      The entire Handlebars dynamic-template surface is REST-only. An agent cannot create
+      or send a templated message through MCP.
+  - operation: getCampaignMailings
+    api: Marketing
+  - operation: createCampaignMailing
+    api: Marketing
+  - operation: getCampaignMailing
+    api: Marketing
+  - operation: updateCampaignMailing
+    api: Marketing
+  - operation: sendCampaignMailingTestEmail
+    api: Marketing
+  - operation: bulkDeleteCampaignMailings
+    api: Marketing
+  - operation: sendCampaignMailing
+    api: Marketing
+  - operation: scheduleCampaignMailing
+    api: Marketing
+    reason: >-
+      No campaign-mailing write surface is exposed through MCP at all. An agent can read
+      campaign analytics but cannot create, send or schedule a campaign.
+  - operation: getDripCampaigns
+    api: Marketing
+  - operation: getDripCampaign
+    api: Marketing
+  - operation: updateDripCampaign
+    api: Marketing
+  - operation: startDripCampaign
+    api: Marketing
+  - operation: pauseDripCampaign
+    api: Marketing
+    reason: The whole drip-campaign surface is REST-only.
+  - operation: bulkCreateSubscribers
+    api: Marketing
+  - operation: bulkDeleteSubscribers
+    api: Marketing
+  - operation: updateSubscriptionListPut
+    api: Marketing
+  - operation: updateSubscriptionListPatch
+    api: Marketing
+  - operation: deleteSubscriptionList
+    api: Marketing
+  - operation: getSubscriptions
+    api: Marketing
+  - operation: createSubscription
+    api: Marketing
+  - operation: getSubscription
+    api: Marketing
+  - operation: deleteSubscription
+    api: Marketing
+  - operation: subscribeSubscribers
+    api: Marketing
+  - operation: unsubscribeSubscribers
+    api: Marketing
+  - operation: bulkGlobalSubscribe
+    api: Marketing
+  - operation: bulkGlobalUnsubscribe
+    api: Marketing
+  - operation: dynamicBulkSubscribe
+    api: Marketing
+  - operation: dynamicBulkUnsubscribe
+    api: Marketing
+    reason: >-
+      The entire subscription (subscriber-to-list join) surface, including every
+      subscribe/unsubscribe path, is REST-only. An agent can create a subscriber through
+      MCP but cannot subscribe or unsubscribe one.
+  - operation: getTrackingLinks
+    api: Marketing
+  - operation: getTrackingLinksByUniqueLink
+    api: Marketing
+  - operation: getSubscribersByTrackingLink
+    api: Marketing
+    reason: Tracking-link reporting is REST-only.
+  - operation: getForm
+    api: Forms
+    reason: >-
+      The authenticated single-form read (which returns inactive and archived forms) has no
+      MCP tool; get_form maps to the public respondent endpoint only.
+
+coverage:
+  mcp_tools: 30
+  rest_operations: 64
+  tools_bound_to_rest: 25
+  tools_with_no_rest_binding: 5
+  rest_operations_with_no_tool: 40
+  note: >-
+    Roughly two thirds of the published REST surface has no MCP tool. The gap is
+    concentrated in write paths: dynamic templates, campaign mailings, drip campaigns and
+    every subscription change are REST-only, so an agent driving Paubox through MCP can
+    send one-off email, manage forms and read marketing analytics, but cannot run a
+    campaign or change a subscription.

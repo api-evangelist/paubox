@@ -1,0 +1,87 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Paubox Marketing API
+  version: 1.0.0
+extends: ../openapi/paubox-marketing-api-openapi.yaml
+x-generated: '2026-08-26'
+x-method: generated
+x-source: >-
+  Derived from https://docs.paubox.com/marketing and the per-operation pages under
+  /marketing/*, plus conventions/paubox-conventions.yml. Records the reversibility and
+  rehearsal semantics the provider documents in prose.
+actions:
+  - target: $.info
+    update:
+      x-auth-header-format: 'Authorization: Token token=<API_KEY>'
+      x-auth-note: >-
+        Bearer is NOT documented for the Marketing API, unlike the Email and Forms APIs.
+      x-separately-purchased: >-
+        Marketing is a separate plan from the Email API; sends are metered separately.
+      x-idempotency-supported: false
+      x-parameter-values-guide: https://docs.paubox.com/marketing/parameter-values
+  - target: $.paths['/campaign_mailings'].post
+    update:
+      x-dry-run: >-
+        Creating a campaign mailing only STORES the content — it delivers nothing. This is
+        the first half of the two-step rehearsal path.
+  - target: $.paths['/campaign_mailings/{campaign_mailing_id}/send_test_email'].get
+    update:
+      x-dry-run: >-
+        The rehearsal operation. Sends a one-off preview to a single address with the
+        subject prefixed "[Test]", from the account's default brand from_email/from_name.
+        Use before every real send.
+  - target: $.paths['/campaign_mailing_sends'].post
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+        note: Delivery is irreversible and there is no idempotency key.
+  - target: $.paths['/campaign_mailing_schedules'].post
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+        note: >-
+          No unschedule or cancel operation is published. Once a mailing is scheduled
+          there is no documented API path to stop it before it sends.
+  - target: $.paths['/campaign_mailings_bulk_delete'].delete
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+        note: >-
+          Permanent. There is no single-delete operation — delete one mailing by passing
+          an array of one ID.
+  - target: $.paths['/subscriptions/{subscription_id}'].delete
+    update:
+      x-reversibility:
+        reversal: subscribeSubscribers
+        window: null
+        note: >-
+          Stamps unsubscribed_at and KEEPS the record. The subscriber stays subscribed to
+          every other list and is not globally opted out.
+  - target: $.paths['/subscriptions/unsubscribe'].post
+    update:
+      x-reversibility:
+        reversal: subscribeSubscribers
+        window: null
+  - target: $.paths['/subscriptions/bulk_global_unsubscribe'].post
+    update:
+      x-reversibility:
+        reversal: bulkGlobalSubscribe
+        window: null
+  - target: $.paths['/subscriptions/dynamic_bulk_unsubscribe'].post
+    update:
+      x-reversibility:
+        reversal: dynamicBulkSubscribe
+        window: null
+  - target: $.paths['/drip_campaigns/{id}/pause'].post
+    update:
+      x-reversibility:
+        reversal: startDripCampaign
+        window: null
+  - target: $.paths['/subscribers_bulk_delete'].delete
+    update:
+      x-reversibility:
+        reversal: null
+        window: null

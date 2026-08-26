@@ -1,0 +1,3094 @@
+openapi: 3.0.3
+info:
+  title: Paubox Marketing API
+  description: >
+    Public documentation Paubox Marketing API. 
+
+
+    All Paubox Marketing customers have access to the Paubox Marketing API to
+    automate various tasks.
+
+
+    ## Authentication
+
+    Use the authorization header in requests with the format: `authorization:
+    Token token=<API_KEY>`
+
+
+    Replace `<API_KEY>` with your API key. Find your API key in the address bar
+    from the email builder (note: each API Key is displayed only once upon
+    creation).
+
+
+    ## Base URL
+
+    `https://api.paubox.com/v1/marketing`
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+  - url: https://api.paubox.com/v1/marketing
+    description: Production server
+security:
+  - TokenAuth: []
+tags:
+  - name: subscribers
+    description: Subscriber management operations
+  - name: analytics
+    description: Campaign analytics and reporting operations
+  - name: campaign_mailings
+    description: Campaign mailing management and sending operations
+  - name: drip_campaigns
+    description: Drip campaign management and automation operations
+  - name: subscription_lists
+    description: Subscription list management operations
+  - name: subscriptions
+    description: Subscriber opt-in and opt-out operations
+  - name: tracking_links
+    description: Tracking link analytics and data operations
+paths:
+  /analytics/campaign_mailing_send_totals:
+    get:
+      tags:
+        - analytics
+      summary: Fetch campaign analytics
+      description: Return json data statistics about campaigns sent
+      operationId: getCampaignAnalytics
+      parameters:
+        - name: campaign_mailing_send_id
+          in: query
+          description: Id of a specific campaign to total
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign analytics data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignAnalyticsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/campaign_mailing_sends_table:
+    get:
+      tags:
+        - analytics
+      summary: Fetch campaign table
+      description: Return json data information about campaigns sent
+      operationId: getCampaignTable
+      parameters:
+        - name: search
+          in: query
+          description: Field:Value pair to search on. Defaults to all records
+          required: false
+          schema:
+            type: string
+          example: '{ "field": "value" }'
+        - name: order_by
+          in: query
+          description: Order by attributes. Defaults to created_at
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: order
+          in: query
+          description: Order direction
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: Campaign table data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignTableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/tracking_links_by_unique_link:
+    get:
+      tags:
+        - analytics
+      summary: Fetch tracking links by unique link
+      description: Returns json data about interactions with tracking links
+      operationId: getTrackingLinksByUniqueLink
+      parameters:
+        - name: campaign_mailing_send_id
+          in: query
+          description: Campaign id to search on
+          required: true
+          schema:
+            type: string
+        - name: order_by
+          in: query
+          description: Order by attributes. Defaults to created_at
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: order
+          in: query
+          description: Order direction
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: Tracking links data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLinksResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/subscribers_by_tracking_link:
+    get:
+      tags:
+        - analytics
+      summary: Fetch subscribers by tracking link
+      description: Returns json data about subscribers for a specific tracking link
+      operationId: getSubscribersByTrackingLink
+      parameters:
+        - name: campaign_mailing_send_id
+          in: query
+          description: Campaign id to search on
+          required: true
+          schema:
+            type: string
+        - name: html_id
+          in: query
+          description: html_id of the associated tracking link
+          required: true
+          schema:
+            type: integer
+        - name: order_by
+          in: query
+          description: Order by non-id attributes. Defaults to created_at
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: order
+          in: query
+          description: Order direction
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: Subscribers by tracking link data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribersByTrackingLinkResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/campaign_mailing_deliveries_table:
+    get:
+      tags:
+        - analytics
+      summary: Fetch campaign deliveries table
+      description: Returns json data about campaign deliveries sent
+      operationId: getCampaignDeliveriesTable
+      parameters:
+        - name: campaign_mailing_send_id
+          in: query
+          description: >-
+            Campaign id to search on (one of campaign_mailing_send_id or
+            campaign_mailing_id is required)
+          required: false
+          schema:
+            type: string
+        - name: campaign_mailing_id
+          in: query
+          description: >-
+            Paubox Marketing Campaign Email id to search on (one of
+            campaign_mailing_send_id or campaign_mailing_id is required)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign deliveries table data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignDeliveriesTableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings:
+    get:
+      tags:
+        - campaign_mailings
+      summary: Fetch campaign mailings
+      description: Return json data about Paubox Marketing Campaign Emails
+      operationId: getCampaignMailings
+      parameters:
+        - name: search
+          in: query
+          description: Regex string to search on. Compares against subject
+          required: false
+          schema:
+            type: string
+        - name: template_type
+          in: query
+          description: >-
+            Return only mailings authored in this editor, for example `quill`,
+            `bee` or `html`
+          required: false
+          schema:
+            type: string
+        - name: order_by
+          in: query
+          description: >-
+            Attribute to sort on. Must be a campaign mailing column name, for
+            example `subject` or `created_at`. When omitted, no explicit
+            ordering is applied.
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: >-
+            Direction to sort. Only applied when `order_by` is supplied.
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+        - name: items
+          in: query
+          description: Number of records to return per page
+          required: false
+          schema:
+            maximum: 100
+            minimum: 1
+            type: integer
+            default: 20
+        - name: page
+          in: query
+          description: For pagination of results
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 1
+        - name: pagination
+          in: query
+          description: >-
+            Set to `false` to disable pagination and return every matching
+            campaign mailing in one response.
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Campaign mailings data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - campaign_mailings
+      summary: Create a campaign mailing
+      description: >
+        Creates a campaign mailing (a marketing email) for the authenticated
+        customer. Creating a mailing only stores the content; use
+        [send a campaign](/marketing/campaigns/send) or
+        [schedule a campaign](/marketing/campaigns/schedule) to deliver it.
+
+
+        `subject` is required and must be unique within your account. An
+        unsubscribe footer is appended to `html_part` automatically on save.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/campaign_mailings \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "campaign_mailing": {
+                "subject": "March newsletter",
+                "html_part": "<html><body><div>Hello</div></body></html>",
+                "text_part": "Hello",
+                "template_type": "html"
+            }
+          }'
+        ```
+      operationId: createCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaignMailingRequest'
+            example:
+              campaign_mailing:
+                subject: March newsletter
+                html_part: <html><body><div>Hello</div></body></html>
+                text_part: Hello
+                template_type: html
+        required: true
+      responses:
+        '200':
+          description: >-
+            The new campaign mailing's ID. If validation fails the response is
+            still `200` but the body contains an `errors` array instead of
+            `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingWriteResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings/{campaign_mailing_id}:
+    get:
+      tags:
+        - campaign_mailings
+      summary: Fetch a campaign mailing
+      description: >
+        Returns a single campaign mailing, including its content. Unlike the
+        list endpoint, this response carries `html_part`, `text_part` and
+        `form_data`, and omits the aggregate delivery counts.
+      operationId: getCampaignMailing
+      parameters:
+        - name: campaign_mailing_id
+          in: path
+          description: UUID of the campaign mailing
+          required: true
+          schema:
+            type: string
+        - name: with_images
+          in: query
+          description: >-
+            Include the mailing's `image_data` in the response. Any non-empty
+            value enables it.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign mailing data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - campaign_mailings
+      summary: Update a campaign mailing
+      description: >
+        Updates a campaign mailing. Only the fields you send are changed. `PUT`
+        is accepted as an equivalent to `PATCH`.
+
+
+        `subject` must stay unique within your account. The unsubscribe footer
+        is reapplied to `html_part` on every save.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X PATCH \
+
+        https://api.paubox.com/v1/marketing/campaign_mailings/123e4567-e89b-12d3-a456-426614174000 \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "campaign_mailing": {
+                "subject": "March newsletter (revised)"
+            }
+          }'
+        ```
+      operationId: updateCampaignMailing
+      parameters:
+        - name: campaign_mailing_id
+          in: path
+          description: UUID of the campaign mailing
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignMailingRequest'
+            example:
+              campaign_mailing:
+                subject: March newsletter (revised)
+        required: true
+      responses:
+        '200':
+          description: >-
+            The updated campaign mailing's ID. If validation fails the response
+            is still `200` but the body contains an `errors` array instead of
+            `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingWriteResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings/{campaign_mailing_id}/send_test_email:
+    get:
+      tags:
+        - campaign_mailings
+      summary: Send a test email
+      description: >
+        Sends a one-off preview of the campaign mailing to a single address, so
+        you can check rendering before sending to a list. The subject is
+        prefixed with `[Test]`, and the message is sent from your account's
+        default brand `from_email` and `from_name`.
+
+
+        Test sends are not recorded as a campaign send and do not appear in
+        analytics.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X GET \
+
+        'https://api.paubox.com/v1/marketing/campaign_mailings/123e4567-e89b-12d3-a456-426614174000/send_test_email?to_email=me@example.com' \
+          -H 'authorization: Token token=YOUR_API_KEY'
+        ```
+      operationId: sendCampaignMailingTestEmail
+      parameters:
+        - name: campaign_mailing_id
+          in: path
+          description: UUID of the campaign mailing
+          required: true
+          schema:
+            type: string
+        - name: to_email
+          in: query
+          description: Address to send the test message to
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '204':
+          description: Test email queued. The response has no body.
+        '400':
+          description: '`to_email` was not supplied.'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings_bulk_delete:
+    delete:
+      tags:
+        - campaign_mailings
+      summary: Bulk delete campaign mailings
+      description: >
+        Permanently deletes the campaign mailings identified by
+        `campaign_mailing_ids`. There is no single-delete endpoint; delete one
+        mailing by passing an array of one ID.
+
+
+        This is irreversible. Deleting a mailing also removes its associated
+        delivery and send records.
+
+
+        Omitting `campaign_mailing_ids` is a no-op and still returns `200` with
+        an empty object.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X DELETE \
+
+        https://api.paubox.com/v1/marketing/campaign_mailings_bulk_delete \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "campaign_mailing_ids": ["123e4567-e89b-12d3-a456-426614174000"]
+          }'
+        ```
+      operationId: bulkDeleteCampaignMailings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteCampaignMailingsRequest'
+            example:
+              campaign_mailing_ids:
+                - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: >-
+            An empty object. The response does not report how many records were
+            deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailing_sends:
+    post:
+      tags:
+        - campaign_mailings
+      summary: Send campaign mailings
+      description: >
+        Send campaign email to recipients. The email message must be created
+        within the Paubox Marketing web interface in order to use this to
+        trigger a send.
+
+
+        **Note:** The campaign_mailing_id can be retrieved from the id= part of
+        the URL when editing a marketing email. The subscription_list_id can be
+        retrieved from the listId= part of the URL of any Contact List page.
+      operationId: sendCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCampaignMailingRequest'
+            example:
+              campaign_mailing_id: g79da293-4a84-4b50-b0d9-76a16af167fe
+              campaign_mailing_send:
+                sender_email: marketing@yourdomain.com
+                subscription_list_id: 1a55ec71-0b08-457a-b183-51ac7791f1fe
+                recipient_emails:
+                  - test1@example.com
+                  - test2@example.com
+                customer_name: Your Company
+                from_email: no-reply@yourdomain.com
+                from_name: Your Company Name
+                subject: Your Campaign Subject
+        required: true
+      responses:
+        '200':
+          description: Campaign mailing sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailing_schedules:
+    post:
+      tags:
+        - campaign_mailings
+      summary: Schedule a new campaign mailing
+      description: >-
+        Schedules a new email campaign mailing with specified details for
+        delivery at a future time
+      operationId: scheduleCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleCampaignMailingRequest'
+            example:
+              send_at: '2023-05-01T15:00:00Z'
+              from_email: no-reply@yourdomain.com
+              from_name: Your Company Name
+              sender_email: marketing@yourdomain.com
+              subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              subject: Your Campaign Subject Line
+              dynamic_list_id: optional-uuid-for-dynamic-list
+              recipient_emails:
+                - test1@example.com
+                - test2@example.com
+        required: true
+      responses:
+        '200':
+          description: Campaign mailing scheduled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleCampaignMailingResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /drip_campaigns:
+    get:
+      tags:
+        - drip_campaigns
+      summary: Fetch drip campaigns
+      description: Return json data about Drip Campaigns
+      operationId: getDripCampaigns
+      parameters:
+        - name: search
+          in: query
+          description: Regex string to search on. Compares against drip campaign name
+          required: false
+          schema:
+            type: string
+        - name: order_by
+          in: query
+          description: Attribute to sort on. Default value is created_at
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: order
+          in: query
+          description: Direction to sort. Default value is descending
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: Drip campaigns data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DripCampaignsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /drip_campaigns/{id}:
+    get:
+      tags:
+        - drip_campaigns
+      summary: Fetch drip campaign
+      description: Returns json data about a drip campaign
+      operationId: getDripCampaign
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the drip campaign to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Drip campaign data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DripCampaignResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - drip_campaigns
+      summary: Update drip campaign
+      description: Updates drip campaign attributes
+      operationId: updateDripCampaign
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the drip campaign to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDripCampaignRequest'
+            example:
+              drip_campaign:
+                name: Welcome Series
+                subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+                start_trigger: subscription
+                drip_campaign_nodes: '{"nodes": [], "edges": []}'
+        required: true
+      responses:
+        '200':
+          description: Drip campaign updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DripCampaignResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /drip_campaigns/{id}/start:
+    post:
+      tags:
+        - drip_campaigns
+      summary: Start a drip campaign
+      description: Starts a drip campaign
+      operationId: startDripCampaign
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the drip campaign to start
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Drip campaign started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartDripCampaignResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /drip_campaigns/{id}/pause:
+    post:
+      tags:
+        - drip_campaigns
+      summary: Pause a drip campaign
+      description: Pauses a drip campaign
+      operationId: pauseDripCampaign
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the drip campaign to pause
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Drip campaign paused successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PauseDripCampaignResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscribers:
+    get:
+      tags:
+        - subscribers
+      summary: Fetch subscribers
+      description: Return json data about subscribers
+      operationId: getSubscribers
+      parameters:
+        - name: items
+          in: query
+          description: Number of records to return
+          required: false
+          schema:
+            maximum: 1000
+            minimum: 1
+            type: integer
+            default: 50
+        - name: page
+          in: query
+          description: For pagination of results
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            default: 1
+        - name: search
+          in: query
+          description: Search term
+          required: false
+          schema:
+            pattern: ^[a-zA-Z0-9\s]*$
+            type: string
+        - name: order_by
+          in: query
+          description: Field to order by
+          required: false
+          schema:
+            type: string
+            enum:
+              - first_name
+              - last_name
+              - email
+              - created_at
+              - updated_at
+            default: created_at
+        - name: order
+          in: query
+          description: Order direction
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: subscription_list_id
+          in: query
+          description: >-
+            Filter by subscription list ID (defaults to all subscribers/default
+            subscription list)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribersResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - subscribers
+      summary: Create subscriber
+      description: >
+        Creates a subscriber record. Adds record to subscription list if
+        specified otherwise adds to all contacts.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/subscribers \
+          -H 'authorization: Token token=<API_KEY>' \
+          -H 'content-type: application/json' \
+          -d '{
+            "subscriber": {
+                "email": "test@example.com",
+                "first_name": "test",
+                "last_name": "example"
+            }
+          }'
+        ```
+      operationId: createSubscriber
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriberRequest'
+            example:
+              subscriber:
+                email: test@example.com
+                first_name: test
+                last_name: example
+        required: true
+      responses:
+        '200':
+          description: Subscriber created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscribers/{subscriber_id}:
+    get:
+      tags:
+        - subscribers
+      summary: Fetch subscriber
+      description: Return json data about subscriber
+      operationId: getSubscriber
+      parameters:
+        - name: subscriber_id
+          in: path
+          description: The ID of the subscriber to fetch
+          required: true
+          schema:
+            type: string
+        - name: with_stats
+          in: query
+          description: Include aggregate analytics
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedSubscriberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - subscribers
+      summary: Update subscriber
+      description: Updates a subscriber record
+      operationId: updateSubscriberPut
+      parameters:
+        - name: subscriber_id
+          in: path
+          description: The ID of the subscriber to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriberRequest'
+        required: true
+      responses:
+        '200':
+          description: Subscriber updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - subscribers
+      summary: Update subscriber
+      description: Updates a subscriber record
+      operationId: updateSubscriberPatch
+      parameters:
+        - name: subscriber_id
+          in: path
+          description: The ID of the subscriber to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriberRequest'
+        required: true
+      responses:
+        '200':
+          description: Subscriber updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscribers_bulk_create:
+    post:
+      tags:
+        - subscribers
+      summary: Bulk create subscribers
+      description: >-
+        Creates one or more subscriber records. Adds to subscription list if
+        specified, otherwise adds to all contacts.
+      operationId: bulkCreateSubscribers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCreateSubscribersRequest'
+        required: true
+      responses:
+        '200':
+          description: Subscribers created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscribers_bulk_delete:
+    delete:
+      tags:
+        - subscribers
+      summary: Bulk delete subscribers
+      description: >
+        Deletes one or more subscriber records. Removes from subscription list
+        if specified, otherwise removed from all contacts.
+
+
+        **Example:**
+
+        ```
+
+        DELETE
+        /subscribers_bulk_delete?subscriber_ids=id1,id2,id3&subscription_list_id=list123
+
+        ```
+      operationId: bulkDeleteSubscribers
+      parameters:
+        - name: subscriber_ids
+          in: query
+          description: Comma-separated list of subscriber IDs to delete
+          required: true
+          schema:
+            type: string
+          example: id1,id2,id3
+        - name: subscription_list_id
+          in: query
+          description: Optional subscription list ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscribers deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscription_lists:
+    get:
+      tags:
+        - subscription_lists
+      summary: Fetch subscription lists
+      description: Return json data about subscription lists
+      operationId: getSubscriptionLists
+      responses:
+        '200':
+          description: Subscription lists data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - subscription_lists
+      summary: Create subscription list
+      description: Creates a subscription list record
+      operationId: createSubscriptionList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionListRequest'
+            example:
+              name: Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscription_lists/{subscription_list_id}:
+    put:
+      tags:
+        - subscription_lists
+      summary: Update subscription list
+      description: Updates a subscription list record
+      operationId: updateSubscriptionListPut
+      parameters:
+        - name: subscription_list_id
+          in: path
+          description: The ID of the subscription list to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionListRequest'
+            example:
+              name: Updated Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - subscription_lists
+      summary: Delete subscription list
+      description: |
+        Deletes subscription list record.
+
+        **Note:** Cannot delete default/all contacts list.
+      operationId: deleteSubscriptionList
+      parameters:
+        - name: subscription_list_id
+          in: path
+          description: The ID of the subscription list to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription list deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - subscription_lists
+      summary: Update subscription list
+      description: Updates a subscription list record
+      operationId: updateSubscriptionListPatch
+      parameters:
+        - name: subscription_list_id
+          in: path
+          description: The ID of the subscription list to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionListRequest'
+            example:
+              name: Updated Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions:
+    get:
+      tags:
+        - subscriptions
+      summary: List subscriptions
+      description: >
+        Returns every subscription belonging to the authenticated customer. A
+        subscription is the join between a subscriber and a subscription list
+        (or a dynamic list), and it carries the `unsubscribed_at` timestamp that
+        marks a list-level opt-out.
+
+
+        This endpoint is not paginated and returns raw subscription records.
+      operationId: getSubscriptions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - subscriptions
+      summary: Create a subscription
+      description: >
+        Subscribes an existing subscriber to an existing subscription list.
+
+
+        Creating a subscription fires any drip campaign configured with a
+        `subscription_created` trigger on that list.
+
+
+        A subscriber may only be subscribed to a given list once; a duplicate
+        request fails validation.
+
+
+        **Note on `subscriber_id`:** this field takes the subscriber's internal
+        numeric ID, not the UUID returned by the subscriber endpoints. To add a
+        subscriber to a list by UUID, use
+        [`POST /subscribers`](/marketing/subscribers/create) with a
+        `subscription_list_id`, or
+        [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe)
+        to re-subscribe an existing subscription.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/subscriptions \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "subscription": {
+                "subscription_list_id": "123e4567-e89b-12d3-a456-426614174000",
+                "subscriber_id": 4821
+            }
+          }'
+        ```
+      operationId: createSubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+            example:
+              subscription:
+                subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+                subscriber_id: 4821
+        required: true
+      responses:
+        '200':
+          description: >-
+            Subscription created. If validation fails the response is still
+            `200` but the body contains an `errors` array instead of `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/{subscription_id}:
+    get:
+      tags:
+        - subscriptions
+      summary: Fetch a subscription
+      description: Returns a single subscription by its UUID.
+      operationId: getSubscription
+      parameters:
+        - name: subscription_id
+          in: path
+          description: UUID of the subscription
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - subscriptions
+      summary: Unsubscribe a subscription
+      description: >
+        Unsubscribes the subscriber from the list this subscription belongs to
+        by stamping `unsubscribed_at`. The subscription record itself is kept,
+        and the subscriber stays subscribed to every other list and is not
+        globally opted out.
+
+
+        To re-subscribe, use
+        [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe).
+      operationId: deleteSubscription
+      parameters:
+        - name: subscription_id
+          in: path
+          description: UUID of the subscription
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription unsubscribed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/subscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Subscribe subscribers
+      description: >
+        Re-subscribes one or more subscribers, identified by their UUIDs.
+
+
+        When `subscription_list_ids` is supplied, the matching subscriptions
+        have their `unsubscribed_at` cleared. When it is omitted, only the
+        global opt-out (`opted_out_on`) is cleared and list-level opt-outs are
+        left untouched.
+
+
+        In both cases the global opt-out is cleared, because a subscriber who is
+        subscribed to any list is by definition not globally unsubscribed.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/subscriptions/subscribe \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "subscriber_ids": ["8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60"],
+            "subscription_list_ids": ["123e4567-e89b-12d3-a456-426614174000"]
+          }'
+        ```
+      operationId: subscribeSubscribers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionChangeRequest'
+            example:
+              subscriber_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+              subscription_list_ids:
+                - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: >-
+            The affected subscribers. If the operation raises, the response is
+            still `200` but the body contains an `errors` string.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/unsubscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Unsubscribe subscribers
+      description: >
+        Unsubscribes one or more subscribers, identified by their UUIDs.
+
+
+        When `subscription_list_ids` is supplied, the matching subscriptions are
+        stamped with `unsubscribed_at` and the subscribers remain subscribed to
+        every other list. When it is omitted, the subscribers are globally
+        opted out by stamping `opted_out_on`, which suppresses all future
+        marketing email to them.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/subscriptions/unsubscribe \
+          -H 'authorization: Token token=YOUR_API_KEY' \
+          -H 'content-type: application/json' \
+          -d '{
+            "subscriber_ids": ["8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60"],
+            "subscription_list_ids": ["123e4567-e89b-12d3-a456-426614174000"]
+          }'
+        ```
+      operationId: unsubscribeSubscribers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionChangeRequest'
+            example:
+              subscriber_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+              subscription_list_ids:
+                - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: >-
+            The affected subscribers. If the operation raises, the response is
+            still `200` but the body contains an `errors` string.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/bulk_global_subscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Bulk global subscribe
+      description: >
+        Clears the global opt-out for a whole subscription list without having
+        to enumerate every subscriber.
+
+
+        This endpoint has two modes:
+
+
+        - **Explicit** — supply `subscriber_ids` and the request behaves exactly
+          like [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe),
+          returning the affected subscribers synchronously.
+        - **Select-all** — omit `subscriber_ids` and supply
+          `from_subscription_list_id`. Every subscriber matching `search` and
+          `filters` in that list, minus `except_ids`, is queued for processing in
+          the background and a Sidekiq job ID (`jid`) is returned immediately.
+
+        In select-all mode `from_subscription_list_id` is required and must be a
+        subscription list UUID.
+      operationId: bulkGlobalSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              search: '*'
+              except_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: >-
+            A job ID in select-all mode, or the affected subscribers when
+            `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/bulk_global_unsubscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Bulk global unsubscribe
+      description: >
+        Globally opts out every subscriber in a subscription list without having
+        to enumerate them.
+
+
+        This endpoint has two modes:
+
+
+        - **Explicit** — supply `subscriber_ids` and the request behaves exactly
+          like [`POST /subscriptions/unsubscribe`](/marketing/subscriptions/unsubscribe),
+          returning the affected subscribers synchronously.
+        - **Select-all** — omit `subscriber_ids` and supply
+          `from_subscription_list_id`. Every subscriber matching `search` and
+          `filters` in that list, minus `except_ids`, is queued for processing in
+          the background and a Sidekiq job ID (`jid`) is returned immediately.
+
+        In select-all mode `from_subscription_list_id` is required and must be a
+        subscription list UUID. Globally opting a subscriber out suppresses all
+        future marketing email to them, across every list.
+      operationId: bulkGlobalUnsubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              search: '*'
+              except_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: >-
+            A job ID in select-all mode, or the affected subscribers when
+            `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/dynamic_bulk_subscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Bulk subscribe a dynamic list
+      description: >
+        The dynamic list counterpart to
+        [bulk global subscribe](/marketing/subscriptions/bulk-global-subscribe).
+
+
+        - **Explicit** — supply `subscriber_ids` and the request behaves exactly
+          like [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe).
+        - **Select-all** — omit `subscriber_ids` and supply
+          `from_subscription_list_id`, which here is a **dynamic list** UUID. The
+          job resolves the list's current membership, subtracts `except_ids`, and
+          clears the global opt-out on the rest. A Sidekiq job ID (`jid`) is
+          returned immediately.
+
+        A dynamic list's membership is defined by the filters saved on the list
+        itself, so any `filters` sent with the request is ignored in select-all
+        mode.
+      operationId: dynamicBulkSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+              except_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: >-
+            A job ID in select-all mode, or the affected subscribers when
+            `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/dynamic_bulk_unsubscribe:
+    post:
+      tags:
+        - subscriptions
+      summary: Bulk unsubscribe a dynamic list
+      description: >
+        The dynamic list counterpart to
+        [bulk global unsubscribe](/marketing/subscriptions/bulk-global-unsubscribe).
+
+
+        - **Explicit** — supply `subscriber_ids` and the request behaves exactly
+          like [`POST /subscriptions/unsubscribe`](/marketing/subscriptions/unsubscribe).
+        - **Select-all** — omit `subscriber_ids` and supply
+          `from_subscription_list_id`, which here is a **dynamic list** UUID. The
+          job resolves the list's current membership, subtracts `except_ids`, and
+          globally opts out the rest. A Sidekiq job ID (`jid`) is returned
+          immediately.
+
+        A dynamic list's membership is defined by the filters saved on the list
+        itself, so any `filters` sent with the request is ignored in select-all
+        mode.
+      operationId: dynamicBulkUnsubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+              except_ids:
+                - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: >-
+            A job ID in select-all mode, or the affected subscribers when
+            `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /tracking_links:
+    get:
+      tags:
+        - tracking_links
+      summary: Fetch tracking links
+      description: >
+        Return a list of json data for all tracking links associated to a
+        campaign mailing send or campaign mailing delivery.
+
+
+        **Note:** The campaign_mailing_send_id is available from the Paubox
+        Marketing interface analytics page. Click a sent campaign and the URL
+        will show a selectedId.
+
+
+        If you pass in the campaign_mailing_send_id, it will return a list of
+        every link in every email sent in the campaign and the tracking info.
+      operationId: getTrackingLinks
+      parameters:
+        - name: campaign_mailing_send_id
+          in: query
+          description: >-
+            UUID string, available from the Paubox Marketing interface analytics
+            page. Click a sent campaign and the URL will show a selectedId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1308ab8d-a128-498c-8367-f71ac16934e8
+        - name: order_by
+          in: query
+          description: Attribute to sort on. Default value is created_at
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: order
+          in: query
+          description: Direction to sort. Default value is descending
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+      responses:
+        '200':
+          description: Tracking links data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLinksDetailResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Subscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - subscriber
+        attributes:
+          $ref: '#/components/schemas/Subscriber_attributes'
+    DetailedSubscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes'
+    SubscribersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscriber'
+    SubscriberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscriber'
+    DetailedSubscriberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DetailedSubscriber'
+    CreateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/CreateSubscriberRequest_subscriber'
+        subscription_list_id:
+          type: string
+          description: Optional subscription list ID
+    UpdateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/UpdateSubscriberRequest_subscriber'
+    BulkCreateSubscribersRequest:
+      type: object
+      properties:
+        subscribers:
+          type: array
+          description: Array of subscribers to create
+          items:
+            $ref: '#/components/schemas/BulkCreateSubscribersRequest_subscribers'
+        subscription_list_id:
+          type: string
+          description: Optional subscription list ID
+    BulkCreateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BulkCreateResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    CampaignAnalyticsResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignAnalyticsResponse_data'
+    CampaignTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignTableResponse_data'
+    TrackingLinksResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksResponse_data'
+    SubscribersByTrackingLinkResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_data'
+    CampaignDeliveriesTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignDeliveriesTableResponse_data'
+    CampaignMailingsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignMailingsResponse_data'
+    SendCampaignMailingRequest:
+      required:
+        - campaign_mailing_id
+        - campaign_mailing_send
+      type: object
+      properties:
+        campaign_mailing_id:
+          type: string
+          description: >-
+            UUID string, can be retrieved from the id= part of the URL when
+            editing a marketing email
+          format: uuid
+        campaign_mailing_send:
+          $ref: >-
+            #/components/schemas/SendCampaignMailingRequest_campaign_mailing_send
+    ScheduleCampaignMailingRequest:
+      required:
+        - from_email
+        - from_name
+        - send_at
+        - sender_email
+        - subject
+        - subscription_list_id
+      type: object
+      properties:
+        send_at:
+          type: string
+          description: The time at which to send the campaign, in RFC3339 format
+          format: date-time
+        from_email:
+          type: string
+          description: >-
+            The email address from which the campaign will be sent. It should be
+            from a verified domain from your Paubox Marketing settings page
+          format: email
+        from_name:
+          type: string
+          description: The name to appear as the sender of the campaign
+        sender_email:
+          type: string
+          description: >-
+            The email address of the person/entity sending this email. Should be
+            a Paubox user email address and is NOT going to appear as the From
+            email
+          format: email
+        subscription_list_id:
+          type: string
+          description: The uuid of the subscription list to which the campaign will be sent
+          format: uuid
+        subject:
+          type: string
+          description: The subject line of the campaign mailing
+        dynamic_list_id:
+          type: string
+          description: >-
+            The uuid of the dynamic list to which the campaign will be sent
+            (optional)
+          format: uuid
+        recipient_emails:
+          type: array
+          description: >-
+            A list of extra recipient email addresses for the campaign to be
+            sent to. These are not tracked for analytics purposes and are
+            usually just for verification and/or testing
+          items:
+            type: string
+            format: email
+    ScheduleCampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ScheduleCampaignMailingResponse_data'
+    DripCampaignsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DripCampaignsResponse_data'
+    DripCampaignResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DripCampaignResponse_data'
+    UpdateDripCampaignRequest:
+      type: object
+      properties:
+        drip_campaign:
+          $ref: '#/components/schemas/UpdateDripCampaignRequest_drip_campaign'
+    StartDripCampaignResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StartDripCampaignResponse_data'
+    PauseDripCampaignResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PauseDripCampaignResponse_data'
+    SubscriptionListsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    SubscriptionListResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    CreateSubscriptionListRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list (cannot be 'default')
+    UpdateSubscriptionListRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list
+    TrackingLinksDetailResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
+    inline_response_400:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Invalid time format provided, please use RFC3339 format.
+    Subscriber_attributes:
+      required:
+        - email
+        - unsubscribed
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        unsubscribed:
+          type: boolean
+          description: Whether the subscriber is unsubscribed
+    DetailedSubscriber_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: ID of the custom field type
+        custom_field_name:
+          type: string
+          description: Name of the custom field
+        custom_field_value:
+          type: string
+          description: Value of the custom field
+    DetailedSubscriber_attributes_subscription_lists:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        name:
+          type: string
+          description: Subscription list name
+        unsubscribed:
+          type: boolean
+          description: Whether subscriber is unsubscribed from this list
+    DetailedSubscriber_attributes_statistics:
+      type: object
+      properties:
+        deliveries:
+          type: integer
+          description: Number of deliveries
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        opened:
+          type: integer
+          description: Number of opened emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounces
+        hard_bounced:
+          type: integer
+          description: Number of hard bounces
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribes
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribes
+    DetailedSubscriber_attributes:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        unsubscribed:
+          type: boolean
+          description: Whether the subscriber is unsubscribed
+        created_at:
+          type: string
+          description: Timestamp when subscriber was created
+          format: date-time
+        updated_at:
+          type: string
+          description: Timestamp when subscriber was last updated
+          format: date-time
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber_attributes_custom_fields'
+        subscription_lists:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/DetailedSubscriber_attributes_subscription_lists
+        statistics:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes_statistics'
+    CreateSubscriberRequest_subscriber:
+      type: object
+      properties:
+        email:
+          type: string
+          description: >-
+            Subscriber's email address (required unless phone_number is
+            provided)
+          format: email
+        phone_number:
+          type: string
+          description: E.164 formatted phone number (required unless email is provided)
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          description: Optional custom fields (unlimited)
+          items:
+            type: object
+            additionalProperties:
+              type: string
+    UpdateSubscriberRequest_subscriber:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        phone_number:
+          type: string
+          description: E.164 formatted phone number
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+    BulkCreateSubscribersRequest_subscribers:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address (required)
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          description: Optional custom fields (unlimited)
+          items:
+            type: object
+            additionalProperties:
+              type: string
+    BulkCreateResponse_data:
+      type: object
+      properties:
+        num_subscribers_added:
+          type: integer
+          description: Number of subscribers successfully added
+    CampaignAnalyticsResponse_data:
+      type: object
+      properties:
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        viewed:
+          type: integer
+          description: Number of viewed emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        bounced:
+          type: integer
+          description: Number of bounced emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounced emails
+        hard_bounced:
+          type: integer
+          description: Number of hard bounced emails
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribed emails
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribed emails
+    CampaignTableResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign table entry ID
+        marketing_email_id:
+          type: string
+          description: Marketing email ID
+        campaign_mailing_id:
+          type: string
+          description: Campaign mailing ID
+        campaign_mailing_created_at:
+          type: string
+          description: Campaign mailing creation timestamp
+          format: date-time
+        sent_at:
+          type: string
+          description: Campaign sent timestamp
+          format: date-time
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+    TrackingLinksResponse_data:
+      type: object
+      properties:
+        html_id:
+          type: integer
+          description: HTML ID of the tracking link
+        target_url:
+          type: string
+          description: Target URL of the tracking link
+        clicked:
+          type: integer
+          description: Number of clicks on this link
+    SubscribersByTrackingLinkResponse_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: Custom field type ID
+        value:
+          type: string
+          description: Custom field value
+    SubscribersByTrackingLinkResponse_attributes:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/SubscribersByTrackingLinkResponse_attributes_custom_fields
+    SubscribersByTrackingLinkResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscriber ID
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes'
+    CampaignDeliveriesTableResponse_data:
+      type: object
+      properties:
+        recipient:
+          type: string
+          description: Email recipient
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        delivered:
+          type: boolean
+          description: Whether email was delivered
+        viewed:
+          type: boolean
+          description: Whether email was viewed
+        clicked:
+          type: boolean
+          description: Whether email was clicked
+        bounced:
+          type: boolean
+          description: Whether email bounced
+        unsubscribed:
+          type: boolean
+          description: Whether recipient unsubscribed
+        tracking_links:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Tracking link information (dynamic property names based on actual
+            URLs)
+    CampaignMailingsResponse_attributes:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Campaign mailing subject
+        default_subject:
+          type: string
+          nullable: true
+          description: Fallback subject used when no subject is set on a send
+        template_type:
+          type: string
+          description: >-
+            Editor the mailing was authored in, for example `quill`, `bee` or
+            `html`
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        sent_count:
+          type: integer
+          description: Number of emails sent
+        delivered_count:
+          type: integer
+          description: Number of emails delivered
+        viewed_count:
+          type: integer
+          description: Number of emails viewed
+        clicked_count:
+          type: integer
+          description: Number of emails clicked
+        bounced_count:
+          type: integer
+          description: Number of emails bounced
+        unsubscribed_count:
+          type: integer
+          description: Number of emails that resulted in unsubscribes
+    CampaignMailingsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign mailing ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailingsResponse_attributes'
+    SendCampaignMailingRequest_campaign_mailing_send:
+      required:
+        - sender_email
+        - subscription_list_id
+      type: object
+      properties:
+        sender_email:
+          type: string
+          description: >-
+            Email for a Paubox Marketing user to track who sent it. This is NOT
+            the "From email" that will be used to send the message
+          format: email
+        subscription_list_id:
+          type: string
+          description: >-
+            UUID string, can be retrieved from the listId= part of the URL of
+            any Contact List page
+          format: uuid
+        recipient_emails:
+          type: array
+          description: >-
+            Optional - will send preview message equivalent (no smart text
+            replacements)
+          items:
+            type: string
+            format: email
+        customer_name:
+          type: string
+          description: Optional for footer. Leave empty to use default information
+        from_email:
+          type: string
+          description: >-
+            Optional - the email the user will see the email is sent from. Leave
+            empty to use default information
+          format: email
+        from_name:
+          type: string
+          description: >-
+            Optional - the name the user will see the email is from. Leave empty
+            to use default information
+        subject:
+          type: string
+          description: >-
+            Optional - the subject of the email. Will use the marketing email
+            unique ID if not specified
+    ScheduleCampaignMailingResponse_data:
+      type: object
+      properties:
+        send_at:
+          type: string
+          description: The scheduled send time in RFC3339 format
+          format: date-time
+        send_at_timestamp:
+          type: string
+          description: The scheduled send time as a Unix timestamp string
+        jid:
+          type: string
+          description: Job ID string for the scheduled campaign
+    DripCampaignsResponse_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+        state:
+          type: string
+          description: Current state of the drip campaign
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in the campaign
+        subscriber_completed_count:
+          type: integer
+          description: Number of subscribers who completed the campaign
+    DripCampaignsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drip campaign ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - drip_campaign
+        attributes:
+          $ref: '#/components/schemas/DripCampaignsResponse_attributes'
+    DripCampaignResponse_data_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+        state:
+          type: string
+          description: Current state of the drip campaign
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in the campaign
+        subscriber_completed_count:
+          type: integer
+          description: Number of subscribers who completed the campaign
+        drip_campaign_nodes:
+          type: string
+          description: JSON string containing drip campaign node configuration
+        drip_campaign_tree_blob:
+          type: string
+          description: JSON string containing drip campaign tree structure
+    DripCampaignResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drip campaign ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - drip_campaign
+        attributes:
+          $ref: '#/components/schemas/DripCampaignResponse_data_attributes'
+    UpdateDripCampaignRequest_drip_campaign:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+          format: uuid
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        drip_campaign_nodes:
+          type: string
+          description: JSON string containing drip campaign node configuration
+    StartDripCampaignResponse_data:
+      type: object
+      properties:
+        jids:
+          type: array
+          description: Array of job IDs for the started drip campaign
+          items:
+            type: string
+    PauseDripCampaignResponse_data:
+      type: object
+      properties:
+        drip_campaign_id:
+          type: string
+          description: ID of the paused drip campaign
+        status:
+          type: string
+          description: Status of the drip campaign after pausing
+    SubscriptionListsResponse_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list
+        is_default:
+          type: boolean
+          description: Whether this is the default subscription list
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in this list
+        form_id:
+          type: string
+          description: Form ID for use with Paubox Secure Forms
+    SubscriptionListsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - subscription_list
+        attributes:
+          $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
+    TrackingLinksDetailResponse_attributes:
+      type: object
+      properties:
+        target_url:
+          type: string
+          description: The target URL of the tracking link
+        opened_at:
+          type: string
+          description: Timestamp when the link was opened
+          format: date-time
+        clicked:
+          type: integer
+          description: Number of times the link was clicked
+        campaign_mailing_delivery_id:
+          type: string
+          description: >-
+            ID of the campaign mailing delivery associated with this tracking
+            link
+    TrackingLinksDetailResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Tracking link ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - tracking_link
+        attributes:
+          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Internal numeric identifier for the subscription
+        uuid:
+          type: string
+          description: >-
+            Public identifier for the subscription. Use this value as
+            `subscription_id` in path parameters.
+        subscription_list_id:
+          type: string
+          nullable: true
+          description: >-
+            UUID of the subscription list. Null when the subscription belongs to
+            a dynamic list.
+        dynamic_list_id:
+          type: integer
+          nullable: true
+          description: >-
+            Identifier of the dynamic list. Null when the subscription belongs
+            to a subscription list.
+        subscriber_id:
+          type: integer
+          description: Internal numeric identifier of the subscriber
+        unsubscribed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: >-
+            When the subscriber opted out of this list. Null while the
+            subscription is active.
+        delete_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the subscription is scheduled for deletion
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    SubscriptionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+    SubscriptionResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscription'
+    CreateSubscriptionRequest:
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/CreateSubscriptionRequest_subscription'
+    CreateSubscriptionRequest_subscription:
+      required:
+        - subscriber_id
+        - subscription_list_id
+      type: object
+      properties:
+        subscription_list_id:
+          type: string
+          description: UUID of the subscription list to subscribe to
+        subscriber_id:
+          type: integer
+          description: >-
+            Internal numeric identifier of the subscriber. This is not the
+            subscriber UUID returned by the subscriber endpoints.
+    CreateSubscriptionResponse:
+      type: object
+      description: >-
+        Returned with HTTP 200 in both the success and the validation-failure
+        case. Check for the presence of `errors`.
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscription'
+        errors:
+          type: array
+          description: Validation messages, present only when the create failed
+          items:
+            type: string
+    SubscriptionChangeRequest:
+      required:
+        - subscriber_ids
+      type: object
+      properties:
+        subscriber_ids:
+          type: array
+          description: UUIDs of the subscribers to update
+          items:
+            type: string
+        subscription_list_ids:
+          type: array
+          description: >-
+            UUIDs of the subscription lists to update the subscribers on. Omit
+            to act on the subscribers' global opt-out instead.
+          items:
+            type: string
+    SubscriptionChangeResponse:
+      type: object
+      description: >-
+        The affected subscribers in JSON:API form. Returned with HTTP 200; on
+        failure the body carries `errors` instead of `data`.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber'
+        errors:
+          type: string
+          description: Error message, present only when the operation failed
+    BulkSubscriptionChangeRequest:
+      type: object
+      properties:
+        subscriber_ids:
+          type: array
+          description: >-
+            UUIDs of specific subscribers to update. When present the request is
+            handled synchronously and every other field is ignored.
+          items:
+            type: string
+        from_subscription_list_id:
+          type: string
+          description: >-
+            UUID of the list whose members are being updated. Required when
+            `subscriber_ids` is omitted. On the `bulk_global_*` endpoints this
+            is a subscription list UUID; on the `dynamic_bulk_*` endpoints it is
+            a dynamic list UUID.
+        search:
+          type: string
+          description: >-
+            Search term used to narrow the list's members. Defaults to `*` (all
+            members) on the `bulk_global_*` endpoints.
+        filters:
+          type: string
+          description: >-
+            URL-encoded JSON describing additional subscriber filters, as
+            generated by the subscriber search in the Marketing dashboard. The
+            decoded value is an array of filter groups, each group an array of
+            `{"field": ..., "op": ..., "terms": [...]}` objects. Ignored by the
+            `dynamic_bulk_*` endpoints, which use the filters saved on the
+            dynamic list.
+        except_ids:
+          type: array
+          description: >-
+            UUIDs of subscribers to exclude from the operation. Use this to
+            express "select all except these".
+          items:
+            type: string
+    BulkSubscriptionChangeResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/BulkSubscriptionJob'
+            - type: array
+              description: >-
+                The affected subscribers, returned when `subscriber_ids` was
+                supplied.
+              items:
+                $ref: '#/components/schemas/DetailedSubscriber'
+        errors:
+          type: string
+          description: Error message, present only when the operation failed
+    BulkSubscriptionJob:
+      type: object
+      properties:
+        jid:
+          type: string
+          description: >-
+            Identifier of the background job processing the change. The change
+            is applied asynchronously.
+    CampaignMailing:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the campaign mailing
+        type:
+          type: string
+          description: Resource type
+          enum:
+            - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailing_attributes'
+    CampaignMailing_attributes:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Campaign mailing subject
+        default_subject:
+          type: string
+          nullable: true
+          description: Fallback subject used when no subject is set on a send
+        template_type:
+          type: string
+          description: >-
+            Editor the mailing was authored in, for example `quill`, `bee` or
+            `html`
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        form_data:
+          type: string
+          description: JSON-encoded editor state for the mailing
+        html_part:
+          type: string
+          description: HTML body of the mailing, including the unsubscribe footer
+        text_part:
+          type: string
+          nullable: true
+          description: Plain-text body of the mailing
+        image_data:
+          type: string
+          description: >-
+            Image payload for the mailing. Only present when `with_images` is
+            supplied.
+    CampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailing'
+    CampaignMailingWriteResponse:
+      type: object
+      description: >-
+        Returned with HTTP 200 in both the success and the validation-failure
+        case. Check for the presence of `errors`.
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailingWriteResponse_data'
+        errors:
+          type: array
+          description: Validation messages, present only when the write failed
+          items:
+            type: string
+    CampaignMailingWriteResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the created or updated campaign mailing
+    CreateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/CreateCampaignMailingRequest_campaign_mailing'
+    CreateCampaignMailingRequest_campaign_mailing:
+      required:
+        - subject
+      type: object
+      properties:
+        subject:
+          type: string
+          description: >-
+            Subject line. Required, and must be unique within your account.
+        default_subject:
+          type: string
+          description: Fallback subject used when no subject is set on a send
+        from:
+          type: string
+          description: From address for the mailing
+        reply_to:
+          type: string
+          description: Reply-to address for the mailing
+        html_part:
+          type: string
+          description: >-
+            HTML body. An unsubscribe footer is appended automatically on save.
+        text_part:
+          type: string
+          description: Plain-text body
+        form_data:
+          type: string
+          description: JSON-encoded editor state, for mailings built in an editor
+        template_type:
+          type: string
+          description: >-
+            Editor the mailing is authored in, for example `quill`, `bee` or
+            `html`. Defaults to `quill`.
+          default: quill
+    UpdateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/UpdateCampaignMailingRequest_campaign_mailing'
+    UpdateCampaignMailingRequest_campaign_mailing:
+      type: object
+      description: Only the fields supplied are changed.
+      properties:
+        subject:
+          type: string
+          description: Subject line. Must remain unique within your account.
+        default_subject:
+          type: string
+          description: Fallback subject used when no subject is set on a send
+        from:
+          type: string
+          description: From address for the mailing
+        reply_to:
+          type: string
+          description: Reply-to address for the mailing
+        html_part:
+          type: string
+          description: >-
+            HTML body. The unsubscribe footer is reapplied on save.
+        text_part:
+          type: string
+          description: Plain-text body
+        form_data:
+          type: string
+          description: JSON-encoded editor state, for mailings built in an editor
+        template_type:
+          type: string
+          description: >-
+            Editor the mailing is authored in, for example `quill`, `bee` or
+            `html`
+    BulkDeleteCampaignMailingsRequest:
+      type: object
+      properties:
+        campaign_mailing_ids:
+          type: array
+          description: >-
+            UUIDs of the campaign mailings to delete. Omit for a no-op.
+          items:
+            type: string
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: >-
+        Token-based authentication. Use format: "Token token=<API_KEY>" where
+        <API_KEY> is your API key
+      name: authorization
+      in: header

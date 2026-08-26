@@ -1,0 +1,163 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.paubox.com/sdks
+description: >-
+  First-party Paubox client libraries, the CLI, the MCP server package and the n8n
+  community node. Package names were read from each SDK's own quickstart page on
+  docs.paubox.com; version and published date were read from the registry metadata
+  endpoint for each ecosystem on 2026-08-26. Every entry is first-party: all source
+  repositories live under https://github.com/Paubox.
+packages:
+  - language: javascript
+    registry: npm
+    name: paubox-node
+    url: https://www.npmjs.com/package/paubox-node
+    source: https://github.com/Paubox/paubox-node
+    install: npm install --save paubox-node
+    official: true
+    version: 1.5.0
+    published: '2026-08-21'
+  - language: javascript
+    registry: npm
+    name: paubox-cli
+    url: https://www.npmjs.com/package/paubox-cli
+    source: https://github.com/Paubox/paubox-cli
+    install: npm install -g paubox-cli
+    official: true
+    version: 1.0.1
+    published: '2026-08-25'
+    note: The Paubox CLI binary. Command surface captured in cli/paubox-cli.yml.
+  - language: javascript
+    registry: npm
+    name: n8n-nodes-paubox
+    url: https://www.npmjs.com/package/n8n-nodes-paubox
+    source: https://github.com/Paubox/n8n-nodes-paubox
+    install: npm install n8n-nodes-paubox
+    official: true
+    version: 1.0.4
+    published: '2025-10-24'
+    note: >-
+      Paubox's own n8n community node for HIPAA compliant transactional email. Oldest
+      first-party release in the set by roughly ten months.
+  - language: javascript
+    registry: npm
+    name: "@paubox/mcp"
+    url: https://www.npmjs.com/package/@paubox/mcp
+    source: https://github.com/Paubox/paubox-mcp
+    install: npx -y @paubox/mcp@latest
+    official: true
+    version: null
+    published: null
+    note: >-
+      ADVERTISED BUT NOT RESOLVABLE. docs.paubox.com/mcp-server/quickstart and
+      /mcp-server/authentication both instruct clients to run `npx -y @paubox/mcp@latest`
+      for the stdio transport, but https://registry.npmjs.org/@paubox%2Fmcp returned 404
+      on 2026-08-26, as did the unscoped `paubox-mcp`. The source repository
+      github.com/Paubox/paubox-mcp is public and was pushed 2026-08-24, so the package
+      appears to be documented ahead of publication. The hosted HTTP transport at
+      https://mcp.paubox.com/mcp is live and unaffected.
+  - language: python
+    registry: pypi
+    name: paubox-python3
+    url: https://pypi.org/project/paubox-python3/
+    source: https://github.com/Paubox/paubox-python3
+    install: pip3 install paubox-python3
+    official: true
+    version: 1.0.1
+    published: '2021-06-09'
+    note: >-
+      Decay signal: the Python SDK's last PyPI release predates the current Email API
+      documentation set and the 2026-08 release wave that refreshed the Ruby, Go, Rust,
+      PHP and Node libraries. The GitHub repository was pushed 2026-08-25, so the code
+      has moved without a corresponding publish.
+  - language: ruby
+    registry: rubygems
+    name: paubox
+    url: https://rubygems.org/gems/paubox
+    source: https://github.com/Paubox/paubox-ruby
+    install: gem install paubox
+    official: true
+    version: 1.0.0
+    published: '2026-08-21'
+  - language: ruby
+    registry: rubygems
+    name: paubox_rails
+    url: https://rubygems.org/gems/paubox_rails
+    source: https://github.com/Paubox/paubox-rails
+    install: gem 'paubox_rails'
+    official: true
+    version: 1.0.0
+    published: '2026-08-21'
+    note: ActionMailer delivery method for Rails applications.
+  - language: php
+    registry: packagist
+    name: paubox/paubox-php
+    url: https://packagist.org/packages/paubox/paubox-php
+    source: https://github.com/Paubox/paubox-php
+    install: composer require paubox/paubox-php
+    official: true
+    version: v1.2.0
+    published: '2026-08-21'
+  - language: go
+    registry: goproxy
+    name: github.com/Paubox/paubox-go
+    url: https://pkg.go.dev/github.com/Paubox/paubox-go
+    source: https://github.com/Paubox/paubox-go
+    install: go get github.com/paubox/paubox-go
+    official: true
+    version: v1.0.0
+    published: '2026-08-20'
+  - language: rust
+    registry: crates.io
+    name: paubox
+    url: https://crates.io/crates/paubox
+    source: https://github.com/Paubox/paubox-rust
+    install: cargo add paubox
+    official: true
+    version: 1.0.0
+    published: '2026-08-21'
+    note: >-
+      docs.paubox.com/rust-sdk/quickstart still tells readers to pin `paubox = "0.1"`
+      while crates.io has published 1.0.0.
+  - language: perl
+    registry: cpan
+    name: Paubox_Email_SDK
+    url: https://metacpan.org/dist/Paubox-Email-SDK
+    source: https://github.com/Paubox/paubox-perl
+    install: cpanm Paubox_Email_SDK
+    official: true
+    version: null
+    published: null
+    note: >-
+      Version not recorded. The MetaCPAN release query for this distribution did not
+      return a usable release document on 2026-08-26; rather than guess from the GitHub
+      tag, this is left null. The GitHub repository github.com/Paubox/paubox-perl was
+      pushed 2026-08-25.
+  - language: java
+    registry: none
+    name: Paubox.Email.API.jar
+    url: https://github.com/Paubox/paubox-java
+    source: https://github.com/Paubox/paubox-java
+    install: Download Paubox.Email.API.jar from the repository and add it to the classpath
+    official: true
+    version: null
+    published: null
+    note: >-
+      DISTRIBUTED AS A REPOSITORY JAR, NOT A REGISTRY ARTIFACT. The Java quickstart
+      instructs developers to download the JAR and add it to the classpath. No Maven
+      Central coordinate is published for it, so there is no metadata endpoint to read a
+      version or date from, and a consumer cannot pin a dependency.
+  - language: csharp
+    registry: none
+    name: Paubox.Email.API.dll
+    url: https://github.com/Paubox/paubox-csharp
+    source: https://github.com/Paubox/paubox-csharp
+    install: Clone the repository and reference lib/Paubox.Email.API.dll
+    official: true
+    version: null
+    published: null
+    note: >-
+      DISTRIBUTED AS A REPOSITORY DLL, NOT A NUGET PACKAGE. The C# quickstart instructs
+      developers to add lib/Paubox.Email.API.dll as a project reference. api.nuget.org
+      returned 404 for both `paubox` and `paubox.csharp` on 2026-08-26, so there is no
+      registry metadata to read and no version to pin.

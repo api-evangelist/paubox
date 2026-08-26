@@ -1,0 +1,69 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Paubox Forms API
+  version: 1.0.0
+extends: ../openapi/paubox-forms-api-openapi.yaml
+x-generated: '2026-08-26'
+x-method: generated
+x-source: >-
+  Derived from https://docs.paubox.com/forms/index, /forms/authentication and the
+  per-operation pages under /forms/*. Records the two-tier auth model, the archive
+  semantics and the "does not verify the form exists" behaviour the provider states
+  explicitly.
+actions:
+  - target: $.info
+    update:
+      x-auth-tiers:
+        public: >-
+          getPublicForm and createFormSubmission require NO credential. The form UUID is
+          the access control.
+        managed: >-
+          Every other operation requires a Paubox API key carrying the `forms` scope, sent
+          as a Bearer token. The `Token token=` format used by the Marketing API is
+          rejected.
+      x-max-request-bytes: 262144000
+      x-max-request-bytes-note: >-
+        250 MB total request size including attachments, per
+        https://docs.paubox.com/cli/commands
+  - target: $.paths['/public/form_data/{form_id}'].get
+    update:
+      x-agent-note: >-
+        Returns HTML, JSON schema and CSS. Read the JSON schema to learn which fields
+        exist and which are required before asking a respondent anything.
+  - target: $.paths['/api/forms/{form_id}/submissions'].post
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+        note: >-
+          No delete-submission operation is published. A respondent submission, including
+          any PHI it carries, cannot be withdrawn through the API.
+      x-response-note: Returns 201 with NO body. Do not expect a submission ID back.
+  - target: $.paths['/api/forms/{form_id}/submissions'].get
+    update:
+      x-payload-note: >-
+        Each submission's form_data is a JSON-ENCODED STRING, not a nested object. Parse
+        it before use.
+  - target: $.paths['/api/forms/{form_id}/archive'].post
+    update:
+      x-reversibility:
+        reversal: unarchiveForm
+        window: null
+        note: >-
+          PARTIAL. Archiving sets archived=true AND active=false; unarchiving clears only
+          archived. Restoring a form to service takes unarchiveForm THEN updateForm with
+          active:true.
+      x-existence-not-verified: >-
+        The provider states this endpoint does not verify the form exists — an unknown
+        form ID still returns 200. A 200 is NOT proof the form was found.
+  - target: $.paths['/api/forms/{form_id}/unarchive'].post
+    update:
+      x-existence-not-verified: >-
+        Same as archive: an unknown form ID returns 200.
+      x-does-not-reactivate: >-
+        active stays false until the form is separately updated with active:true.
+  - target: $.paths['/api/forms/copy'].post
+    update:
+      x-copy-semantics: >-
+        The copy starts with submission_count 0 and no vanity URL, and carries old_form_id
+        pointing at the original.

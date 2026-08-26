@@ -1,0 +1,92 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.paubox.com/email-api/limits
+description: >-
+  Paubox publishes hard sending limits (recipients, attachment size, batch size) and plan
+  quotas with overage pricing, but does NOT publish a numeric request rate limit and
+  does NOT document any rate-limit response header. An agent gets no runtime pacing
+  signal — only the 429 itself.
+docs: https://docs.paubox.com/email-api/limits
+limit_count: 4
+rate_limits:
+  - name: Max recipients per message
+    scope: per-request
+    api: Paubox Email API
+    limit: 100
+    unit: recipients
+    window: null
+    operations: [sendMessage]
+    source: https://docs.paubox.com/email-api/limits
+  - name: Max attachment size per message
+    scope: per-request
+    api: Paubox Email API
+    limit: 50
+    unit: MB (total across all attachments)
+    window: null
+    operations: [sendMessage, sendBulkMessages]
+    source: https://docs.paubox.com/email-api/limits
+  - name: Recommended bulk batch size
+    scope: per-request
+    api: Paubox Email API
+    limit: 50
+    unit: messages per request
+    window: null
+    enforced: false
+    note: Published as a provider recommendation, not a hard cap.
+    operations: [sendBulkMessages]
+    source: https://docs.paubox.com/email-api/limits
+  - name: Max form submission request size
+    scope: per-request
+    api: Paubox Forms API
+    limit: 250
+    unit: MB (total request size including attachments)
+    window: null
+    source: https://docs.paubox.com/cli/commands
+    note: Stated in the CLI reference for `paubox forms submit --attach`.
+
+quota_limits:
+  note: >-
+    Monthly send quotas are plan-attached rather than rate limits. Exceeding them does not
+    return 429 — it bills overage. See plans/paubox-plans-pricing.yml.
+  tiers:
+    - plan: Free
+      monthly_emails: 300
+      overage_per_email_usd: null
+    - plan: Pro
+      monthly_emails: 10000
+      overage_per_email_usd: 0.0130
+    - plan: Pro
+      monthly_emails: 30000
+      overage_per_email_usd: 0.0130
+    - plan: Pro
+      monthly_emails: 50000
+      overage_per_email_usd: 0.0100
+    - plan: Pro
+      monthly_emails: 100000
+      overage_per_email_usd: 0.0098
+    - plan: Pro
+      monthly_emails: null
+      overage_per_email_usd: null
+      note: Custom volume — priced on request.
+
+exhaustion:
+  status_code: 429
+  status_title: Too Many Requests
+  documented_at: https://docs.paubox.com/email-api/errors
+  guidance: 'Provider guidance is verbatim: "back off and retry."'
+
+response_headers:
+  documented: false
+  ratelimit_headers: []
+  retry_after: false
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header is documented anywhere in
+    docs.paubox.com, and no rate-limit header appears in any response definition in the
+    three OpenAPI documents. The 429 status is the only runtime signal published. This is
+    the largest single agent-readiness gap in the Paubox surface: a client cannot pace
+    itself, only react after being refused.
+
+gaps:
+  - No numeric requests-per-second or requests-per-minute limit is published for any API.
+  - No rate-limit headers are documented, so backoff interval is entirely client-chosen.
+  - 429 is not declared as a response on any operation in any OpenAPI document.

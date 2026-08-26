@@ -1,0 +1,151 @@
+# Paubox API Docs
+
+## Docs
+
+- [Introduction](https://docs.paubox.com/welcome.md): Paubox is HIPAA compliant, HITRUST certified, email infrastructure. Send transactional email, run marketing campaigns, and collect patient data via forms, all without worrying about PHI exposure.
+- [Quickstart guide](https://docs.paubox.com/email-api/quickstart.md): In this Quickstart, send your first HIPAA compliant email via Paubox Email API in under 5 minutes.
+- [General information](https://docs.paubox.com/email-api.md): Base URL, authentication, date formats, and response codes for the Paubox Email API.
+- [Authentication](https://docs.paubox.com/email-api/authentication.md): How to obtain and pass credentials to the Paubox Email API.
+- [SMTP API](https://docs.paubox.com/email-api/smtp.md)
+- [Attachments](https://docs.paubox.com/email-api/attachments.md): Attach files to emails sent via the Paubox Email API.
+- [Webhooks](https://docs.paubox.com/email-api/webhooks.md): Receive real-time delivery event notifications from the Paubox Email API.
+- [Limits and overage rates](https://docs.paubox.com/email-api/limits.md): Sending limits, rate limits, and overage pricing for the Paubox Email API.
+- [Errors](https://docs.paubox.com/email-api/errors.md): HTTP error codes returned by the Paubox Email API, with common causes and fixes.
+- [Dynamic templates](https://docs.paubox.com/email-api/dynamic-templates-guide.md): Create reusable Handlebars email templates and send personalized messages through the Paubox Email API.
+- [Migrate from Mailgun](https://docs.paubox.com/email-api/migrate-from-mailgun.md): Switch from Mailgun to the Paubox Email API for HIPAA compliant transactional email.
+- [Migrate from Postmark](https://docs.paubox.com/email-api/migrate-from-postmark.md): Switch from Postmark to the Paubox Email API for HIPAA compliant transactional email.
+- [Migrate from Resend](https://docs.paubox.com/email-api/migrate-from-resend.md): Switch from Resend to the Paubox Email API for HIPAA compliant transactional email.
+- [Migrate from SendGrid](https://docs.paubox.com/email-api/migrate-from-sendgrid.md): Switch from SendGrid v3 to the Paubox Email API for HIPAA compliant transactional email.
+- [Migrate from Amazon SES](https://docs.paubox.com/email-api/migrate-from-ses.md): Switch from Amazon SES to the Paubox Email API for HIPAA compliant transactional email.
+- [Overview](https://docs.paubox.com/marketing.md): Base URL, authentication, core concepts, and conventions for the Paubox Marketing API.
+- [Locating parameter values](https://docs.paubox.com/marketing/parameter-values.md): How to find parameter values like campaign_mailing_id, subscription_list_id, and campaign_mailing_send_id in the Paubox Marketing web dashboard.
+- [Quickstart](https://docs.paubox.com/mcp-server/quickstart.md): Connect the Paubox MCP Server to Claude, Claude Desktop, Claude Code, or any MCP-compatible client.
+- [Paubox MCP Server](https://docs.paubox.com/mcp-server/index.md): The Paubox MCP Server gives AI assistants HIPAA compliant email and secure form tools through the Model Context Protocol.
+- [MCP tools](https://docs.paubox.com/mcp-server/tools.md): Reference for all tools exposed by the Paubox MCP Server.
+- [Authentication](https://docs.paubox.com/mcp-server/authentication.md): How to obtain and pass credentials to the Paubox MCP Server.
+- [SDKs](https://docs.paubox.com/sdks.md): Official client libraries for the Paubox Email API and Forms API.
+- [Paubox C# SDK](https://docs.paubox.com/csharp-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from .NET applications using the official Paubox C# SDK.
+- [Quickstart](https://docs.paubox.com/csharp-sdk/quickstart.md): Add the Paubox C# SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/csharp-sdk/authentication.md): Configure your Paubox API credentials for the C# SDK.
+- [Email client](https://docs.paubox.com/csharp-sdk/email-client.md): Full reference for the Paubox C# SDK Email API client: sending messages, bulk sending, delivery tracking, dynamic templates, and error handling.
+- [Forms client](https://docs.paubox.com/csharp-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the C# SDK.
+- [Paubox Go SDK](https://docs.paubox.com/go-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Go applications using the official Paubox Go SDK.
+- [Quickstart](https://docs.paubox.com/go-sdk/quickstart.md): Install the Paubox Go SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/go-sdk/authentication.md): Configure your Paubox API credentials for the Go SDK.
+- [Email client](https://docs.paubox.com/go-sdk/email-client.md): Full reference for the Paubox Go SDK Email API client: sending messages, batch sending, delivery tracking, dynamic templates, and error handling.
+- [Forms client](https://docs.paubox.com/go-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Go SDK.
+- [Paubox Java SDK](https://docs.paubox.com/java-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Java applications using the official Paubox Java SDK.
+- [Quickstart](https://docs.paubox.com/java-sdk/quickstart.md): Add the Paubox Java SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/java-sdk/authentication.md): Configure your Paubox API credentials for the Java SDK.
+- [Email client](https://docs.paubox.com/java-sdk/email-client.md): Full reference for the Paubox Java SDK email client: building messages, sending email, tracking delivery, and error handling.
+- [Forms client](https://docs.paubox.com/java-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Java SDK.
+- [Paubox Node.js SDK](https://docs.paubox.com/node-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Node.js applications using the official Paubox Node.js SDK.
+- [Quickstart](https://docs.paubox.com/node-sdk/quickstart.md): Install the Paubox Node.js SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/node-sdk/authentication.md): Configure your Paubox API credentials for the Node.js SDK.
+- [Email client](https://docs.paubox.com/node-sdk/email-client.md): Full reference for the Paubox Node.js SDK email service: building messages, sending email, tracking delivery, dynamic templates, and error handling.
+- [Forms client](https://docs.paubox.com/node-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Node.js SDK.
+- [Paubox Perl SDK](https://docs.paubox.com/perl-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Perl applications using the official Paubox Perl SDK.
+- [Quickstart](https://docs.paubox.com/perl-sdk/quickstart.md): Install the Paubox Perl SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/perl-sdk/authentication.md): Configure your Paubox API credentials for the Perl SDK.
+- [Email client](https://docs.paubox.com/perl-sdk/email-client.md): Full reference for the Paubox Perl SDK Email API client: building messages, sending email, tracking delivery, and error handling.
+- [Forms client](https://docs.paubox.com/perl-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Perl SDK.
+- [Paubox PHP SDK](https://docs.paubox.com/php-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from PHP applications using the official Paubox PHP SDK.
+- [Quickstart](https://docs.paubox.com/php-sdk/quickstart.md): Install the Paubox PHP SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/php-sdk/authentication.md): Configure your Paubox API key for the PHP SDK.
+- [Email client](https://docs.paubox.com/php-sdk/email-client.md): Full reference for the Paubox PHP SDK Email API client: building messages, sending email, tracking delivery, and error handling.
+- [Forms client](https://docs.paubox.com/php-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the PHP SDK.
+- [Paubox Python SDK](https://docs.paubox.com/python-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Python 3 applications using the official Paubox Python SDK.
+- [Quickstart](https://docs.paubox.com/python-sdk/quickstart.md): Install the Paubox Python SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/python-sdk/authentication.md): Configure your Paubox API credentials for the Python SDK.
+- [Email client](https://docs.paubox.com/python-sdk/email-client.md): Full reference for the Paubox Python SDK email client: composing messages, sending email, tracking delivery, and error handling.
+- [Forms client](https://docs.paubox.com/python-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Python SDK.
+- [Paubox Rails SDK](https://docs.paubox.com/rails-sdk/index.md): Send HIPAA compliant email from Rails applications using ActionMailer and the official Paubox Rails gem.
+- [Quickstart](https://docs.paubox.com/rails-sdk/quickstart.md): Add the Paubox Rails gem, configure credentials, and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/rails-sdk/authentication.md): Configure your Paubox API credentials in a Rails initializer.
+- [Email delivery](https://docs.paubox.com/rails-sdk/email-delivery.md): Send HIPAA compliant email through ActionMailer using the Paubox Rails gem.
+- [Forms client](https://docs.paubox.com/rails-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Rails SDK.
+- [Paubox Ruby SDK](https://docs.paubox.com/ruby-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Ruby applications using the official Paubox Ruby gem.
+- [Quickstart](https://docs.paubox.com/ruby-sdk/quickstart.md): Install the Paubox Ruby gem and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/ruby-sdk/authentication.md): Configure your Paubox API credentials for the Ruby SDK.
+- [Email client](https://docs.paubox.com/ruby-sdk/email-client.md): Full reference for the Paubox Ruby SDK email client: building messages, sending email, tracking delivery, dynamic templates, and error handling.
+- [Forms client](https://docs.paubox.com/ruby-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Ruby SDK.
+- [Paubox Rust SDK](https://docs.paubox.com/rust-sdk/index.md): Send HIPAA compliant email and submit Paubox Forms from Rust applications using the official Paubox Rust SDK.
+- [Quickstart](https://docs.paubox.com/rust-sdk/quickstart.md): Install the Paubox Rust SDK and send your first HIPAA compliant email in minutes.
+- [Authentication](https://docs.paubox.com/rust-sdk/authentication.md): Configure your Paubox API credentials for the Rust SDK.
+- [Email client](https://docs.paubox.com/rust-sdk/email-client.md): Full reference for the Paubox Rust SDK email client: building messages, sending email, tracking delivery, and error handling.
+- [Forms client](https://docs.paubox.com/rust-sdk/forms-client.md): Retrieve Paubox Form schemas and submit form responses using the Rust SDK.
+- [Paubox CLI](https://docs.paubox.com/cli/index.md): Send HIPAA compliant email and drive Paubox Forms from the terminal or CI pipelines using the Paubox CLI.
+- [Quickstart](https://docs.paubox.com/cli/quickstart.md): Install the Paubox CLI, authenticate, and send your first email in under five minutes.
+- [Installation](https://docs.paubox.com/cli/installation.md): Install the Paubox CLI on macOS, Windows, or Linux.
+- [Authentication](https://docs.paubox.com/cli/authentication.md): Store and manage Paubox API credentials with the CLI.
+- [Commands](https://docs.paubox.com/cli/commands.md): Full reference for all Paubox CLI commands and global options.
+- [Paubox Forms API](https://docs.paubox.com/forms/index.md): Build, host, and process HIPAA compliant forms directly inside your application.
+- [Authentication](https://docs.paubox.com/forms/authentication.md): How to authenticate to the Paubox Forms API with a scoped API key.
+- [Send a message](https://docs.paubox.com/email-api/messages.md)
+- [Send bulk messages](https://docs.paubox.com/email-api/bulk-messages.md): Sends multiple messages in one request. Paubox recommends batches of 50 or fewer. Source tracking IDs are returned in the same order as the messages array.
+- [Get message receipt](https://docs.paubox.com/email-api/message-receipt.md): Retrieve delivery status, open tracking, and click tracking information for a sent message
+- [List dynamic templates](https://docs.paubox.com/email-api/dynamic-templates.md): Retrieve all dynamic templates for your organization
+- [Create a dynamic template](https://docs.paubox.com/email-api/dynamic-templates/create.md): Upload a new Handlebars template for dynamic content generation
+- [Get a dynamic template](https://docs.paubox.com/email-api/dynamic-templates/get.md): Retrieve a specific dynamic template by ID
+- [Update a dynamic template](https://docs.paubox.com/email-api/dynamic-templates/update.md): Update an existing Handlebars template
+- [Delete a dynamic template](https://docs.paubox.com/email-api/dynamic-templates/delete.md): Delete a specific dynamic template by ID
+- [Send a templated message](https://docs.paubox.com/email-api/templated-messages.md): Send an email using a dynamic template with variable substitution
+- [List campaign mailings](https://docs.paubox.com/marketing/campaigns.md): Return json data about Paubox Marketing Campaign Emails
+- [Create a campaign](https://docs.paubox.com/marketing/campaigns/create.md): Creates a campaign mailing (a marketing email) for the authenticated customer. Creating a mailing only stores the content; use [send a campaign](/marketing/campaigns/send) or [schedule a campaign](/marketing/campaigns/schedule) to deliver it.
+- [Fetch a campaign](https://docs.paubox.com/marketing/campaigns/get.md): Returns a single campaign mailing, including its content. Unlike the list endpoint, this response carries `html_part`, `text_part` and `form_data`, and omits the aggregate delivery counts.
+- [Update a campaign](https://docs.paubox.com/marketing/campaigns/update.md): Updates a campaign mailing. Only the fields you send are changed. `PUT` is accepted as an equivalent to `PATCH`.
+- [Send a campaign mailing](https://docs.paubox.com/marketing/campaigns/send.md): Send campaign email to recipients. The email message must be created within the Paubox Marketing web interface in order to use this to trigger a send.
+- [Schedule a campaign mailing](https://docs.paubox.com/marketing/campaigns/schedule.md): Schedules a new email campaign mailing with specified details for delivery at a future time
+- [Send a test email](https://docs.paubox.com/marketing/campaigns/send-test-email.md): Sends a one-off preview of the campaign mailing to a single address, so you can check rendering before sending to a list. The subject is prefixed with `[Test]`, and the message is sent from your account's default brand `from_email` and `from_name`.
+- [Bulk delete campaigns](https://docs.paubox.com/marketing/campaigns/bulk-delete.md): Permanently deletes the campaign mailings identified by `campaign_mailing_ids`. There is no single-delete endpoint; delete one mailing by passing an array of one ID.
+- [List drip campaigns](https://docs.paubox.com/marketing/drip-campaigns.md): Return json data about Drip Campaigns
+- [Get a drip campaign](https://docs.paubox.com/marketing/drip-campaigns/get.md): Returns json data about a drip campaign
+- [Update a drip campaign](https://docs.paubox.com/marketing/drip-campaigns/update.md): Updates drip campaign attributes
+- [Start a drip campaign](https://docs.paubox.com/marketing/drip-campaigns/start.md): Starts a drip campaign
+- [Pause a drip campaign](https://docs.paubox.com/marketing/drip-campaigns/pause.md): Pauses a drip campaign
+- [List subscribers](https://docs.paubox.com/marketing/subscribers.md): Return json data about subscribers
+- [Create a subscriber](https://docs.paubox.com/marketing/subscribers/create.md): Creates a subscriber record. Adds record to subscription list if specified otherwise adds to all contacts.
+- [Get a subscriber](https://docs.paubox.com/marketing/subscribers/get.md): Return json data about subscriber
+- [Update a subscriber](https://docs.paubox.com/marketing/subscribers/update.md): Updates a subscriber record
+- [Bulk create subscribers](https://docs.paubox.com/marketing/subscribers/bulk-create.md): Creates one or more subscriber records. Adds to subscription list if specified, otherwise adds to all contacts.
+- [Bulk delete subscribers](https://docs.paubox.com/marketing/subscribers/bulk-delete.md): Deletes one or more subscriber records. Removes from subscription list if specified, otherwise removed from all contacts.
+- [List subscriptions](https://docs.paubox.com/marketing/subscriptions.md): Returns every subscription belonging to the authenticated customer. A subscription is the join between a subscriber and a subscription list (or a dynamic list), and it carries the `unsubscribed_at` timestamp that marks a list-level opt-out.
+- [Create a subscription](https://docs.paubox.com/marketing/subscriptions/create.md): Subscribes an existing subscriber to an existing subscription list.
+- [Fetch a subscription](https://docs.paubox.com/marketing/subscriptions/get.md): Returns a single subscription by its UUID.
+- [Unsubscribe a subscription](https://docs.paubox.com/marketing/subscriptions/delete.md): Unsubscribes the subscriber from the list this subscription belongs to by stamping `unsubscribed_at`. The subscription record itself is kept, and the subscriber stays subscribed to every other list and is not globally opted out.
+- [Subscribe subscribers](https://docs.paubox.com/marketing/subscriptions/subscribe.md): Re-subscribes one or more subscribers, identified by their UUIDs.
+- [Unsubscribe subscribers](https://docs.paubox.com/marketing/subscriptions/unsubscribe.md): Unsubscribes one or more subscribers, identified by their UUIDs.
+- [Bulk global subscribe](https://docs.paubox.com/marketing/subscriptions/bulk-global-subscribe.md): Clears the global opt-out for a whole subscription list without having to enumerate every subscriber.
+- [Bulk global unsubscribe](https://docs.paubox.com/marketing/subscriptions/bulk-global-unsubscribe.md): Globally opts out every subscriber in a subscription list without having to enumerate them.
+- [Bulk subscribe a dynamic list](https://docs.paubox.com/marketing/subscriptions/dynamic-bulk-subscribe.md): The dynamic list counterpart to [bulk global subscribe](/marketing/subscriptions/bulk-global-subscribe).
+- [Bulk unsubscribe a dynamic list](https://docs.paubox.com/marketing/subscriptions/dynamic-bulk-unsubscribe.md): The dynamic list counterpart to [bulk global unsubscribe](/marketing/subscriptions/bulk-global-unsubscribe).
+- [List subscription lists](https://docs.paubox.com/marketing/lists.md): Return json data about subscription lists
+- [Create a subscription list](https://docs.paubox.com/marketing/lists/create.md): Creates a subscription list record
+- [Update a subscription list](https://docs.paubox.com/marketing/lists/update.md): Updates a subscription list record
+- [Delete a subscription list](https://docs.paubox.com/marketing/lists/delete.md): Deletes subscription list record.
+- [List tracking links](https://docs.paubox.com/marketing/tracking-links.md): Return a list of json data for all tracking links associated to a campaign mailing send or campaign mailing delivery.
+- [Campaign analytics](https://docs.paubox.com/marketing/analytics/campaigns.md): Return json data statistics about campaigns sent
+- [Campaign sends table](https://docs.paubox.com/marketing/analytics/campaign-sends.md): Return json data information about campaigns sent
+- [Campaign deliveries table](https://docs.paubox.com/marketing/analytics/deliveries.md): Returns json data about campaign deliveries sent
+- [Tracking links by unique link](https://docs.paubox.com/marketing/analytics/tracking-links.md): Returns json data about interactions with tracking links
+- [Subscribers by tracking link](https://docs.paubox.com/marketing/analytics/subscribers-by-link.md): Returns json data about subscribers for a specific tracking link
+- [Get form metadata](https://docs.paubox.com/forms/get-form.md): Returns the full form definition (HTML, JSON schema, CSS) for a given form. Called by the form embed before rendering a form to a respondent. No authentication required.
+- [Submit a form response](https://docs.paubox.com/forms/submit-form.md): Submits a respondent's answers for a form. No authentication required. On success, the service stores the submission, increments the form's submission count, emails recipients (if configured), and returns 201 with no body.
+- [List forms](https://docs.paubox.com/forms/list-forms.md): Returns a paginated list of forms belonging to a customer. Supports filtering by form ID, title/description search, and archived/active state, plus ordering and pagination.
+- [Create a form](https://docs.paubox.com/forms/create-form.md): Creates a new form. Returns the UUID of the created form.
+- [Get a form](https://docs.paubox.com/forms/get-form-details.md): Returns the full form definition by ID, including inactive and archived forms (unlike the public endpoint, which only serves renderable forms to respondents).
+- [Update a form](https://docs.paubox.com/forms/update-form.md): Updates a form. This is a partial update: any fields omitted from the request body are left unchanged.
+- [Copy a form](https://docs.paubox.com/forms/copy-form.md): Creates a copy of an existing form with a new title. The copy starts with a submission count of 0 and no vanity URL. Returns the full new form object.
+- [Archive a form](https://docs.paubox.com/forms/archive-form.md): Archives a form. Archiving also deactivates the form (sets `active` to false), so it stops accepting submissions. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
+- [Unarchive a form](https://docs.paubox.com/forms/unarchive-form.md): Unarchives a form. This does not re-activate it: `active` stays false until the form is updated with `active: true`. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
+- [Get form statistics](https://docs.paubox.com/forms/form-stats.md): Returns aggregate form statistics for a customer: the number of active forms, the total submission count, and the number of submissions received in the last 7 days.
+- [List form submissions](https://docs.paubox.com/forms/list-submissions.md): Returns a paginated list of submissions for a form. Each submission's `form_data` field is a JSON-encoded string of the respondent's answers.
+- [Export submissions as CSV](https://docs.paubox.com/forms/export-submissions-csv.md): Exports all submissions of a form as a CSV attachment (filename `form_data.csv`). The first column is "Created At", followed by one column per form field, using the field labels from the form definition.
+- [Export a submission as CSV](https://docs.paubox.com/forms/export-submission-csv.md): Exports a single submission as a CSV attachment (filename `form_data.csv`). Uses the same column layout as the full export (a "Created At" column followed by one column per form field), with a single data row.
+- [Export a submission as PDF](https://docs.paubox.com/forms/export-submission-pdf.md): Exports a single submission as a PDF attachment (filename `form_data.pdf`). For signable forms, the PDF includes the respondent's signature images.
+
+## OpenAPI Specs
+
+- [openapi2](https://docs.paubox.com/openapi2.yaml)
+- [openapi-forms](https://docs.paubox.com/openapi-forms.yaml)
+- [openapi1](https://docs.paubox.com/openapi1.yaml)

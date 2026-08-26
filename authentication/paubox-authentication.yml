@@ -1,0 +1,109 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.paubox.com/email-api/authentication,
+  https://docs.paubox.com/forms/authentication, https://docs.paubox.com/marketing,
+  https://docs.paubox.com/mcp-server/authentication and
+  https://docs.paubox.com/email-api/smtp — cross-checked against the securitySchemes
+  declared in the three OpenAPI documents under openapi/.
+description: >-
+  Paubox authenticates with static API keys issued per verified sending domain. There is
+  no OAuth on any of the three REST APIs — OAuth 2.1 exists only in front of the MCP
+  server. The header FORMAT differs between products, which is the most common
+  integration mistake: Bearer for Email and Forms, `Token token=` for Marketing.
+summary:
+  types: [apiKey, http, oauth2]
+  api_key_in: [header]
+  oauth2_scope: mcp-server-only
+  key_issuance: Paubox dashboard, per verified sending domain. Displayed once at creation.
+  key_scoping: >-
+    Keys are scoped per product. A key scoped only to the Email API is rejected by the
+    Forms API with 401.
+
+schemes:
+  - name: PauboxToken
+    api: Paubox Email API
+    type: http
+    scheme: bearer
+    location: 'Authorization header'
+    format: 'Authorization: Bearer YOUR_API_KEY'
+    legacy_format: 'Authorization: Token token=YOUR_API_KEY'
+    legacy_note: Still accepted; provider states Bearer is preferred for new integrations.
+    docs: https://docs.paubox.com/email-api/authentication
+    sources:
+      - openapi/paubox-email-api-openapi.yaml
+  - name: bearerAuth
+    api: Paubox Forms API
+    type: http
+    scheme: bearer
+    location: 'Authorization header'
+    format: 'Authorization: Bearer YOUR_API_KEY'
+    required_scope: forms
+    docs: https://docs.paubox.com/forms/authentication
+    note: >-
+      The Forms API does NOT accept the `Token token=` format. Two operations —
+      getPublicForm and createFormSubmission — take no credential at all; the form UUID is
+      the access control.
+    sources:
+      - openapi/paubox-forms-api-openapi.yaml
+  - name: TokenAuth
+    api: Paubox Marketing API
+    type: apiKey
+    in: header
+    parameter: authorization
+    format: 'Authorization: Token token=<API_KEY>'
+    docs: https://docs.paubox.com/marketing
+    note: >-
+      Bearer is not documented for Marketing. Marketing is a separately purchased plan, so
+      an Email API key will not necessarily work here.
+    sources:
+      - openapi/paubox-marketing-api-openapi.yaml
+  - name: SMTP
+    api: Paubox Email API (SMTP transport)
+    type: http
+    scheme: basic
+    host: smtp.paubox.com
+    port: 587
+    username: apikey
+    password: your Paubox API key
+    docs: https://docs.paubox.com/email-api/smtp
+  - name: MCP OAuth
+    api: Paubox MCP Server
+    type: oauth2
+    issuer: https://mcp.paubox.com
+    authorization_endpoint: https://mcp.paubox.com/oauth/authorize
+    token_endpoint: https://mcp.paubox.com/oauth/token
+    registration_endpoint: https://mcp.paubox.com/register
+    response_types_supported: [code]
+    grant_types_supported: [authorization_code, refresh_token]
+    code_challenge_methods_supported: [S256]
+    token_endpoint_auth_methods_supported: [none]
+    scopes_supported: null
+    scopes_note: >-
+      The authorization-server metadata declares NO scopes_supported, so there is no
+      published OAuth scope vocabulary. This is why no scopes/ artifact is emitted.
+    alternatives:
+      - 'x-paubox-api-key: <api key> request header'
+      - PAUBOX_API_KEY environment variable (stdio transport)
+      - optional apiKey parameter on every tool (HTTP transport only)
+    docs: https://docs.paubox.com/mcp-server/authentication
+    discovery: well-known/paubox-mcp-oauth-authorization-server.json
+
+key_management:
+  rotation: >-
+    Each domain can hold multiple active keys, so rotation is: create the new key, cut
+    traffic over, then revoke the old one.
+  revocation: Provider advises immediate revocation on exposure or staff departure.
+  storage_guidance: >-
+    Provider warns against committing keys to source control and recommends environment
+    variables or a secrets manager. The CLI stores credentials in the OS keychain, falling
+    back to ~/.config/paubox/config.json at 0600.
+
+gaps:
+  - No OAuth, no scopes and no token exchange on any of the three REST APIs.
+  - >-
+    No scope vocabulary published for the MCP OAuth server either — scopes_supported is
+    absent from the authorization-server metadata.
+  - >-
+    Three different header conventions across three APIs on one host, with no shared
+    documentation page reconciling them.

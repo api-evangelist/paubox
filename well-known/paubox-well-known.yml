@@ -1,0 +1,85 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live probes of the /.well-known/ discovery surface on every apis.yml baseURL host and
+  every OpenAPI servers[] host (api.paubox.com), plus the docs host (docs.paubox.com),
+  the marketing host (www.paubox.com) and the MCP host (mcp.paubox.com). Status is the
+  HTTP code observed at fetch time on 2026-08-26.
+description: >-
+  Paubox serves no security.txt and no api-catalog on any host. It does serve the two MCP
+  OAuth discovery documents on mcp.paubox.com and an A2A agent card on docs.paubox.com
+  (the latter is captured separately under a2a/). www.paubox.com answers 404 with an HTML
+  body for every /.well-known/ path; those are recorded as 404, not as documents.
+hosts:
+  - host: https://www.paubox.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.paubox.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://docs.paubox.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 200
+        type: application/json
+        file: ../a2a/paubox-agent-card.json
+        note: >-
+          Real A2A AgentCard JSON object. Captured verbatim under a2a/ and graded in
+          a2a/paubox-a2a.yml.
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://mcp.paubox.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        type: application/json
+        file: paubox-mcp-oauth-authorization-server.json
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        type: application/json
+        file: paubox-mcp-oauth-protected-resource.json
+      - path: /.well-known/agent-card.json
+        status: 404
+        note: 200-shaped SPA shell is not served here; this host returns a real 404 HTML page.

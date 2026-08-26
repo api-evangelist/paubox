@@ -1,0 +1,258 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.paubox.com/email-api (General information), /email-api/authentication,
+  /email-api/errors, /email-api/limits, /email-api/webhooks, /forms/authentication and
+  /marketing, cross-checked against openapi/paubox-email-api-openapi.yaml,
+  openapi/paubox-forms-api-openapi.yaml and openapi/paubox-marketing-api-openapi.yaml.
+description: >-
+  Cross-cutting request/response semantics for the three Paubox REST APIs. Paubox runs
+  three separately-versioned products behind one host, and they do NOT share conventions:
+  authentication header format, pagination style and error envelope all differ between
+  Email, Marketing and Forms. Anything an agent assumes from one will break on another.
+
+base_url: https://api.paubox.com
+api_style: REST over HTTPS, JSON request and response bodies
+per_api_bases:
+  email: https://api.paubox.com/v1/email
+  marketing: https://api.paubox.com/v1/marketing
+  forms: https://api.paubox.com/v1/forms
+
+authentication:
+  scheme_varies_by_api: true
+  email:
+    preferred: 'Authorization: Bearer YOUR_API_KEY'
+    legacy_accepted: 'Authorization: Token token=YOUR_API_KEY'
+  marketing:
+    scheme: 'Authorization: Token token=<API_KEY>'
+    note: Bearer is not documented for Marketing.
+  forms:
+    scheme: 'Authorization: Bearer YOUR_API_KEY'
+    scope_required: forms
+    note: >-
+      Docs state explicitly that the Forms API does NOT accept the `Token token=` format.
+      A key scoped only to another product is rejected 401.
+    public_endpoints:
+      - getPublicForm
+      - createFormSubmission
+    public_endpoint_note: >-
+      These two take no credential; the form UUID is the access control.
+  key_issuance: Per verified sending domain, from the Paubox dashboard. Displayed once at creation.
+  rotation_guidance: >-
+    Provider documents multiple concurrent active keys per domain; generate the new key
+    before revoking the old one.
+  docs: https://docs.paubox.com/email-api/authentication
+  detail: authentication/paubox-authentication.yml
+
+idempotency:
+  supported: false
+  mechanism: null
+  evidence: >-
+    No Idempotency-Key header, no idempotency parameter and no replay semantics appear in
+    any of the three OpenAPI documents or anywhere in docs.paubox.com. Searched the
+    published llms.txt index and the Email API general-information, errors and limits
+    pages.
+  consequence: >-
+    A retried POST /messages sends a second email. A retried POST /campaign_mailing_sends
+    may send a campaign twice. Agents must deduplicate client-side using the
+    sourceTrackingId returned by a successful send, and must treat a send that failed
+    before returning an ID as an unknown outcome rather than a safe retry.
+  docs: null
+
+pagination:
+  style_varies_by_api: true
+  email:
+    style: none
+    note: listDynamicTemplates returns the full template set with no page parameters.
+  forms:
+    style: page-number
+    request_params:
+      page: page number
+      per_page: page size
+    response_fields:
+      page_info: PageInfo object carried alongside the results array
+    operations: [listForms, listFormSubmissions]
+  marketing:
+    style: page-number
+    note: >-
+      List operations accept page/per_page style parameters. The response envelope is a
+      JSON:API-flavoured {data: [{id, type, attributes}]} shape.
+
+response_envelope:
+  email: >-
+    Nested under `data` on requests (data.message...) and returns `data` /
+    `sourceTrackingId` on responses.
+  marketing: >-
+    JSON:API-flavoured — top-level `data`, each member carrying `id`, `type` and
+    `attributes`. Write requests wrap the payload in a resource key
+    (campaign_mailing, subscriber, subscription, drip_campaign).
+  forms: Plain JSON objects and arrays; list responses carry a PageInfo block.
+
+error_envelope:
+  format: vendor-json
+  rfc9457: false
+  email_shape: '{"errors": "Sender domain not verified"}'
+  note: >-
+    Not application/problem+json. The Email API returns a JSON object whose `errors` (or
+    `message`) field carries a human-readable string, not a machine-readable code. The
+    Marketing OpenAPI declares an `Error` schema; the Forms OpenAPI declares plain error
+    objects. There is no shared error type across the three APIs.
+  detail: errors/paubox-problem-types.yml
+  docs: https://docs.paubox.com/email-api/errors
+
+rate_limit_signaling:
+  status_on_exhaustion: 429
+  response_headers_documented: false
+  note: >-
+    Docs instruct clients to "back off and retry" on 429 but publish NO RateLimit-*,
+    X-RateLimit-* or Retry-After header contract, and no numeric per-second or per-minute
+    limit. An agent has no runtime signal to pace against — only the 429 itself.
+  detail: rate-limits/paubox-rate-limits.yml
+
+versioning:
+  scheme: URL path
+  current: v1
+  evidence: All three base URLs are https://api.paubox.com/v1/<product>.
+  header_versioning: false
+  detail: lifecycle/paubox-lifecycle.yml
+
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation header is documented. The nearest equivalent is the
+    per-message `sourceTrackingId` returned by sendMessage/sendBulkMessages, which is a
+    message handle rather than a request trace, and is also the key echoed in webhook
+    payloads as `source_tracking_id`.
+
+date_format:
+  requests: RFC 2822 strings, e.g. "Fri, 16 Feb 2018 13:00:00 GMT"
+  webhooks: ISO 8601 with milliseconds, e.g. "2022-04-18T20:27:25.379Z"
+  note: The two formats differ between the request surface and the event surface.
+
+field_expansion:
+  supported: false
+metadata:
+  supported: true
+  mechanism: >-
+    Email API accepts arbitrary custom headers on a message; they are echoed back in
+    webhook payloads under `custom_headers`. Marketing subscribers carry account-defined
+    custom fields.
+
+dry_run_mode:
+  supported: partial
+  grade: documented
+  detail:
+    email: >-
+      No test mode, no sandbox key prefix, no simulated send. The Free plan (300
+      emails/month) is a production quota, not a sandbox.
+    marketing: >-
+      Two-step rehearsal exists. createCampaignMailing stores content WITHOUT delivering,
+      and sendCampaignMailingTestEmail (GET
+      /campaign_mailings/{id}/send_test_email) sends a single-address preview with the
+      subject prefixed "[Test]". This is the only documented rehearsal path in the
+      Paubox surface.
+    forms: No dry-run submission path.
+
+reversibility:
+  grade: documented
+  summary: >-
+    Paubox publishes real reversal operations on the subscription and form surfaces and
+    NONE on the delivery surface. No reversal window is stated anywhere in the docs for
+    any operation, so nothing here grades as verified — an agent can learn WHETHER an
+    action can be undone but not FOR HOW LONG.
+  write_surfaces:
+    - surface: Email — send a message
+      operation: sendMessage
+      reversal: null
+      window: null
+      note: >-
+        No unsend, recall, cancel or void operation exists. Delivery is final from the
+        moment the call returns. This is the highest-consequence irreversible action in
+        the Paubox surface and it is also the one with no idempotency protection.
+      docs: https://docs.paubox.com/email-api/messages
+    - surface: Email — send bulk messages
+      operation: sendBulkMessages
+      reversal: null
+      window: null
+    - surface: Email — delete a dynamic template
+      operation: deleteDynamicTemplate
+      reversal: createDynamicTemplate
+      window: null
+      note: >-
+        Not a true restore: the template must be re-uploaded and receives a new ID.
+        Anything referencing the old template ID stays broken.
+    - surface: Marketing — send a campaign
+      operation: sendCampaignMailing
+      reversal: null
+      window: null
+    - surface: Marketing — schedule a campaign
+      operation: scheduleCampaignMailing
+      reversal: null
+      window: null
+      note: >-
+        No unschedule or cancel operation is published. Once a mailing is scheduled there
+        is no documented API path to stop it before it sends.
+    - surface: Marketing — bulk delete campaign mailings
+      operation: bulkDeleteCampaignMailings
+      reversal: null
+      window: null
+      note: Docs state deletion is permanent. There is no single-delete operation.
+    - surface: Marketing — subscribe a subscriber to a list
+      operation: createSubscription
+      reversal: deleteSubscription
+      window: null
+      note: >-
+        DELETE /subscriptions/{id} stamps unsubscribed_at and KEEPS the record; the
+        subscriber remains on every other list and is not globally opted out. Fully
+        reversible in the other direction via subscribeSubscribers.
+      docs: https://docs.paubox.com/marketing/subscriptions/delete
+    - surface: Marketing — unsubscribe subscribers
+      operation: unsubscribeSubscribers
+      reversal: subscribeSubscribers
+      window: null
+      docs: https://docs.paubox.com/marketing/subscriptions/subscribe
+    - surface: Marketing — bulk global unsubscribe a list
+      operation: bulkGlobalUnsubscribe
+      reversal: bulkGlobalSubscribe
+      window: null
+      docs: https://docs.paubox.com/marketing/subscriptions/bulk-global-subscribe
+    - surface: Marketing — bulk unsubscribe a dynamic list
+      operation: dynamicBulkUnsubscribe
+      reversal: dynamicBulkSubscribe
+      window: null
+    - surface: Marketing — pause a drip campaign
+      operation: pauseDripCampaign
+      reversal: startDripCampaign
+      window: null
+    - surface: Marketing — bulk delete subscribers
+      operation: bulkDeleteSubscribers
+      reversal: null
+      window: null
+    - surface: Forms — archive a form
+      operation: archiveForm
+      reversal: unarchiveForm
+      window: null
+      note: >-
+        PARTIAL REVERSAL. Archiving sets archived=true AND active=false; unarchiving only
+        clears archived. The docs state active stays false until the form is separately
+        updated with active:true, so restoring a form to service takes unarchiveForm THEN
+        updateForm. Both archive operations also return 200 for a form ID that does not
+        exist, so a 200 is not proof the reversal landed.
+      docs: https://docs.paubox.com/forms/unarchive-form
+    - surface: Forms — submit a form response
+      operation: createFormSubmission
+      reversal: null
+      window: null
+      note: >-
+        No delete-submission operation is published. A respondent submission, including
+        any PHI it carries, cannot be withdrawn through the API.
+
+webhooks:
+  detail: asyncapi/paubox-email-webhooks.yml
+
+cross_links:
+  errors: errors/paubox-problem-types.yml
+  lifecycle: lifecycle/paubox-lifecycle.yml
+  authentication: authentication/paubox-authentication.yml
+  rate_limits: rate-limits/paubox-rate-limits.yml
+  data_model: data-model/paubox-data-model.yml

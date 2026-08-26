@@ -1,0 +1,121 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.paubox.com/email-api/errors and
+  https://docs.paubox.com/forms/authentication, enriched with the 4xx/5xx responses
+  declared in openapi/paubox-email-api-openapi.yaml,
+  openapi/paubox-forms-api-openapi.yaml and openapi/paubox-marketing-api-openapi.yaml.
+description: >-
+  Paubox does not publish a numeric error-code registry and does not use RFC 9457
+  application/problem+json. Errors are plain HTTP status codes with a JSON body carrying a
+  human-readable string. This catalog records the documented status semantics, the
+  envelope, and the per-status remediation the provider publishes.
+format: vendor-json
+rfc9457: false
+envelope:
+  email: '{"errors": "<human readable message>"}'
+  email_alt: 'Some responses use a `message` field instead of `errors`.'
+  marketing: 'Declared as an `Error` schema in the Marketing OpenAPI.'
+  forms: 'Plain JSON error objects; no shared schema across the three APIs.'
+docs: https://docs.paubox.com/email-api/errors
+
+problem_types:
+  - status: 400
+    title: Bad Request
+    meaning: Invalid request body.
+    retryable: false
+    remediation: >-
+      Provider publishes a five-point checklist: (1) the `from` domain is not verified —
+      sending from an unverified domain, including @gmail.com, always returns 400;
+      (2) `data.message.headers.subject` is missing; (3) `data.message.recipients` is
+      empty; (4) an attachment's `content` is not valid base64; (5) neither text/plain nor
+      text/html is present in `data.message.content`.
+    declared_on:
+      - sendMessage
+      - sendBulkMessages
+      - listDynamicTemplates
+      - createDynamicTemplate
+      - updateDynamicTemplate
+      - sendTemplatedMessage
+      - createFormSubmission
+      - most Marketing operations
+  - status: 401
+    title: Unauthorized
+    meaning: API key missing, malformed, or (Forms) lacking the required `forms` scope.
+    retryable: false
+    remediation: >-
+      Check the Authorization header is present and uses the right format for the API —
+      Bearer for Email and Forms, `Token token=` for Marketing. For Forms, confirm the key
+      carries the `forms` scope; a key scoped only to the Email API is rejected here.
+    declared_on: [every authenticated Forms operation, every Marketing operation]
+  - status: 403
+    title: Forbidden
+    meaning: >-
+      Key is valid but lacks permission for this action. On Forms specifically, the
+      requested resource belongs to a different customer.
+    retryable: false
+    declared_on: [listForms, createForm, getFormStats, copyForm, getForm, updateForm, listFormSubmissions]
+  - status: 404
+    title: Not Found
+    meaning: Resource does not exist — e.g. an unknown tracking ID or template ID.
+    retryable: false
+    declared_on: [getMessageReceipt, getDynamicTemplate, updateDynamicTemplate, deleteDynamicTemplate, getPublicForm, copyForm, updateForm, listFormSubmissions, exportSubmissionsCsv, exportSubmissionCsv, getCampaignMailing, updateCampaignMailing, getDripCampaign, getSubscriber]
+  - status: 422
+    title: Unprocessable Entity
+    meaning: >-
+      Request is well-formed but semantically invalid — the documented example is an
+      unverified `from` domain. On Marketing, also used for state-transition refusals.
+    retryable: false
+    remediation: >-
+      Do not retry unchanged. On drip-campaign and campaign-send operations, re-read the
+      resource: 422 there means the campaign is not in a state that permits the requested
+      transition.
+    declared_on: [sendCampaignMailing, scheduleCampaignMailing, startDripCampaign, pauseDripCampaign, updateDripCampaign, createSubscriber, updateSubscriberPut, updateSubscriberPatch, bulkCreateSubscribers, bulkDeleteSubscribers, createSubscriptionList, updateSubscriptionListPut, updateSubscriptionListPatch, deleteSubscriptionList, getTrackingLinks]
+  - status: 429
+    title: Too Many Requests
+    meaning: Rate limit exceeded for the plan.
+    retryable: true
+    remediation: >-
+      Back off and retry. For high-volume sending switch to sendBulkMessages (recommended
+      max 50 messages per request) rather than looping sendMessage. NOTE: no Retry-After
+      or RateLimit-* header is documented, so the backoff interval is the client's to
+      choose.
+    declared_on: []
+    note: >-
+      Documented in prose on /email-api/errors and /email-api/limits but NOT declared as a
+      response on any operation in any of the three OpenAPI documents.
+  - status: 500
+    title: Internal Server Error
+    meaning: Unexpected server-side error.
+    retryable: true
+    remediation: Retry with backoff.
+    declared_on: [getForm, exportSubmissionPdf, createFormSubmission, every Marketing operation]
+  - status: 502
+    title: Bad Gateway
+    meaning: Upstream connectivity issue.
+    retryable: true
+    remediation: Retry with backoff.
+    declared_on: []
+  - status: 503
+    title: Service Unavailable
+    meaning: Temporary outage.
+    retryable: true
+    remediation: Check https://status.paubox.com before retrying.
+    declared_on: []
+  - status: 504
+    title: Gateway Timeout
+    meaning: Request timed out.
+    retryable: true
+    remediation: Retry with backoff.
+    declared_on: []
+
+gaps:
+  - >-
+    No stable machine-readable error code. Every error is identified only by HTTP status
+    plus an English string, so a client cannot branch on a code without string-matching.
+  - >-
+    429, 502, 503 and 504 are documented in prose but appear in none of the three OpenAPI
+    documents, so a generated client will not model the retryable cases at all.
+  - >-
+    The three APIs do not share an error schema, so one error handler cannot serve all
+    three.

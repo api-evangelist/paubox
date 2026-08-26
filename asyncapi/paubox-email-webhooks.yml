@@ -1,0 +1,83 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.paubox.com/email-api/webhooks
+description: >-
+  Paubox publishes a delivery-event webhook surface for the Email API but NO AsyncAPI
+  document. Events are documented in prose and tables only, so this artifact captures the
+  webhook catalog rather than a spec. Searched for an AsyncAPI at /asyncapi.yaml and
+  /asyncapi.json on every host and in the provider's own llms.txt index — none is
+  published, and none is referenced anywhere in the documentation.
+asyncapi_published: false
+asyncapi_probed:
+  - url: https://docs.paubox.com/llms.txt
+    status: 200
+    note: >-
+      Provider's own documentation index. Lists three OpenAPI specs under an "OpenAPI
+      Specs" heading and no AsyncAPI.
+type: webhooks
+docs: https://docs.paubox.com/email-api/webhooks
+configuration_url: https://next.paubox.com/emailapi/webhooks
+api: Paubox Email API
+
+delivery:
+  transport: HTTPS POST to a consumer-owned URL
+  scope: organization
+  scope_warning: >-
+    Webhooks fire at the ORGANIZATION level, not per domain. Every domain in the
+    organization sends events to the one configured URL, with no per-domain filtering.
+    Consumers must inspect the payload's `from` field to route by domain.
+  content_type: application/json
+
+events:
+  - name: Delivered
+    key: api_mail_log_delivered
+    trigger: Message is delivered.
+  - name: Temporary Failure
+    key: api_mail_log_temporary_failure
+    trigger: Soft bounce.
+  - name: Permanent Failure
+    key: api_mail_log_permanent_failure
+    trigger: Hard bounce.
+  - name: Opened
+    key: api_mail_log_opened
+    trigger: Message is opened.
+event_count: 4
+
+payload:
+  envelope:
+    event_name: string — one of the event keys above
+    payload: object — shape depends on the model that triggered the event
+  common_shape: API Mail Log
+  fields:
+    id: integer
+    subject: string
+    header_message_id: string
+    source_tracking_id: string — the same handle returned by sendMessage
+    outbound_queue_id: string
+    time: ISO 8601 timestamp with milliseconds
+    from: string
+    to: string
+    custom_headers: object — arbitrary custom headers set on the original message
+
+reliability:
+  signature_verification: false
+  signature_note: >-
+    Provider states verbatim that webhook signature verification is not currently
+    supported, and recommends network-level controls instead — IP allowlisting or a shared
+    secret embedded in the URL path. A consumer therefore cannot cryptographically
+    establish that a payload came from Paubox.
+  retries: false
+  retry_note: >-
+    Provider states verbatim that Paubox does not currently retry failed webhook
+    deliveries. If the endpoint is unavailable when an event fires, that notification is
+    lost permanently.
+  recommended_fallback: >-
+    Poll getMessageReceipt (GET /message_receipt) with the sourceTrackingId when
+    guaranteed delivery tracking is required.
+
+gaps:
+  - No AsyncAPI or other machine-readable event contract.
+  - No signature or HMAC verification.
+  - No retry, no dead-letter, no replay.
+  - No per-domain event filtering.
+  - No webhook events published for the Marketing API or the Forms API.

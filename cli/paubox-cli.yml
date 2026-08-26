@@ -1,0 +1,128 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.paubox.com/cli/index, /cli/installation, /cli/authentication and
+  /cli/commands
+description: >-
+  First-party Paubox CLI. A Node-based command-line client for the Paubox Email API and
+  Paubox Forms, aimed at terminal use, shell scripts and CI pipelines. It covers a
+  deliberately narrow slice of the API surface — send, status, forms — and does not touch
+  the Marketing API at all.
+name: paubox
+docs: https://docs.paubox.com/cli/index
+repository: https://github.com/Paubox/paubox-cli
+package: paubox-cli
+package_entry: packages/paubox-packages.yml
+
+install:
+  - method: npm
+    command: npm install -g paubox-cli
+    platforms: [macos, windows, linux]
+  - method: homebrew
+    command: brew tap paubox/paubox && brew install paubox-cli
+    platforms: [macos]
+    tap_repository: https://github.com/Paubox/homebrew-paubox
+  - method: winget
+    command: winget install Paubox.CLI
+    platforms: [windows]
+
+requirements:
+  node: '>=20.12.0'
+  linux_note: >-
+    libsecret-1-dev is required for OS keychain support (the CLI uses keytar). Without it
+    credentials fall back to ~/.config/paubox/config.json with 0600 permissions and the
+    CLI warns.
+
+credential_storage:
+  default: OS keychain
+  fallback: ~/.config/paubox/config.json (0600)
+  note: >-
+    `paubox config` stores general settings only; API credentials are managed separately
+    by `paubox auth` and are never written to config.json when the keychain is available.
+
+commands:
+  - group: auth
+    description: Store and manage Paubox API credentials.
+    subcommands:
+      - command: paubox auth login
+        description: Prompt for an API key, validate it, and store it.
+      - command: paubox auth logout
+        description: Remove stored credentials.
+      - command: paubox auth status
+        description: Show whether credentials are currently stored.
+  - group: send
+    description: Send a HIPAA compliant email.
+    subcommands:
+      - command: paubox send --to <email> --subject <subject> [options]
+        backing_operation: sendMessage
+        flags:
+          - name: --to <email>
+            required: true
+            description: Recipient address. Repeat for multiple recipients.
+          - name: --subject <text>
+            required: true
+          - name: --html <html>
+            required: one-of
+            description: HTML body. One of --html or --text is required.
+          - name: --text <text>
+            required: one-of
+          - name: --from <email>
+            required: false
+            description: >-
+              Sender address. Defaults to the `defaultFrom` config value. Must be on a
+              verified Paubox domain.
+          - name: --attachment <path>
+            required: false
+            description: Path to a file to attach. Repeat for multiple attachments.
+  - group: status
+    description: Check delivery status for a sent message.
+    subcommands:
+      - command: paubox status <trackingId>
+        backing_operation: getMessageReceipt
+  - group: forms
+    description: >-
+      Fetch and submit Paubox Forms. These hit the public Forms endpoints and do NOT
+      require `paubox auth login`.
+    subcommands:
+      - command: paubox forms get <formId>
+        backing_operation: getPublicForm
+        flags:
+          - name: --json
+            description: Return the raw API response object instead of the human-readable summary.
+      - command: paubox forms submit <formId> [options]
+        backing_operation: createFormSubmission
+        flags:
+          - name: --data <key>=<value>
+            required: one-of
+            description: Form field as a key=value pair. Repeat for multiple fields.
+          - name: --data-file <path>
+            required: one-of
+            description: >-
+              JSON file whose top-level string values become form_data. Merged with
+              --data; --data wins on key conflicts.
+          - name: --attach <file>
+            required: false
+            description: >-
+              File to attach. Repeat for multiple. Total request size must not exceed
+              250 MB.
+  - group: config
+    description: General (non-credential) configuration.
+    subcommands:
+      - command: paubox config set <key> <value>
+      - command: paubox config get <key>
+      - command: paubox config list
+      - command: paubox config reset
+    supported_keys:
+      - key: defaultFrom
+        description: Default sender address used when --from is not passed to `paubox send`.
+
+global_options:
+  - option: --json
+    description: Machine-readable output, documented for scripting and automation.
+  - option: --version
+    description: Print the installed version.
+
+coverage_gap: >-
+  The CLI covers 4 of the 64 published REST operations. It does not expose bulk send,
+  the dynamic-template surface, the authenticated Forms management surface, or any part
+  of the Marketing API.

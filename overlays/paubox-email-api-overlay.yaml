@@ -1,0 +1,79 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Paubox Email API
+  version: 1.0.0
+extends: ../openapi/paubox-email-api-openapi.yaml
+x-generated: '2026-08-26'
+x-method: generated
+x-source: >-
+  Derived from https://docs.paubox.com/email-api/errors,
+  https://docs.paubox.com/email-api/limits and
+  https://docs.paubox.com/email-api/webhooks — documented behaviour the provider
+  publishes in prose but did not declare in the OpenAPI document. Applied as an overlay so
+  the harvested spec stays byte-identical to what Paubox serves.
+actions:
+  - target: $.info
+    update:
+      x-status-page: https://status.paubox.com/
+      x-support: https://support.paubox.com/
+      x-community: https://github.com/Paubox/community/discussions
+      x-idempotency-supported: false
+      x-error-format: vendor-json
+      x-rfc9457: false
+      x-date-format-requests: RFC 2822
+  - target: $.info
+    update:
+      x-undocumented-status-codes:
+        note: >-
+          The provider documents these on /email-api/errors but declares them on no
+          operation in this specification, so a generated client will not model the
+          retryable cases.
+        codes: [403, 422, 429, 502, 503, 504]
+  - target: $.paths['/messages'].post
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+        note: >-
+          No unsend, recall or void operation exists. Delivery is irreversible from the
+          moment this call returns, and there is no idempotency key, so a retry sends a
+          second email.
+      x-rate-limits:
+        max_recipients_per_message: 100
+        max_attachment_bytes_total: 52428800
+        docs: https://docs.paubox.com/email-api/limits
+      x-common-400-causes:
+        - Sender domain not verified
+        - Missing data.message.headers.subject
+        - Empty data.message.recipients
+        - Attachment content is not valid base64
+        - Neither text/plain nor text/html present in data.message.content
+  - target: $.paths['/bulk_messages'].post
+    update:
+      x-reversibility:
+        reversal: null
+        window: null
+      x-batch-guidance:
+        recommended_max: 50
+        ordering: >-
+          Source tracking IDs are returned in the same order as the messages array; zip
+          them against the input positionally.
+        docs: https://docs.paubox.com/email-api/limits
+  - target: $.paths['/message_receipt'].get
+    update:
+      x-agent-note: >-
+        The only way to confirm a send after the fact. Use this before retrying a send
+        whose outcome is unknown, to avoid a duplicate delivery.
+  - target: $.paths['/dynamic_templates/{id}'].delete
+    update:
+      x-reversibility:
+        reversal: createDynamicTemplate
+        window: null
+        note: >-
+          Not a true restore — the template must be re-uploaded and receives a new ID, so
+          anything referencing the old ID stays broken.
+  - target: $.components.securitySchemes.PauboxToken
+    update:
+      x-key-issuance: Per verified sending domain, from the Paubox dashboard; displayed once.
+      x-rotation: Multiple concurrent active keys per domain are supported; create before revoking.
+      x-docs: https://docs.paubox.com/email-api/authentication

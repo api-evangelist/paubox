@@ -1,0 +1,54 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.paubox.com/security
+description: >-
+  Paubox publishes a security-information page rather than a dedicated trust center.
+  trust.paubox.com does not resolve (connection failed, no HTTP status). The page is a
+  narrative compliance statement, not a certification portal: there is no document
+  request flow, no downloadable report index and no subprocessor list linked from it.
+url: https://www.paubox.com/security
+http_status: 200
+fetched: '2026-08-26'
+trust_center_subdomain_probed: https://trust.paubox.com/
+trust_center_subdomain_status: '<no response> — connection failed, no HTTP status returned'
+
+certifications:
+  paubox_own:
+    - name: HITRUST
+      scope: >-
+        Stated as "HITRUST certified" for Paubox Email Suite on the Email API pricing page,
+        and repeated in the description of every first-party SDK repository under
+        github.com/Paubox.
+      source: https://www.paubox.com/pricing/paubox-email-api
+    - name: HIPAA / HITECH business associate
+      scope: >-
+        Paubox operates as a HIPAA business associate and includes a Business Associate
+        Agreement with all accounts. Third-party audits against HIPAA regulations are
+        claimed on the pricing page.
+      source: https://www.paubox.com/security
+  inherited_from_infrastructure:
+    note: >-
+      ATTRIBUTION MATTERS HERE. The security page attributes the following to Amazon Web
+      Services, the platform Paubox runs on — not to Paubox. Quoting the page: "Paubox
+      uses Amazon Web Services (AWS) as its HIPAA compliant cloud platform. As such, the
+      AWS platform provides industry recognized certifications and audits such as ISO
+      27001, FedRAMP, and the Service Organization Control Reports (SOC1, SOC2, and
+      SOC3)." No Paubox-issued SOC 2 report, ISO 27001 certificate or FedRAMP
+      authorization was found on any public Paubox page.
+    provider: Amazon Web Services
+    items: [ISO 27001, FedRAMP, SOC 1, SOC 2, SOC 3, GDPR DPA, CISPE Code of Conduct]
+    source: https://www.paubox.com/security
+
+controls_published:
+  - Encryption of PHI in transit and at rest, per HHS guidance on rendering unsecured PHI unusable
+  - AWS Key Management Service (KMS) for key management
+  - TLS 1.2 and 1.3 only; SSL 2.0/3.0 and TLS 1.0/1.1 unsupported (NSA guidance cited)
+  - Two-factor authentication on Paubox accounts
+  - U.S.-only data centers, encrypted at rest
+  - 99.99% uptime commitment
+
+gaps:
+  - No trust.paubox.com portal.
+  - No downloadable audit report or report-request flow.
+  - No subprocessor list linked from the security page.
+  - No published vulnerability disclosure policy or bug bounty program (see paubox-vulnerability-disclosure).

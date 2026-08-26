@@ -1,0 +1,96 @@
+generated: '2026-08-26'
+method: searched
+source: https://www.paubox.com/pricing/paubox-email-api
+description: >-
+  Paubox Email API plans. The pricing page renders its price figures client-side from a
+  volume selector, so the per-tier dollar amounts are not readable from the served HTML;
+  what IS published in machine-readable prose is the tier structure, the monthly email
+  quota per tier and the per-email overage rate, on
+  https://docs.paubox.com/email-api/limits. Those are recorded here verbatim. Dollar
+  prices are recorded as null rather than guessed.
+pricing_url: https://www.paubox.com/pricing/paubox-email-api
+overage_url: https://docs.paubox.com/email-api/limits
+currency: USD
+billing_periods: [monthly, annual]
+annual_discount: '30% (stated on the pricing page toggle)'
+plan_count: 6
+plans:
+  - name: Free
+    price: 0
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: 300
+    overage_per_email_usd: null
+    overage_note: No overage rate published for Free; the plan is capped.
+    features:
+      - HITRUST certified
+      - REST API and SMTP API options
+      - Optimized email deliverability (SPF/DKIM/DMARC configuration)
+      - Dynamic email templates
+    signup: https://www.paubox.com/pricing/paubox-email-api
+  - name: Pro
+    tier_label: 10,000 emails
+    price: null
+    price_note: >-
+      Not readable from the served page — the figure is computed client-side by the
+      volume selector. Not guessed.
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: 10000
+    overage_per_email_usd: 0.0130
+  - name: Pro
+    tier_label: 30,000 emails
+    price: null
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: 30000
+    overage_per_email_usd: 0.0130
+  - name: Pro
+    tier_label: 50,000 emails
+    price: null
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: 50000
+    overage_per_email_usd: 0.0100
+  - name: Pro
+    tier_label: 100,000 emails
+    price: null
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: 100000
+    overage_per_email_usd: 0.0098
+  - name: Pro
+    tier_label: Custom
+    price: null
+    currency: USD
+    period: monthly
+    included_quota:
+      emails_per_month: null
+    overage_per_email_usd: null
+    note: Volume above 100,000 — contact sales.
+
+related_products:
+  - name: Paubox Email Suite
+    pricing_url: https://www.paubox.com/pricing/paubox-email-suite
+    tiers: [Standard, Plus, Premium]
+    note: Separate product with its own plans; not the developer API.
+  - name: Paubox Marketing
+    pricing_url: https://www.paubox.com/pricing/paubox-marketing
+    note: >-
+      Purchased separately from the Email API. Provider states explicitly that Marketing
+      sends are counted separately from Email API sends.
+  - name: Paubox Forms
+    note: Included free with any paid Paubox subscription.
+
+metering:
+  unit: One email to one recipient counts as one email.
+  note: >-
+    Counted whether the message is ultimately deferred or filed as spam by the receiving
+    provider. Overage is billed on the invoice of the month following the over-limit
+    sending.
+  source: https://www.paubox.com/pricing/paubox-email-api

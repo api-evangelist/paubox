@@ -1,0 +1,82 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.paubox.com/email-api, https://status.paubox.com/,
+  https://www.paubox.com/pricing/paubox-email-api, and the three OpenAPI documents in
+  openapi/.
+description: >-
+  Versioning, deprecation, status and support posture for the Paubox API surface. Paubox
+  runs a live status page and states an uptime commitment on its pricing page, but
+  publishes no deprecation policy, no changelog and no Sunset/Deprecation header contract.
+
+versioning:
+  scheme: url-path
+  current: v1
+  bases:
+    - https://api.paubox.com/v1/email
+    - https://api.paubox.com/v1/marketing
+    - https://api.paubox.com/v1/forms
+  spec_info_versions:
+    paubox-email-api-openapi.yaml: 1.0.0
+    paubox-marketing-api-openapi.yaml: 1.0.0
+    paubox-forms-api-openapi.yaml: 1.0.0
+  header_versioning: false
+  note: >-
+    Only one API version has ever been published. There is no v0 or v2, so no migration
+    precedent exists to reason from.
+
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  evidence: >-
+    No operation in any of the three OpenAPI documents carries `deprecated: true`. No
+    deprecation, sunset, EOL or migration-policy page appears in the published
+    https://docs.paubox.com/llms.txt index, and no such page was found on
+    www.paubox.com.
+
+change_log:
+  published: false
+  url: null
+  evidence: >-
+    https://docs.paubox.com/changelog returns 404 and no changelog, release-notes or
+    what's-new entry appears in the published llms.txt documentation index. Release
+    history is discoverable only per-SDK from the GitHub repositories under
+    https://github.com/Paubox and from the package registries (see
+    packages/paubox-packages.yml).
+
+status_page:
+  published: true
+  url: https://status.paubox.com/
+  http_status: 200
+  fetched: '2026-08-26'
+  subscribe: Email and SMS incident notifications offered on the status page.
+  referenced_from: https://docs.paubox.com/email-api/errors (503 remediation)
+
+sla:
+  uptime_commitment: 99.99%
+  source: https://www.paubox.com/pricing/paubox-email-api
+  note: >-
+    Stated on the pricing page as part of the Paubox Email Suite Standard plan feature
+    list and repeated as "99.99% uptime" against the U.S. data-center infrastructure
+    claim. No separate machine-readable SLA document or credit schedule is published.
+
+support:
+  channels:
+    - type: help-center
+      url: https://support.paubox.com/
+    - type: community
+      url: https://github.com/Paubox/community/discussions
+      note: >-
+        GitHub Discussions, with per-product categories. Provider warns explicitly not to
+        post PHI, recipient addresses or message content in public threads.
+    - type: email
+      url: mailto:support@paubox.com
+      note: For account, billing or anything sensitive.
+  security_contact: security@paubox.com
+  security_contact_source: >-
+    CAA iodef record on paubox.com — `0 iodef "mailto:security@paubox.com"`. Not a
+    published vulnerability-disclosure policy; see security/paubox-domain-security.yml.
