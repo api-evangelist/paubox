@@ -34,87 +34,12 @@ tags:
 - Encryption
 - Messaging
 apis:
-- aid: paubox-email-api
-  name: Paubox Email API
-  description: >-
-    HIPAA compliant transactional email API. Send a single message, send bulk messages
-    (batches of 50 or fewer recommended), retrieve a message receipt with delivery, open
-    and click tracking, and manage Handlebars dynamic templates for templated sends.
-    Authenticates with an API key issued per verified sending domain, passed as
-    `Authorization: Bearer YOUR_API_KEY` (the legacy `Token token=` form is still
-    accepted). An SMTP relay is offered as an alternative transport.
-  humanURL: https://docs.paubox.com/email-api
-  baseURL: https://api.paubox.com/v1/email
-  tags:
-  - Email
-  - Transactional Email
-  - HIPAA
-  - Templates
-  properties:
-  - type: OpenAPI
-    url: openapi/paubox-email-api-openapi.yaml
-  - type: Documentation
-    url: https://docs.paubox.com/email-api
-  - type: GettingStarted
-    url: https://docs.paubox.com/email-api/quickstart
-  - type: Authentication
-    url: https://docs.paubox.com/email-api/authentication
-  - type: Overlay
-    url: overlays/paubox-email-api-overlay.yaml
-- aid: paubox-marketing-api
-  name: Paubox Marketing API
-  description: >-
-    HIPAA compliant email marketing API. Create, fetch, update, send, schedule, test and
-    bulk-delete campaign mailings; run drip campaigns; manage subscribers, subscriptions
-    and subscription lists including dynamic lists and global opt-out; list tracking
-    links; and read campaign, send, delivery and tracking-link analytics. Authenticates
-    with `Authorization: Token token=<API_KEY>`.
-  humanURL: https://docs.paubox.com/marketing
-  baseURL: https://api.paubox.com/v1/marketing
-  tags:
-  - Email Marketing
-  - Campaigns
-  - Subscribers
-  - Analytics
-  properties:
-  - type: OpenAPI
-    url: openapi/paubox-marketing-api-openapi.yaml
-  - type: Documentation
-    url: https://docs.paubox.com/marketing
-  - type: Overlay
-    url: overlays/paubox-marketing-api-overlay.yaml
-- aid: paubox-forms-api
-  name: Paubox Forms API
-  description: >-
-    HIPAA compliant online form API. Public respondent-facing endpoints retrieve a form
-    definition (HTML, JSON schema, CSS) and submit a response with no authentication —
-    the form UUID is the access control. Authenticated management endpoints, which
-    require an API key carrying the `forms` scope as a Bearer token, list, create,
-    update, copy, archive and unarchive forms, return form statistics, and list or
-    export submissions as CSV and PDF.
-  humanURL: https://docs.paubox.com/forms/index
-  baseURL: https://api.paubox.com/v1/forms
-  tags:
-  - Forms
-  - Submissions
-  - HIPAA
-  - Patient Intake
-  properties:
-  - type: OpenAPI
-    url: openapi/paubox-forms-api-openapi.yaml
-  - type: Documentation
-    url: https://docs.paubox.com/forms/index
-  - type: Authentication
-    url: https://docs.paubox.com/forms/authentication
-  - type: Overlay
-    url: overlays/paubox-forms-api-overlay.yaml
 - aid: paubox-mcp-server
   name: Paubox MCP Server
   description: >-
-    Hosted Model Context Protocol server exposing 30 Paubox tools across email, forms and
-    email marketing to MCP-compatible AI clients. Reachable over streamable HTTP at
-    https://mcp.paubox.com/mcp with OAuth or an `x-paubox-api-key` header, and over stdio
-    via the `@paubox/mcp` package.
+    Hosted Model Context Protocol server exposing 30 Paubox tools across email, forms and email marketing
+    to MCP-compatible AI clients. Reachable over streamable HTTP at https://mcp.paubox.com/mcp with OAuth
+    or an `x-paubox-api-key` header, and over stdio via the `@paubox/mcp` package.
   humanURL: https://docs.paubox.com/mcp-server/index
   baseURL: https://mcp.paubox.com/mcp
   tags:
@@ -128,12 +53,282 @@ apis:
     url: mcp/paubox-tool-crosswalk.yml
   - type: Documentation
     url: https://docs.paubox.com/mcp-server/tools
+- aid: paubox:paubox-analytics-api
+  name: Paubox Analytics API
+  description: Campaign analytics and reporting operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-campaign-mailings-api
+  name: Paubox Campaign Mailings API
+  description: Campaign mailing management and sending operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - campaign_mailings
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-campaign-mailings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-drip-campaigns-api
+  name: Paubox Drip Campaigns API
+  description: Drip campaign management and automation operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - drip_campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-drip-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-dynamic-templates-api
+  name: Paubox Dynamic Templates API
+  description: Manage and use dynamic Handlebars templates for email content
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Dynamic Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-dynamic-templates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-form-management-api
+  name: Paubox Form management API
+  description: Create, list, update, copy, and archive forms (requires API key)
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Form management
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-form-management-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-forms-api
+  name: Paubox Forms API
+  description: Retrieve form definitions and accept submissions
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Forms
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-forms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-messages-api
+  name: Paubox Messages API
+  description: Send individual or bulk transactional email
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-messages-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-submissions-api
+  name: Paubox Submissions API
+  description: List and export form submissions (requires API key)
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - Submissions
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-submissions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-subscribers-api
+  name: Paubox Subscribers API
+  description: Subscriber management operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - subscribers
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-subscribers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-subscription-lists-api
+  name: Paubox Subscription Lists API
+  description: Subscription list management operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - subscription_lists
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-subscription-lists-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-subscriptions-api
+  name: Paubox Subscriptions API
+  description: Subscriber opt-in and opt-out operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
+- aid: paubox:paubox-tracking-links-api
+  name: Paubox Tracking Links API
+  description: Tracking link analytics and data operations
+  humanURL: https://docs.paubox.com/email-api
+  baseURL: https://api.paubox.com/v1/email
+  tags:
+  - tracking_links
+  properties:
+  - type: OpenAPI
+    url: openapi/paubox-tracking-links-api-openapi.yml
+  - type: Documentation
+    url: https://docs.paubox.com/email-api
+  - type: GettingStarted
+    url: https://docs.paubox.com/email-api/quickstart
+  - type: Authentication
+    url: https://docs.paubox.com/email-api/authentication
+  - type: Documentation
+    url: https://docs.paubox.com/marketing
+  - type: Documentation
+    url: https://docs.paubox.com/forms/index
+  - type: Authentication
+    url: https://docs.paubox.com/forms/authentication
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/paubox-email-api-overlay.yaml
+- type: Overlay
+  url: overlays/paubox-marketing-api-overlay.yaml
+- type: Overlay
+  url: overlays/paubox-forms-api-overlay.yaml
 - type: Website
   url: https://www.paubox.com/
 - type: DeveloperPortal
