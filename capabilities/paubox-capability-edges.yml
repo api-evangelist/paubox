@@ -3,7 +3,7 @@ provider: Paubox
 generated_by: planning/capability-mapping/scripts/classify_capabilities.py
 model: claude-opus-5
 frame:
-- Healthcare Providers
+- Telecommunications
 min_confidence: 0.7
 capability_model:
   source: https://github.com/vincentmakes/turbo-ea-capabilities
@@ -11,27 +11,56 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 2
+edge_count: 5
 edges:
 - tag: campaign_mailings
   spec_file: paubox-campaign-mailings-api-openapi.yml
   capability_id: BC-400.60
   capability_id_l1: BC-400
   capability_name: Digital Marketing Management
-  confidence: 0.8
-  evidence: POST /campaign_mailings  createCampaignMailing  Create a campaign mailing; POST /campaign_mailing_schedules  scheduleCampaignMailing  Schedule
-    a new campaign mailing
-  reason: Authoring, testing, scheduling and sending marketing email campaigns via the Paubox Marketing
-    API — email marketing automation, i.e. Digital Marketing Management. Some overlap with Demand Generation
-    keeps it below 0.9.
+  confidence: 0.78
+  evidence: POST /campaign_mailings createCampaignMailing Create a campaign mailing; POST /campaign_mailing_schedules
+    scheduleCampaignMailing Schedule a new campaign mailing
+  reason: Creation, test-sending, scheduling and dispatch of marketing email campaigns — email marketing
+    automation execution. L2 could arguably be Demand Generation, so confidence held at 0.78.
+- tag: analytics
+  spec_file: paubox-analytics-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: GET /analytics/campaign_mailing_send_totals getCampaignAnalytics Fetch campaign analytics;
+    GET /analytics/subscribers_by_tracking_link
+  reason: Measurement of email marketing campaign sends, deliveries and click-tracking links — email/digital
+    campaign performance analytics. Some ambiguity between Digital Marketing Management and Marketing
+    Operations measurement, hence 0.75.
 - tag: drip_campaigns
   spec_file: paubox-drip-campaigns-api-openapi.yml
   capability_id: BC-400.60
   capability_id_l1: BC-400
   capability_name: Digital Marketing Management
-  confidence: 0.72
-  evidence: GET /drip_campaigns  getDripCampaigns; POST /drip_campaigns/{id}/start  startDripCampaign  Start
-    a drip campaign
-  reason: Lifecycle control of automated drip email sequences — marketing automation. Sits between Digital
-    Marketing Management (marketing automation) and Demand Generation (lifecycle marketing); the L1 is
-    secure, the L2 choice is the residual uncertainty.
+  confidence: 0.75
+  evidence: POST /drip_campaigns/{id}/start startDripCampaign Start a drip campaign
+  reason: Automated drip email sequences started/paused per campaign — classic marketing automation /
+    lifecycle email. Could equally sit under Demand Generation lifecycle marketing, so moderate confidence.
+- tag: subscribers
+  spec_file: paubox-subscribers-api-openapi.yml
+  capability_id: BC-400
+  capability_id_l1: BC-400
+  capability_name: Marketing Management
+  confidence: 0.7
+  evidence: POST /subscribers_bulk_create bulkCreateSubscribers; DetailedSubscriber_attributes_subscription_lists
+  reason: Management of email marketing subscriber records with custom fields, statistics and list memberships
+    — marketing contact-base management. Which L2 (digital marketing vs marketing ops) is not determinable,
+    so L1 only.
+- tag: subscriptions
+  spec_file: paubox-subscriptions-api-openapi.yml
+  capability_id: BC-400
+  capability_id_l1: BC-400
+  capability_name: Marketing Management
+  confidence: 0.7
+  evidence: POST /subscriptions/unsubscribe unsubscribeSubscribers; POST /subscriptions/bulk_global_unsubscribe
+    bulkGlobalUnsubscribe
+  reason: 'Homograph guard: these ''subscriptions'' are subscriber-to-mailing-list opt-ins and global
+    unsubscribes, not paid SaaS subscriptions (so BC-4240 is wrong). Email audience/consent list management
+    under Marketing Management.'
