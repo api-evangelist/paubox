@@ -335,6 +335,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/paubox-capability-edges.yml
+  name: Paubox Business Capability Map
 - type: Overlay
   url: overlays/paubox-email-api-overlay.yaml
 - type: Overlay
