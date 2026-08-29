@@ -15,6 +15,18 @@ description: >-
   Node-based CLI, delivery webhooks, an llms.txt, an A2A agent card, a published Agent
   Skill, and a hosted MCP server at mcp.paubox.com exposing 30 tools across email,
   forms and marketing.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.paubox.com/hubfs/Logos/Paubox_Primary_color.svg
 url: https://raw.githubusercontent.com/api-evangelist/paubox/refs/heads/main/apis.yml
 x-type: company
