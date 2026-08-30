@@ -1,0 +1,218 @@
+openapi: 3.2.0
+info:
+  title: Paubox Forms API
+  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.
+
+    '
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/forms
+  description: Paubox Forms API
+tags:
+- name: Forms
+  description: Retrieve form definitions and accept submissions
+paths:
+  /public/form_data/{form_id}:
+    get:
+      tags:
+      - Forms
+      summary: Get form metadata
+      operationId: getPublicForm
+      security: []
+      description: 'Returns the full form definition (HTML, JSON schema, CSS) for a given form. Called by the form embed before rendering a form to a respondent. No authentication required.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form to retrieve
+      responses:
+        '200':
+          description: Form found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Form'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    id: 550e8400-e29b-41d4-a716-446655440000
+                    title: Patient Intake Form
+                    description: Please complete before your appointment.
+                    form_json: {}
+                    form_html: <form>...</form>
+                    form_css: 'form { font-family: sans-serif; }'
+                    active: true
+                    customer_id: 123
+                    signable: false
+                    submission_count: 42
+                    created_at: '2024-01-15T10:30:00Z'
+                    updated_at: '2024-06-01T08:00:00Z'
+        '404':
+          description: Form not found
+  /api/forms/{form_id}/submissions:
+    post:
+      tags:
+      - Forms
+      summary: Submit a form response
+      operationId: createFormSubmission
+      security: []
+      description: 'Submits a respondent''s answers for a form. No authentication required. On success, the service stores the submission, increments the form''s submission count, emails recipients (if configured), and returns 201 with no body.
+
+
+        Maximum request size is **250 MB** (to support file attachments).
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form being submitted
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSubmissionRequest'
+            examples:
+              basic:
+                summary: Text fields only
+                value:
+                  form_data:
+                    first_name: Jane
+                    last_name: Smith
+                    email: jane@example.com
+              with_attachments:
+                summary: With file attachments
+                value:
+                  form_data:
+                    first_name: Jane
+                    signature: '{signature_field}'
+                  attachments:
+                  - name: consent.pdf
+                    content: JVBERi0xLjQ...
+      responses:
+        '201':
+          description: Submission accepted
+        '400':
+          description: Missing required `form_data` field
+        '500':
+          description: 'Form not found. The service currently returns 500 (rather than 404) when submitting to a form ID that does not exist.
+
+            '
+components:
+  schemas:
+    Form:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        form_html:
+          type:
+          - string
+          - 'null'
+        form_json:
+          type:
+          - object
+          - 'null'
+        form_css:
+          type:
+          - string
+          - 'null'
+        vanity_url:
+          type:
+          - string
+          - 'null'
+        version:
+          type: integer
+        active:
+          type: boolean
+        customer_id:
+          type: integer
+        old_form_id:
+          type:
+          - integer
+          - 'null'
+        recipient:
+          type:
+          - string
+          - 'null'
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        signable:
+          type: boolean
+        signature_confirmation_label:
+          type:
+          - string
+          - 'null'
+        submission_count:
+          type: integer
+        type:
+          type:
+          - string
+          - 'null'
+        subscription_list_id:
+          type:
+          - string
+          - 'null'
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+        deleted:
+          type: boolean
+        archived:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    FormSubmissionRequest:
+      type: object
+      required:
+      - form_data
+      properties:
+        form_data:
+          type: object
+          description: 'Key-value pairs matching the form''s field schema (`form_json`). Structure varies per form.
+
+            '
+        attachments:
+          type: array
+          description: Optional file attachments
+          items:
+            type: object
+            required:
+            - name
+            - content
+            properties:
+              name:
+                type: string
+                description: Filename
+              content:
+                type: string
+                description: Base64-encoded file content
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Paubox API key sent as `Authorization: Bearer YOUR_API_KEY`. API keys are created in the Paubox dashboard and must have the "forms" scope; a key without the forms scope receives 401 Unauthorized. A valid key used against a resource that belongs to a different customer receives 403 Forbidden.
+
+        '

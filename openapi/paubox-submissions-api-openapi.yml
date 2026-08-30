@@ -1,0 +1,302 @@
+openapi: 3.2.0
+info:
+  title: Paubox Forms Submissions API
+  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.
+
+    '
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/forms
+  description: Paubox Forms API
+tags:
+- name: Submissions
+  description: List and export form submissions (requires API key)
+paths:
+  /api/forms/{form_id}/submissions:
+    get:
+      tags:
+      - Submissions
+      summary: List form submissions
+      operationId: listFormSubmissions
+      security:
+      - bearerAuth: []
+      description: 'Returns a paginated list of submissions for a form. Each submission''s `form_data` field is a JSON-encoded string of the respondent''s answers.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form
+      - name: submission_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filter the results to a single submission by its UUID.
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created_at
+          - submitter_email
+          default: created_at
+        description: Field to order results by.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Sort direction.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+        description: Page number to return.
+      - name: items
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          maximum: 100
+        description: Number of submissions per page (maximum 100).
+      responses:
+        '200':
+          description: Paginated list of submissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSubmissionListResponse'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    data:
+                    - id: 1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+                      form_id: 550e8400-e29b-41d4-a716-446655440000
+                      form_data: '{"first_name":"Jane","last_name":"Smith","email":"jane@example.com"}'
+                      storage_type: S3
+                      storage_url: null
+                      submitter_email: jane@example.com
+                      recipients: intake@example.com
+                      attachment_name: null
+                      attachment_url: null
+                      attachment_type: null
+                      attachment: null
+                      created_at: '2024-06-05T14:22:00Z'
+                    total: 42
+                    page: 1
+                    items: 50
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The form belongs to a different customer
+        '404':
+          description: Form not found
+  /api/forms/{form_id}/submissions/submission-csv:
+    get:
+      tags:
+      - Submissions
+      summary: Export submissions as CSV
+      operationId: exportSubmissionsCsv
+      security:
+      - bearerAuth: []
+      description: 'Exports all submissions of a form as a CSV attachment (filename `form_data.csv`). The first column is "Created At", followed by one column per form field, using the field labels from the form definition.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form
+      responses:
+        '200':
+          description: CSV file with all submissions
+          content:
+            text/csv:
+              schema:
+                type: string
+              examples:
+                example:
+                  summary: Example CSV
+                  value: 'Created At,First name,Last name,Email
+
+                    2024-06-05 02:22:00 PM,Jane,Smith,jane@example.com
+
+                    2024-06-04 09:10:00 AM,John,Doe,john@example.com
+
+                    '
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '404':
+          description: Form not found
+  /api/forms/{form_id}/submissions/submission-csv/{submission_id}:
+    get:
+      tags:
+      - Submissions
+      summary: Export a submission as CSV
+      operationId: exportSubmissionCsv
+      security:
+      - bearerAuth: []
+      description: 'Exports a single submission as a CSV attachment (filename `form_data.csv`). Uses the same column layout as the full export (a "Created At" column followed by one column per form field), with a single data row.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form
+      - name: submission_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the submission to export
+      responses:
+        '200':
+          description: CSV file with the single submission
+          content:
+            text/csv:
+              schema:
+                type: string
+              examples:
+                example:
+                  summary: Example CSV
+                  value: 'Created At,First name,Last name,Email
+
+                    2024-06-05 02:22:00 PM,Jane,Smith,jane@example.com
+
+                    '
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '404':
+          description: Form or submission not found
+  /api/forms/{form_id}/submissions/{submission_id}/submission-pdf:
+    get:
+      tags:
+      - Submissions
+      summary: Export a submission as PDF
+      operationId: exportSubmissionPdf
+      security:
+      - bearerAuth: []
+      description: 'Exports a single submission as a PDF attachment (filename `form_data.pdf`). For signable forms, the PDF includes the respondent''s signature images.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form
+      - name: submission_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the submission to export
+      responses:
+        '200':
+          description: PDF file with the submission
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '500':
+          description: 'Form or submission not found. The service currently returns 500 (rather than 404) when either the form or the submission does not exist.
+
+            '
+components:
+  schemas:
+    FormSubmission:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        form_id:
+          type: string
+          format: uuid
+        form_data:
+          type: string
+          description: 'JSON-encoded object of the respondent''s answers.
+
+            '
+        storage_type:
+          type: string
+        storage_url:
+          type:
+          - string
+          - 'null'
+        submitter_email:
+          type:
+          - string
+          - 'null'
+        recipients:
+          type:
+          - string
+          - 'null'
+        attachment_name:
+          type:
+          - string
+          - 'null'
+        attachment_url:
+          type:
+          - string
+          - 'null'
+        attachment_type:
+          type:
+          - string
+          - 'null'
+        attachment: {}
+        created_at:
+          type: string
+          format: date-time
+    FormSubmissionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmission'
+        total:
+          type: integer
+          description: Total number of matching submissions
+        page:
+          type: integer
+          description: Current page number
+        items:
+          type: integer
+          description: Number of items per page
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Paubox API key sent as `Authorization: Bearer YOUR_API_KEY`. API keys are created in the Paubox dashboard and must have the "forms" scope; a key without the forms scope receives 401 Unauthorized. A valid key used against a resource that belongs to a different customer receives 403 Forbidden.
+
+        '

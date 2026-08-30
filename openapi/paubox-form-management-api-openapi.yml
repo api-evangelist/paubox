@@ -1,0 +1,708 @@
+openapi: 3.2.0
+info:
+  title: Paubox Forms Form management API
+  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.
+
+    '
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/forms
+  description: Paubox Forms API
+tags:
+- name: Form management
+  description: Create, list, update, copy, and archive forms (requires API key)
+paths:
+  /api/forms:
+    get:
+      tags:
+      - Form management
+      summary: List forms
+      operationId: listForms
+      security:
+      - bearerAuth: []
+      description: 'Returns a paginated list of forms belonging to a customer. Supports filtering by form ID, title/description search, and archived/active state, plus ordering and pagination.
+
+        '
+      parameters:
+      - name: customer_id
+        in: query
+        required: true
+        schema:
+          type: integer
+        description: 'Your Paubox customer ID. Requests for a customer you do not have access to return 403.
+
+          '
+      - name: form_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filter the results to a single form by its UUID.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Substring match against the form title or description.
+
+          '
+      - name: archived
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by archived state.
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by active state.
+      - name: order_by
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created_at
+          - title
+          - updated_at
+          - submission_count
+          default: created_at
+        description: 'Field to order results by. Unknown values fall back to `created_at`.
+
+          '
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Sort direction.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+        description: Page number to return.
+      - name: items
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          maximum: 100
+        description: Number of forms per page (maximum 100).
+      responses:
+        '200':
+          description: Paginated list of forms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormListResponse'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    results:
+                    - id: 550e8400-e29b-41d4-a716-446655440000
+                      title: Patient Intake Form
+                      description: Please complete before your appointment.
+                      form_html: <form>...</form>
+                      form_json: {}
+                      form_css: 'form { font-family: sans-serif; }'
+                      vanity_url: null
+                      version: 2
+                      active: true
+                      customer_id: 123
+                      old_form_id: null
+                      recipient: intake@example.com,records@example.com
+                      signable: false
+                      signature_confirmation_label: null
+                      submission_count: 42
+                      type: null
+                      subscription_list_id: null
+                      deleted: false
+                      archived: false
+                      created_at: '2024-01-15T10:30:00Z'
+                      updated_at: '2024-06-01T08:00:00Z'
+                    page_info:
+                      count: 1
+                      pages: 1
+                      page: 1
+                      items: 50
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The API key does not have access to the requested customer
+    post:
+      tags:
+      - Form management
+      summary: Create a form
+      operationId: createForm
+      security:
+      - bearerAuth: []
+      description: 'Creates a new form. Returns the UUID of the created form.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFormRequest'
+            examples:
+              basic:
+                summary: Minimal form
+                value:
+                  title: Patient Intake Form
+                  form_json:
+                    fields:
+                    - label: First name
+                      type: text
+                      required: true
+                  customer_id: 123
+                  version: 1
+              full:
+                summary: Marketing form with notifications
+                value:
+                  title: Newsletter Signup
+                  description: Sign up for our monthly newsletter.
+                  form_json:
+                    fields:
+                    - label: Email
+                      type: email
+                      required: true
+                  form_html: <form>...</form>
+                  form_css: 'form { font-family: sans-serif; }'
+                  customer_id: 123
+                  version: 1
+                  recipient: marketing@example.com
+                  subscription_list_id: b3f9c2d1-4a5e-4f6b-8c7d-9e0f1a2b3c4d
+                  type: marketing_form
+                  active: true
+      responses:
+        '200':
+          description: Form created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: UUID of the new form
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The API key does not have access to the requested customer
+  /api/forms/stats:
+    get:
+      tags:
+      - Form management
+      summary: Get form statistics
+      operationId: getFormStats
+      security:
+      - bearerAuth: []
+      description: 'Returns aggregate form statistics for a customer: the number of active forms, the total submission count, and the number of submissions received in the last 7 days.
+
+        '
+      parameters:
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: 'Paubox customer ID. Defaults to the customer that owns the API key.
+
+          '
+      responses:
+        '200':
+          description: Form statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormStats'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    active_form_count: 8
+                    total_submission_count: 1204
+                    submissions_last_7_days: 37
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The API key does not have access to the requested customer
+  /api/forms/copy:
+    post:
+      tags:
+      - Form management
+      summary: Copy a form
+      operationId: copyForm
+      security:
+      - bearerAuth: []
+      description: 'Creates a copy of an existing form with a new title. The copy starts with a submission count of 0 and no vanity URL. Returns the full new form object.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CopyFormRequest'
+            examples:
+              example:
+                summary: Copy a form
+                value:
+                  form_id: 550e8400-e29b-41d4-a716-446655440000
+                  title: Patient Intake Form (Copy)
+      responses:
+        '200':
+          description: The newly created form
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Form'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    id: 9f8b7c6d-5e4f-4a3b-2c1d-0e9f8a7b6c5d
+                    title: Patient Intake Form (Copy)
+                    description: Please complete before your appointment.
+                    form_html: <form>...</form>
+                    form_json: {}
+                    form_css: 'form { font-family: sans-serif; }'
+                    vanity_url: null
+                    version: 2
+                    active: false
+                    customer_id: 123
+                    old_form_id: null
+                    recipient: intake@example.com
+                    signable: false
+                    signature_confirmation_label: null
+                    submission_count: 0
+                    type: null
+                    subscription_list_id: null
+                    deleted: false
+                    archived: false
+                    created_at: '2024-06-10T12:00:00Z'
+                    updated_at: '2024-06-10T12:00:00Z'
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The form belongs to a different customer
+        '404':
+          description: Source form not found
+  /api/forms/{form_id}:
+    get:
+      tags:
+      - Form management
+      summary: Get a form
+      operationId: getForm
+      security:
+      - bearerAuth: []
+      description: 'Returns the full form definition by ID, including inactive and archived forms (unlike the public endpoint, which only serves renderable forms to respondents).
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form to retrieve
+      responses:
+        '200':
+          description: Form found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Form'
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    data:
+                      id: 550e8400-e29b-41d4-a716-446655440000
+                      title: Patient Intake Form
+                      description: Please complete before your appointment.
+                      form_html: <form>...</form>
+                      form_json: {}
+                      form_css: 'form { font-family: sans-serif; }'
+                      vanity_url: null
+                      version: 2
+                      active: true
+                      customer_id: 123
+                      old_form_id: null
+                      recipient: intake@example.com
+                      signable: false
+                      signature_confirmation_label: null
+                      submission_count: 42
+                      type: null
+                      subscription_list_id: null
+                      deleted: false
+                      archived: false
+                      created_at: '2024-01-15T10:30:00Z'
+                      updated_at: '2024-06-01T08:00:00Z'
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The form belongs to a different customer
+        '500':
+          description: 'Form not found. The service currently returns 500 (rather than 404) for a form ID that does not exist.
+
+            '
+    put:
+      tags:
+      - Form management
+      summary: Update a form
+      operationId: updateForm
+      security:
+      - bearerAuth: []
+      description: 'Updates a form. This is a partial update: any fields omitted from the request body are left unchanged.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFormRequest'
+            examples:
+              example:
+                summary: Rename and activate a form
+                value:
+                  title: Patient Intake Form (2024)
+                  active: true
+      responses:
+        '200':
+          description: Form updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  form_id:
+                    type: string
+                    format: uuid
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    detail: Form updated successfully
+                    form_id: 550e8400-e29b-41d4-a716-446655440000
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+        '403':
+          description: The form belongs to a different customer
+        '404':
+          description: Form not found or deleted
+  /api/forms/{form_id}/archive:
+    post:
+      tags:
+      - Form management
+      summary: Archive a form
+      operationId: archiveForm
+      security:
+      - bearerAuth: []
+      description: 'Archives a form. Archiving also deactivates the form (sets `active` to false), so it stops accepting submissions. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form to archive
+      responses:
+        '200':
+          description: Form archived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    detail: Form archived.
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+  /api/forms/{form_id}/unarchive:
+    post:
+      tags:
+      - Form management
+      summary: Unarchive a form
+      operationId: unarchiveForm
+      security:
+      - bearerAuth: []
+      description: 'Unarchives a form. This does not re-activate it: `active` stays false until the form is updated with `active: true`. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
+
+        '
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the form to unarchive
+      responses:
+        '200':
+          description: Form unarchived
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+              examples:
+                example:
+                  summary: Example response
+                  value:
+                    detail: Form unarchived.
+        '401':
+          description: Missing or invalid API key, or the key lacks the "forms" scope
+components:
+  schemas:
+    FormListResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Form'
+        page_info:
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of matching forms
+        pages:
+          type: integer
+          description: Total number of pages
+        page:
+          type: integer
+          description: Current page number
+        items:
+          type: integer
+          description: Number of items per page
+    FormStats:
+      type: object
+      properties:
+        active_form_count:
+          type: integer
+          description: Number of active forms
+        total_submission_count:
+          type: integer
+          description: Total submissions across all forms
+        submissions_last_7_days:
+          type: integer
+          description: Submissions received in the last 7 days
+    CreateFormRequest:
+      type: object
+      required:
+      - title
+      - form_json
+      - customer_id
+      - version
+      properties:
+        title:
+          type: string
+          description: Title of the form
+        form_json:
+          type: object
+          description: The form field schema
+        customer_id:
+          type: integer
+          description: Your Paubox customer ID
+        version:
+          type: integer
+          description: Form schema version
+        description:
+          type: string
+        form_html:
+          type: string
+        form_css:
+          type: string
+        recipient:
+          type: string
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        signable:
+          type: boolean
+          default: false
+          description: Whether the form collects a signature
+        signature_confirmation_label:
+          type: string
+        subscription_list_id:
+          type: string
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+        type:
+          type: string
+          description: Form type, for example `marketing_form`
+        active:
+          type: boolean
+          default: false
+        submission_count:
+          type: integer
+          default: 0
+    CopyFormRequest:
+      type: object
+      required:
+      - form_id
+      - title
+      properties:
+        form_id:
+          type: string
+          format: uuid
+          description: UUID of the form to copy
+        title:
+          type: string
+          description: Title for the copy
+    UpdateFormRequest:
+      type: object
+      description: 'Partial update. All fields are optional; omitted fields are left unchanged.
+
+        '
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        form_json:
+          type: object
+          description: The form field schema
+        vanity_url:
+          type: string
+        recipient:
+          type: string
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        active:
+          type: boolean
+        subscription_list_id:
+          type: string
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+    Form:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        form_html:
+          type:
+          - string
+          - 'null'
+        form_json:
+          type:
+          - object
+          - 'null'
+        form_css:
+          type:
+          - string
+          - 'null'
+        vanity_url:
+          type:
+          - string
+          - 'null'
+        version:
+          type: integer
+        active:
+          type: boolean
+        customer_id:
+          type: integer
+        old_form_id:
+          type:
+          - integer
+          - 'null'
+        recipient:
+          type:
+          - string
+          - 'null'
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        signable:
+          type: boolean
+        signature_confirmation_label:
+          type:
+          - string
+          - 'null'
+        submission_count:
+          type: integer
+        type:
+          type:
+          - string
+          - 'null'
+        subscription_list_id:
+          type:
+          - string
+          - 'null'
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+        deleted:
+          type: boolean
+        archived:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Paubox API key sent as `Authorization: Bearer YOUR_API_KEY`. API keys are created in the Paubox dashboard and must have the "forms" scope; a key without the forms scope receives 401 Unauthorized. A valid key used against a resource that belongs to a different customer receives 403 Forbidden.
+
+        '

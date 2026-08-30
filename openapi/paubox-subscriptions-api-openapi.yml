@@ -1,0 +1,579 @@
+openapi: 3.2.0
+info:
+  title: Paubox Marketing Subscriptions API
+  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/marketing
+  description: Production server
+security:
+- TokenAuth: []
+tags:
+- name: subscriptions
+  description: Subscriber opt-in and opt-out operations
+paths:
+  /subscriptions:
+    get:
+      tags:
+      - subscriptions
+      summary: List subscriptions
+      description: 'Returns every subscription belonging to the authenticated customer. A subscription is the join between a subscriber and a subscription list (or a dynamic list), and it carries the `unsubscribed_at` timestamp that marks a list-level opt-out.
+
+
+        This endpoint is not paginated and returns raw subscription records.
+
+        '
+      operationId: getSubscriptions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - subscriptions
+      summary: Create a subscription
+      description: "Subscribes an existing subscriber to an existing subscription list.\n\nCreating a subscription fires any drip campaign configured with a `subscription_created` trigger on that list.\n\nA subscriber may only be subscribed to a given list once; a duplicate request fails validation.\n\n**Note on `subscriber_id`:** this field takes the subscriber's internal numeric ID, not the UUID returned by the subscriber endpoints. To add a subscriber to a list by UUID, use [`POST /subscribers`](/marketing/subscribers/create) with a `subscription_list_id`, or [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe) to re-subscribe an existing subscription.\n\n**Example curl command:**\n```bash\ncurl -X POST \\\nhttps://api.paubox.com/v1/marketing/subscriptions \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"subscription\": {\n        \"subscription_list_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"subscriber_id\": 4821\n    }\n  }'\n```\n"
+      operationId: createSubscription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+            example:
+              subscription:
+                subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+                subscriber_id: 4821
+        required: true
+      responses:
+        '200':
+          description: Subscription created. If validation fails the response is still `200` but the body contains an `errors` array instead of `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/{subscription_id}:
+    get:
+      tags:
+      - subscriptions
+      summary: Fetch a subscription
+      description: Returns a single subscription by its UUID.
+      operationId: getSubscription
+      parameters:
+      - name: subscription_id
+        in: path
+        description: UUID of the subscription
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - subscriptions
+      summary: Unsubscribe a subscription
+      description: 'Unsubscribes the subscriber from the list this subscription belongs to by stamping `unsubscribed_at`. The subscription record itself is kept, and the subscriber stays subscribed to every other list and is not globally opted out.
+
+
+        To re-subscribe, use [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe).
+
+        '
+      operationId: deleteSubscription
+      parameters:
+      - name: subscription_id
+        in: path
+        description: UUID of the subscription
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Subscription unsubscribed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/subscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Subscribe subscribers
+      description: "Re-subscribes one or more subscribers, identified by their UUIDs.\n\nWhen `subscription_list_ids` is supplied, the matching subscriptions have their `unsubscribed_at` cleared. When it is omitted, only the global opt-out (`opted_out_on`) is cleared and list-level opt-outs are left untouched.\n\nIn both cases the global opt-out is cleared, because a subscriber who is subscribed to any list is by definition not globally unsubscribed.\n\n**Example curl command:**\n```bash\ncurl -X POST \\\nhttps://api.paubox.com/v1/marketing/subscriptions/subscribe \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"subscriber_ids\": [\"8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60\"],\n    \"subscription_list_ids\": [\"123e4567-e89b-12d3-a456-426614174000\"]\n  }'\n```\n"
+      operationId: subscribeSubscribers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionChangeRequest'
+            example:
+              subscriber_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+              subscription_list_ids:
+              - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: The affected subscribers. If the operation raises, the response is still `200` but the body contains an `errors` string.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/unsubscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Unsubscribe subscribers
+      description: "Unsubscribes one or more subscribers, identified by their UUIDs.\n\nWhen `subscription_list_ids` is supplied, the matching subscriptions are stamped with `unsubscribed_at` and the subscribers remain subscribed to every other list. When it is omitted, the subscribers are globally opted out by stamping `opted_out_on`, which suppresses all future marketing email to them.\n\n**Example curl command:**\n```bash\ncurl -X POST \\\nhttps://api.paubox.com/v1/marketing/subscriptions/unsubscribe \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"subscriber_ids\": [\"8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60\"],\n    \"subscription_list_ids\": [\"123e4567-e89b-12d3-a456-426614174000\"]\n  }'\n```\n"
+      operationId: unsubscribeSubscribers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionChangeRequest'
+            example:
+              subscriber_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+              subscription_list_ids:
+              - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: The affected subscribers. If the operation raises, the response is still `200` but the body contains an `errors` string.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/bulk_global_subscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Bulk global subscribe
+      description: "Clears the global opt-out for a whole subscription list without having to enumerate every subscriber.\n\nThis endpoint has two modes:\n\n- **Explicit** — supply `subscriber_ids` and the request behaves exactly\n  like [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe),\n  returning the affected subscribers synchronously.\n- **Select-all** — omit `subscriber_ids` and supply\n  `from_subscription_list_id`. Every subscriber matching `search` and\n  `filters` in that list, minus `except_ids`, is queued for processing in\n  the background and a Sidekiq job ID (`jid`) is returned immediately.\n\nIn select-all mode `from_subscription_list_id` is required and must be a subscription list UUID.\n"
+      operationId: bulkGlobalSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              search: '*'
+              except_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: A job ID in select-all mode, or the affected subscribers when `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/bulk_global_unsubscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Bulk global unsubscribe
+      description: "Globally opts out every subscriber in a subscription list without having to enumerate them.\n\nThis endpoint has two modes:\n\n- **Explicit** — supply `subscriber_ids` and the request behaves exactly\n  like [`POST /subscriptions/unsubscribe`](/marketing/subscriptions/unsubscribe),\n  returning the affected subscribers synchronously.\n- **Select-all** — omit `subscriber_ids` and supply\n  `from_subscription_list_id`. Every subscriber matching `search` and\n  `filters` in that list, minus `except_ids`, is queued for processing in\n  the background and a Sidekiq job ID (`jid`) is returned immediately.\n\nIn select-all mode `from_subscription_list_id` is required and must be a subscription list UUID. Globally opting a subscriber out suppresses all future marketing email to them, across every list.\n"
+      operationId: bulkGlobalUnsubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              search: '*'
+              except_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: A job ID in select-all mode, or the affected subscribers when `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/dynamic_bulk_subscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Bulk subscribe a dynamic list
+      description: "The dynamic list counterpart to [bulk global subscribe](/marketing/subscriptions/bulk-global-subscribe).\n\n- **Explicit** — supply `subscriber_ids` and the request behaves exactly\n  like [`POST /subscriptions/subscribe`](/marketing/subscriptions/subscribe).\n- **Select-all** — omit `subscriber_ids` and supply\n  `from_subscription_list_id`, which here is a **dynamic list** UUID. The\n  job resolves the list's current membership, subtracts `except_ids`, and\n  clears the global opt-out on the rest. A Sidekiq job ID (`jid`) is\n  returned immediately.\n\nA dynamic list's membership is defined by the filters saved on the list itself, so any `filters` sent with the request is ignored in select-all mode.\n"
+      operationId: dynamicBulkSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+              except_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: A job ID in select-all mode, or the affected subscribers when `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/dynamic_bulk_unsubscribe:
+    post:
+      tags:
+      - subscriptions
+      summary: Bulk unsubscribe a dynamic list
+      description: "The dynamic list counterpart to [bulk global unsubscribe](/marketing/subscriptions/bulk-global-unsubscribe).\n\n- **Explicit** — supply `subscriber_ids` and the request behaves exactly\n  like [`POST /subscriptions/unsubscribe`](/marketing/subscriptions/unsubscribe).\n- **Select-all** — omit `subscriber_ids` and supply\n  `from_subscription_list_id`, which here is a **dynamic list** UUID. The\n  job resolves the list's current membership, subtracts `except_ids`, and\n  globally opts out the rest. A Sidekiq job ID (`jid`) is returned\n  immediately.\n\nA dynamic list's membership is defined by the filters saved on the list itself, so any `filters` sent with the request is ignored in select-all mode.\n"
+      operationId: dynamicBulkUnsubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkSubscriptionChangeRequest'
+            example:
+              from_subscription_list_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+              except_ids:
+              - 8f14e45f-ceea-467a-9f2c-4b3d2a1e5c60
+        required: true
+      responses:
+        '200':
+          description: A job ID in select-all mode, or the affected subscribers when `subscriber_ids` was supplied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkSubscriptionChangeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    DetailedSubscriber_attributes:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        unsubscribed:
+          type: boolean
+          description: Whether the subscriber is unsubscribed
+        created_at:
+          type: string
+          description: Timestamp when subscriber was created
+          format: date-time
+        updated_at:
+          type: string
+          description: Timestamp when subscriber was last updated
+          format: date-time
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber_attributes_custom_fields'
+        subscription_lists:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber_attributes_subscription_lists'
+        statistics:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes_statistics'
+    DetailedSubscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes'
+    SubscriptionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+    BulkSubscriptionChangeResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+          - $ref: '#/components/schemas/BulkSubscriptionJob'
+          - type: array
+            description: The affected subscribers, returned when `subscriber_ids` was supplied.
+            items:
+              $ref: '#/components/schemas/DetailedSubscriber'
+        errors:
+          type: string
+          description: Error message, present only when the operation failed
+    SubscriptionChangeRequest:
+      required:
+      - subscriber_ids
+      type: object
+      properties:
+        subscriber_ids:
+          type: array
+          description: UUIDs of the subscribers to update
+          items:
+            type: string
+        subscription_list_ids:
+          type: array
+          description: UUIDs of the subscription lists to update the subscribers on. Omit to act on the subscribers' global opt-out instead.
+          items:
+            type: string
+    SubscriptionResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscription'
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Internal numeric identifier for the subscription
+        uuid:
+          type: string
+          description: Public identifier for the subscription. Use this value as `subscription_id` in path parameters.
+        subscription_list_id:
+          type:
+          - string
+          - 'null'
+          description: UUID of the subscription list. Null when the subscription belongs to a dynamic list.
+        dynamic_list_id:
+          type:
+          - integer
+          - 'null'
+          description: Identifier of the dynamic list. Null when the subscription belongs to a subscription list.
+        subscriber_id:
+          type: integer
+          description: Internal numeric identifier of the subscriber
+        unsubscribed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the subscriber opted out of this list. Null while the subscription is active.
+        delete_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the subscription is scheduled for deletion
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateSubscriptionRequest:
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/CreateSubscriptionRequest_subscription'
+    CreateSubscriptionResponse:
+      type: object
+      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscription'
+        errors:
+          type: array
+          description: Validation messages, present only when the create failed
+          items:
+            type: string
+    SubscriptionChangeResponse:
+      type: object
+      description: The affected subscribers in JSON:API form. Returned with HTTP 200; on failure the body carries `errors` instead of `data`.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber'
+        errors:
+          type: string
+          description: Error message, present only when the operation failed
+    BulkSubscriptionChangeRequest:
+      type: object
+      properties:
+        subscriber_ids:
+          type: array
+          description: UUIDs of specific subscribers to update. When present the request is handled synchronously and every other field is ignored.
+          items:
+            type: string
+        from_subscription_list_id:
+          type: string
+          description: UUID of the list whose members are being updated. Required when `subscriber_ids` is omitted. On the `bulk_global_*` endpoints this is a subscription list UUID; on the `dynamic_bulk_*` endpoints it is a dynamic list UUID.
+        search:
+          type: string
+          description: Search term used to narrow the list's members. Defaults to `*` (all members) on the `bulk_global_*` endpoints.
+        filters:
+          type: string
+          description: 'URL-encoded JSON describing additional subscriber filters, as generated by the subscriber search in the Marketing dashboard. The decoded value is an array of filter groups, each group an array of `{"field": ..., "op": ..., "terms": [...]}` objects. Ignored by the `dynamic_bulk_*` endpoints, which use the filters saved on the dynamic list.'
+        except_ids:
+          type: array
+          description: UUIDs of subscribers to exclude from the operation. Use this to express "select all except these".
+          items:
+            type: string
+    BulkSubscriptionJob:
+      type: object
+      properties:
+        jid:
+          type: string
+          description: Identifier of the background job processing the change. The change is applied asynchronously.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    DetailedSubscriber_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: ID of the custom field type
+        custom_field_name:
+          type: string
+          description: Name of the custom field
+        custom_field_value:
+          type: string
+          description: Value of the custom field
+    DetailedSubscriber_attributes_subscription_lists:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        name:
+          type: string
+          description: Subscription list name
+        unsubscribed:
+          type: boolean
+          description: Whether subscriber is unsubscribed from this list
+    CreateSubscriptionRequest_subscription:
+      required:
+      - subscriber_id
+      - subscription_list_id
+      type: object
+      properties:
+        subscription_list_id:
+          type: string
+          description: UUID of the subscription list to subscribe to
+        subscriber_id:
+          type: integer
+          description: Internal numeric identifier of the subscriber. This is not the subscriber UUID returned by the subscriber endpoints.
+    DetailedSubscriber_attributes_statistics:
+      type: object
+      properties:
+        deliveries:
+          type: integer
+          description: Number of deliveries
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        opened:
+          type: integer
+          description: Number of opened emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounces
+        hard_bounced:
+          type: integer
+          description: Number of hard bounces
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribes
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribes
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: 'Token-based authentication. Use format: "Token token=<API_KEY>" where <API_KEY> is your API key'
+      name: authorization
+      in: header

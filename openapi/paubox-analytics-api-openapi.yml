@@ -1,0 +1,417 @@
+openapi: 3.2.0
+info:
+  title: Paubox Marketing Analytics API
+  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/marketing
+  description: Production server
+security:
+- TokenAuth: []
+tags:
+- name: analytics
+  description: Campaign analytics and reporting operations
+paths:
+  /analytics/campaign_mailing_send_totals:
+    get:
+      tags:
+      - analytics
+      summary: Fetch campaign analytics
+      description: Return json data statistics about campaigns sent
+      operationId: getCampaignAnalytics
+      parameters:
+      - name: campaign_mailing_send_id
+        in: query
+        description: Id of a specific campaign to total
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign analytics data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignAnalyticsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/campaign_mailing_sends_table:
+    get:
+      tags:
+      - analytics
+      summary: Fetch campaign table
+      description: Return json data information about campaigns sent
+      operationId: getCampaignTable
+      parameters:
+      - name: search
+        in: query
+        description: Field:Value pair to search on. Defaults to all records
+        required: false
+        schema:
+          type: string
+        example: '{ "field": "value" }'
+      - name: order_by
+        in: query
+        description: Order by attributes. Defaults to created_at
+        required: false
+        schema:
+          type: string
+          default: created_at
+      - name: order
+        in: query
+        description: Order direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: Campaign table data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignTableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/tracking_links_by_unique_link:
+    get:
+      tags:
+      - analytics
+      summary: Fetch tracking links by unique link
+      description: Returns json data about interactions with tracking links
+      operationId: getTrackingLinksByUniqueLink
+      parameters:
+      - name: campaign_mailing_send_id
+        in: query
+        description: Campaign id to search on
+        required: true
+        schema:
+          type: string
+      - name: order_by
+        in: query
+        description: Order by attributes. Defaults to created_at
+        required: false
+        schema:
+          type: string
+          default: created_at
+      - name: order
+        in: query
+        description: Order direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: Tracking links data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLinksResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/subscribers_by_tracking_link:
+    get:
+      tags:
+      - analytics
+      summary: Fetch subscribers by tracking link
+      description: Returns json data about subscribers for a specific tracking link
+      operationId: getSubscribersByTrackingLink
+      parameters:
+      - name: campaign_mailing_send_id
+        in: query
+        description: Campaign id to search on
+        required: true
+        schema:
+          type: string
+      - name: html_id
+        in: query
+        description: html_id of the associated tracking link
+        required: true
+        schema:
+          type: integer
+      - name: order_by
+        in: query
+        description: Order by non-id attributes. Defaults to created_at
+        required: false
+        schema:
+          type: string
+          default: created_at
+      - name: order
+        in: query
+        description: Order direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: Subscribers by tracking link data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribersByTrackingLinkResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/campaign_mailing_deliveries_table:
+    get:
+      tags:
+      - analytics
+      summary: Fetch campaign deliveries table
+      description: Returns json data about campaign deliveries sent
+      operationId: getCampaignDeliveriesTable
+      parameters:
+      - name: campaign_mailing_send_id
+        in: query
+        description: Campaign id to search on (one of campaign_mailing_send_id or campaign_mailing_id is required)
+        required: false
+        schema:
+          type: string
+      - name: campaign_mailing_id
+        in: query
+        description: Paubox Marketing Campaign Email id to search on (one of campaign_mailing_send_id or campaign_mailing_id is required)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign deliveries table data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignDeliveriesTableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    SubscribersByTrackingLinkResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscriber ID
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes'
+    CampaignAnalyticsResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignAnalyticsResponse_data'
+    CampaignDeliveriesTableResponse_data:
+      type: object
+      properties:
+        recipient:
+          type: string
+          description: Email recipient
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        delivered:
+          type: boolean
+          description: Whether email was delivered
+        viewed:
+          type: boolean
+          description: Whether email was viewed
+        clicked:
+          type: boolean
+          description: Whether email was clicked
+        bounced:
+          type: boolean
+          description: Whether email bounced
+        unsubscribed:
+          type: boolean
+          description: Whether recipient unsubscribed
+        tracking_links:
+          type: object
+          additionalProperties:
+            type: string
+          description: Tracking link information (dynamic property names based on actual URLs)
+    SubscribersByTrackingLinkResponse_attributes:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes_custom_fields'
+    SubscribersByTrackingLinkResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_data'
+    CampaignTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignTableResponse_data'
+    TrackingLinksResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    TrackingLinksResponse_data:
+      type: object
+      properties:
+        html_id:
+          type: integer
+          description: HTML ID of the tracking link
+        target_url:
+          type: string
+          description: Target URL of the tracking link
+        clicked:
+          type: integer
+          description: Number of clicks on this link
+    SubscribersByTrackingLinkResponse_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: Custom field type ID
+        value:
+          type: string
+          description: Custom field value
+    CampaignAnalyticsResponse_data:
+      type: object
+      properties:
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        viewed:
+          type: integer
+          description: Number of viewed emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        bounced:
+          type: integer
+          description: Number of bounced emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounced emails
+        hard_bounced:
+          type: integer
+          description: Number of hard bounced emails
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribed emails
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribed emails
+    CampaignTableResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign table entry ID
+        marketing_email_id:
+          type: string
+          description: Marketing email ID
+        campaign_mailing_id:
+          type: string
+          description: Campaign mailing ID
+        campaign_mailing_created_at:
+          type: string
+          description: Campaign mailing creation timestamp
+          format: date-time
+        sent_at:
+          type: string
+          description: Campaign sent timestamp
+          format: date-time
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+    CampaignDeliveriesTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignDeliveriesTableResponse_data'
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: 'Token-based authentication. Use format: "Token token=<API_KEY>" where <API_KEY> is your API key'
+      name: authorization
+      in: header

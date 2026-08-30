@@ -1,0 +1,285 @@
+openapi: 3.2.0
+info:
+  title: Paubox Marketing Subscription Lists API
+  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/marketing
+  description: Production server
+security:
+- TokenAuth: []
+tags:
+- name: subscription_lists
+  description: Subscription list management operations
+paths:
+  /subscription_lists:
+    get:
+      tags:
+      - subscription_lists
+      summary: Fetch subscription lists
+      description: Return json data about subscription lists
+      operationId: getSubscriptionLists
+      responses:
+        '200':
+          description: Subscription lists data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - subscription_lists
+      summary: Create subscription list
+      description: Creates a subscription list record
+      operationId: createSubscriptionList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionListRequest'
+            example:
+              name: Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscription_lists/{subscription_list_id}:
+    put:
+      tags:
+      - subscription_lists
+      summary: Update subscription list
+      description: Updates a subscription list record
+      operationId: updateSubscriptionListPut
+      parameters:
+      - name: subscription_list_id
+        in: path
+        description: The ID of the subscription list to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionListRequest'
+            example:
+              name: Updated Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - subscription_lists
+      summary: Delete subscription list
+      description: 'Deletes subscription list record.
+
+
+        **Note:** Cannot delete default/all contacts list.
+
+        '
+      operationId: deleteSubscriptionList
+      parameters:
+      - name: subscription_list_id
+        in: path
+        description: The ID of the subscription list to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Subscription list deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - subscription_lists
+      summary: Update subscription list
+      description: Updates a subscription list record
+      operationId: updateSubscriptionListPatch
+      parameters:
+      - name: subscription_list_id
+        in: path
+        description: The ID of the subscription list to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionListRequest'
+            example:
+              name: Updated Newsletter Subscribers
+        required: true
+      responses:
+        '200':
+          description: Subscription list updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    SubscriptionListsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - subscription_list
+        attributes:
+          $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
+    SubscriptionListsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    SubscriptionListsResponse_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list
+        is_default:
+          type: boolean
+          description: Whether this is the default subscription list
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in this list
+        form_id:
+          type: string
+          description: Form ID for use with Paubox Secure Forms
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    SubscriptionListResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    UpdateSubscriptionListRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list
+    CreateSubscriptionListRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list (cannot be 'default')
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: 'Token-based authentication. Use format: "Token token=<API_KEY>" where <API_KEY> is your API key'
+      name: authorization
+      in: header

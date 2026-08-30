@@ -1,0 +1,705 @@
+openapi: 3.2.0
+info:
+  title: Paubox Marketing Campaign Mailings API
+  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/marketing
+  description: Production server
+security:
+- TokenAuth: []
+tags:
+- name: campaign_mailings
+  description: Campaign mailing management and sending operations
+paths:
+  /campaign_mailings:
+    get:
+      tags:
+      - campaign_mailings
+      summary: Fetch campaign mailings
+      description: Return json data about Paubox Marketing Campaign Emails
+      operationId: getCampaignMailings
+      parameters:
+      - name: search
+        in: query
+        description: Regex string to search on. Compares against subject
+        required: false
+        schema:
+          type: string
+      - name: template_type
+        in: query
+        description: Return only mailings authored in this editor, for example `quill`, `bee` or `html`
+        required: false
+        schema:
+          type: string
+      - name: order_by
+        in: query
+        description: Attribute to sort on. Must be a campaign mailing column name, for example `subject` or `created_at`. When omitted, no explicit ordering is applied.
+        required: false
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: Direction to sort. Only applied when `order_by` is supplied.
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+      - name: items
+        in: query
+        description: Number of records to return per page
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          default: 20
+      - name: page
+        in: query
+        description: For pagination of results
+        required: false
+        schema:
+          minimum: 1
+          type: integer
+          default: 1
+      - name: pagination
+        in: query
+        description: Set to `false` to disable pagination and return every matching campaign mailing in one response.
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: Campaign mailings data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - campaign_mailings
+      summary: Create a campaign mailing
+      description: "Creates a campaign mailing (a marketing email) for the authenticated customer. Creating a mailing only stores the content; use [send a campaign](/marketing/campaigns/send) or [schedule a campaign](/marketing/campaigns/schedule) to deliver it.\n\n`subject` is required and must be unique within your account. An unsubscribe footer is appended to `html_part` automatically on save.\n\n**Example curl command:**\n```bash\ncurl -X POST \\\nhttps://api.paubox.com/v1/marketing/campaign_mailings \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"campaign_mailing\": {\n        \"subject\": \"March newsletter\",\n        \"html_part\": \"<html><body><div>Hello</div></body></html>\",\n        \"text_part\": \"Hello\",\n        \"template_type\": \"html\"\n    }\n  }'\n```\n"
+      operationId: createCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaignMailingRequest'
+            example:
+              campaign_mailing:
+                subject: March newsletter
+                html_part: <html><body><div>Hello</div></body></html>
+                text_part: Hello
+                template_type: html
+        required: true
+      responses:
+        '200':
+          description: The new campaign mailing's ID. If validation fails the response is still `200` but the body contains an `errors` array instead of `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingWriteResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings/{campaign_mailing_id}:
+    get:
+      tags:
+      - campaign_mailings
+      summary: Fetch a campaign mailing
+      description: 'Returns a single campaign mailing, including its content. Unlike the list endpoint, this response carries `html_part`, `text_part` and `form_data`, and omits the aggregate delivery counts.
+
+        '
+      operationId: getCampaignMailing
+      parameters:
+      - name: campaign_mailing_id
+        in: path
+        description: UUID of the campaign mailing
+        required: true
+        schema:
+          type: string
+      - name: with_images
+        in: query
+        description: Include the mailing's `image_data` in the response. Any non-empty value enables it.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign mailing data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - campaign_mailings
+      summary: Update a campaign mailing
+      description: "Updates a campaign mailing. Only the fields you send are changed. `PUT` is accepted as an equivalent to `PATCH`.\n\n`subject` must stay unique within your account. The unsubscribe footer is reapplied to `html_part` on every save.\n\n**Example curl command:**\n```bash\ncurl -X PATCH \\\nhttps://api.paubox.com/v1/marketing/campaign_mailings/123e4567-e89b-12d3-a456-426614174000 \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"campaign_mailing\": {\n        \"subject\": \"March newsletter (revised)\"\n    }\n  }'\n```\n"
+      operationId: updateCampaignMailing
+      parameters:
+      - name: campaign_mailing_id
+        in: path
+        description: UUID of the campaign mailing
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignMailingRequest'
+            example:
+              campaign_mailing:
+                subject: March newsletter (revised)
+        required: true
+      responses:
+        '200':
+          description: The updated campaign mailing's ID. If validation fails the response is still `200` but the body contains an `errors` array instead of `data`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignMailingWriteResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings/{campaign_mailing_id}/send_test_email:
+    get:
+      tags:
+      - campaign_mailings
+      summary: Send a test email
+      description: "Sends a one-off preview of the campaign mailing to a single address, so you can check rendering before sending to a list. The subject is prefixed with `[Test]`, and the message is sent from your account's default brand `from_email` and `from_name`.\n\nTest sends are not recorded as a campaign send and do not appear in analytics.\n\n**Example curl command:**\n```bash\ncurl -X GET \\\n'https://api.paubox.com/v1/marketing/campaign_mailings/123e4567-e89b-12d3-a456-426614174000/send_test_email?to_email=me@example.com' \\\n  -H 'authorization: Token token=YOUR_API_KEY'\n```\n"
+      operationId: sendCampaignMailingTestEmail
+      parameters:
+      - name: campaign_mailing_id
+        in: path
+        description: UUID of the campaign mailing
+        required: true
+        schema:
+          type: string
+      - name: to_email
+        in: query
+        description: Address to send the test message to
+        required: true
+        schema:
+          type: string
+          format: email
+      responses:
+        '204':
+          description: Test email queued. The response has no body.
+        '400':
+          description: '`to_email` was not supplied.'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailings_bulk_delete:
+    delete:
+      tags:
+      - campaign_mailings
+      summary: Bulk delete campaign mailings
+      description: "Permanently deletes the campaign mailings identified by `campaign_mailing_ids`. There is no single-delete endpoint; delete one mailing by passing an array of one ID.\n\nThis is irreversible. Deleting a mailing also removes its associated delivery and send records.\n\nOmitting `campaign_mailing_ids` is a no-op and still returns `200` with an empty object.\n\n**Example curl command:**\n```bash\ncurl -X DELETE \\\nhttps://api.paubox.com/v1/marketing/campaign_mailings_bulk_delete \\\n  -H 'authorization: Token token=YOUR_API_KEY' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"campaign_mailing_ids\": [\"123e4567-e89b-12d3-a456-426614174000\"]\n  }'\n```\n"
+      operationId: bulkDeleteCampaignMailings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkDeleteCampaignMailingsRequest'
+            example:
+              campaign_mailing_ids:
+              - 123e4567-e89b-12d3-a456-426614174000
+        required: true
+      responses:
+        '200':
+          description: An empty object. The response does not report how many records were deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailing_sends:
+    post:
+      tags:
+      - campaign_mailings
+      summary: Send campaign mailings
+      description: 'Send campaign email to recipients. The email message must be created within the Paubox Marketing web interface in order to use this to trigger a send.
+
+
+        **Note:** The campaign_mailing_id can be retrieved from the id= part of the URL when editing a marketing email. The subscription_list_id can be retrieved from the listId= part of the URL of any Contact List page.
+
+        '
+      operationId: sendCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCampaignMailingRequest'
+            example:
+              campaign_mailing_id: g79da293-4a84-4b50-b0d9-76a16af167fe
+              campaign_mailing_send:
+                sender_email: marketing@yourdomain.com
+                subscription_list_id: 1a55ec71-0b08-457a-b183-51ac7791f1fe
+                recipient_emails:
+                - test1@example.com
+                - test2@example.com
+                customer_name: Your Company
+                from_email: no-reply@yourdomain.com
+                from_name: Your Company Name
+                subject: Your Campaign Subject
+        required: true
+      responses:
+        '200':
+          description: Campaign mailing sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /campaign_mailing_schedules:
+    post:
+      tags:
+      - campaign_mailings
+      summary: Schedule a new campaign mailing
+      description: Schedules a new email campaign mailing with specified details for delivery at a future time
+      operationId: scheduleCampaignMailing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleCampaignMailingRequest'
+            example:
+              send_at: '2023-05-01T15:00:00Z'
+              from_email: no-reply@yourdomain.com
+              from_name: Your Company Name
+              sender_email: marketing@yourdomain.com
+              subscription_list_id: 123e4567-e89b-12d3-a456-426614174000
+              subject: Your Campaign Subject Line
+              dynamic_list_id: optional-uuid-for-dynamic-list
+              recipient_emails:
+              - test1@example.com
+              - test2@example.com
+        required: true
+      responses:
+        '200':
+          description: Campaign mailing scheduled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleCampaignMailingResponse'
+        '400':
+          description: Bad request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    CampaignMailing_attributes:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Campaign mailing subject
+        default_subject:
+          type:
+          - string
+          - 'null'
+          description: Fallback subject used when no subject is set on a send
+        template_type:
+          type: string
+          description: Editor the mailing was authored in, for example `quill`, `bee` or `html`
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        form_data:
+          type: string
+          description: JSON-encoded editor state for the mailing
+        html_part:
+          type: string
+          description: HTML body of the mailing, including the unsubscribe footer
+        text_part:
+          type:
+          - string
+          - 'null'
+          description: Plain-text body of the mailing
+        image_data:
+          type: string
+          description: Image payload for the mailing. Only present when `with_images` is supplied.
+    CampaignMailingsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign mailing ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailingsResponse_attributes'
+    UpdateCampaignMailingRequest_campaign_mailing:
+      type: object
+      description: Only the fields supplied are changed.
+      properties:
+        subject:
+          type: string
+          description: Subject line. Must remain unique within your account.
+        default_subject:
+          type: string
+          description: Fallback subject used when no subject is set on a send
+        from:
+          type: string
+          description: From address for the mailing
+        reply_to:
+          type: string
+          description: Reply-to address for the mailing
+        html_part:
+          type: string
+          description: HTML body. The unsubscribe footer is reapplied on save.
+        text_part:
+          type: string
+          description: Plain-text body
+        form_data:
+          type: string
+          description: JSON-encoded editor state, for mailings built in an editor
+        template_type:
+          type: string
+          description: Editor the mailing is authored in, for example `quill`, `bee` or `html`
+    SendCampaignMailingRequest_campaign_mailing_send:
+      required:
+      - sender_email
+      - subscription_list_id
+      type: object
+      properties:
+        sender_email:
+          type: string
+          description: Email for a Paubox Marketing user to track who sent it. This is NOT the "From email" that will be used to send the message
+          format: email
+        subscription_list_id:
+          type: string
+          description: UUID string, can be retrieved from the listId= part of the URL of any Contact List page
+          format: uuid
+        recipient_emails:
+          type: array
+          description: Optional - will send preview message equivalent (no smart text replacements)
+          items:
+            type: string
+            format: email
+        customer_name:
+          type: string
+          description: Optional for footer. Leave empty to use default information
+        from_email:
+          type: string
+          description: Optional - the email the user will see the email is sent from. Leave empty to use default information
+          format: email
+        from_name:
+          type: string
+          description: Optional - the name the user will see the email is from. Leave empty to use default information
+        subject:
+          type: string
+          description: Optional - the subject of the email. Will use the marketing email unique ID if not specified
+    UpdateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/UpdateCampaignMailingRequest_campaign_mailing'
+    ScheduleCampaignMailingRequest:
+      required:
+      - from_email
+      - from_name
+      - send_at
+      - sender_email
+      - subject
+      - subscription_list_id
+      type: object
+      properties:
+        send_at:
+          type: string
+          description: The time at which to send the campaign, in RFC3339 format
+          format: date-time
+        from_email:
+          type: string
+          description: The email address from which the campaign will be sent. It should be from a verified domain from your Paubox Marketing settings page
+          format: email
+        from_name:
+          type: string
+          description: The name to appear as the sender of the campaign
+        sender_email:
+          type: string
+          description: The email address of the person/entity sending this email. Should be a Paubox user email address and is NOT going to appear as the From email
+          format: email
+        subscription_list_id:
+          type: string
+          description: The uuid of the subscription list to which the campaign will be sent
+          format: uuid
+        subject:
+          type: string
+          description: The subject line of the campaign mailing
+        dynamic_list_id:
+          type: string
+          description: The uuid of the dynamic list to which the campaign will be sent (optional)
+          format: uuid
+        recipient_emails:
+          type: array
+          description: A list of extra recipient email addresses for the campaign to be sent to. These are not tracked for analytics purposes and are usually just for verification and/or testing
+          items:
+            type: string
+            format: email
+    CreateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/CreateCampaignMailingRequest_campaign_mailing'
+    CampaignMailingWriteResponse:
+      type: object
+      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailingWriteResponse_data'
+        errors:
+          type: array
+          description: Validation messages, present only when the write failed
+          items:
+            type: string
+    SendCampaignMailingRequest:
+      required:
+      - campaign_mailing_id
+      - campaign_mailing_send
+      type: object
+      properties:
+        campaign_mailing_id:
+          type: string
+          description: UUID string, can be retrieved from the id= part of the URL when editing a marketing email
+          format: uuid
+        campaign_mailing_send:
+          $ref: '#/components/schemas/SendCampaignMailingRequest_campaign_mailing_send'
+    CreateCampaignMailingRequest_campaign_mailing:
+      required:
+      - subject
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Subject line. Required, and must be unique within your account.
+        default_subject:
+          type: string
+          description: Fallback subject used when no subject is set on a send
+        from:
+          type: string
+          description: From address for the mailing
+        reply_to:
+          type: string
+          description: Reply-to address for the mailing
+        html_part:
+          type: string
+          description: HTML body. An unsubscribe footer is appended automatically on save.
+        text_part:
+          type: string
+          description: Plain-text body
+        form_data:
+          type: string
+          description: JSON-encoded editor state, for mailings built in an editor
+        template_type:
+          type: string
+          description: Editor the mailing is authored in, for example `quill`, `bee` or `html`. Defaults to `quill`.
+          default: quill
+    CampaignMailingsResponse_attributes:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Campaign mailing subject
+        default_subject:
+          type:
+          - string
+          - 'null'
+          description: Fallback subject used when no subject is set on a send
+        template_type:
+          type: string
+          description: Editor the mailing was authored in, for example `quill`, `bee` or `html`
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        sent_count:
+          type: integer
+          description: Number of emails sent
+        delivered_count:
+          type: integer
+          description: Number of emails delivered
+        viewed_count:
+          type: integer
+          description: Number of emails viewed
+        clicked_count:
+          type: integer
+          description: Number of emails clicked
+        bounced_count:
+          type: integer
+          description: Number of emails bounced
+        unsubscribed_count:
+          type: integer
+          description: Number of emails that resulted in unsubscribes
+    ScheduleCampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ScheduleCampaignMailingResponse_data'
+    BulkDeleteCampaignMailingsRequest:
+      type: object
+      properties:
+        campaign_mailing_ids:
+          type: array
+          description: UUIDs of the campaign mailings to delete. Omit for a no-op.
+          items:
+            type: string
+    CampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailing'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    inline_response_400:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: Invalid time format provided, please use RFC3339 format.
+    CampaignMailingsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignMailingsResponse_data'
+    CampaignMailingWriteResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the created or updated campaign mailing
+    CampaignMailing:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the campaign mailing
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailing_attributes'
+    ScheduleCampaignMailingResponse_data:
+      type: object
+      properties:
+        send_at:
+          type: string
+          description: The scheduled send time in RFC3339 format
+          format: date-time
+        send_at_timestamp:
+          type: string
+          description: The scheduled send time as a Unix timestamp string
+        jid:
+          type: string
+          description: Job ID string for the scheduled campaign
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: 'Token-based authentication. Use format: "Token token=<API_KEY>" where <API_KEY> is your API key'
+      name: authorization
+      in: header

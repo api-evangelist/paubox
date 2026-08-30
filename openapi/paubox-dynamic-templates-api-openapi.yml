@@ -1,0 +1,448 @@
+openapi: 3.2.0
+info:
+  title: Paubox Email Dynamic Templates API
+  description: 'Public documentation for Paubox''s Transactional Email API
+
+
+    ## Authentication
+
+
+    **IMPORTANT**: This API uses a custom authentication format that requires the "Token token=" prefix.
+
+
+    All requests must include the Authorization header in this exact format:
+
+    ```
+
+    Authorization: Token token=YOUR_API_KEY
+
+    ```
+
+
+    **Note for Code Generation Tools**: Auto-generated code from this specification may need to be modified to include the "Token token=" prefix, as most generators expect standard Bearer token format.
+
+    '
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/email
+  description: Paubox Email API
+security:
+- PauboxToken: []
+tags:
+- name: Dynamic Templates
+  description: Manage and use dynamic Handlebars templates for email content
+paths:
+  /dynamic_templates:
+    get:
+      tags:
+      - Dynamic Templates
+      summary: List all dynamic templates
+      description: Retrieve all dynamic templates for your organization
+      operationId: listDynamicTemplates
+      responses:
+        '200':
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicTemplateListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+    post:
+      tags:
+      - Dynamic Templates
+      summary: Create a dynamic template
+      description: Upload a new Handlebars template for dynamic content generation
+      operationId: createDynamicTemplate
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dynamic_templates_body'
+        required: true
+      responses:
+        '200':
+          description: Template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicTemplateResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+  /dynamic_templates/{id}:
+    get:
+      tags:
+      - Dynamic Templates
+      summary: Get a dynamic template
+      description: Retrieve a specific dynamic template by ID
+      operationId: getDynamicTemplate
+      parameters:
+      - name: id
+        in: path
+        description: Template ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Template details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicTemplateResponse'
+        '404':
+          description: Template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+    delete:
+      tags:
+      - Dynamic Templates
+      summary: Delete a dynamic template
+      description: Delete a specific dynamic template by ID
+      operationId: deleteDynamicTemplate
+      parameters:
+      - name: id
+        in: path
+        description: Template ID to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Template deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        '404':
+          description: Template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+    patch:
+      tags:
+      - Dynamic Templates
+      summary: Update a dynamic template
+      description: Update an existing Handlebars template
+      operationId: updateDynamicTemplate
+      parameters:
+      - name: id
+        in: path
+        description: Template ID to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/dynamic_templates_id_body'
+        required: true
+      responses:
+        '200':
+          description: Template updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicTemplateResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+  /templated_messages:
+    post:
+      tags:
+      - Dynamic Templates
+      summary: Send a dynamically templated message
+      description: Send an email using a dynamic template with variable substitution
+      operationId: sendTemplatedMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplatedMessageRequest'
+            examples:
+              basic:
+                summary: Basic templated message
+                value:
+                  data:
+                    template_name: detailed_test
+                    template_values: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
+                    message:
+                      recipients:
+                      - recipient@host.com
+                      - Recipient Name <recipient2@host.com>
+                      bcc:
+                      - recipient3@host.com
+                      - Recipient Name <recipient4@host.com>
+                      headers:
+                        subject: sample email
+                        from: sender@authorized_domain.com
+                        reply-to: Sender Name <sender@authorized_domain.com>
+                      allowNonTLS: false
+                      forceSecureNotification: false
+                      attachments:
+                      - fileName: hello_world.txt
+                        contentType: text/plain
+                        content: SGVsbG8gV29ybGQ
+        required: true
+      responses:
+        '200':
+          description: Templated message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleSendResponse'
+              examples:
+                success:
+                  value:
+                    sourceTrackingId: 3d38ab13-0af8-4028-bd45-XXXXXXXXXXXX
+                    data: Service OK
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - PauboxToken: []
+components:
+  schemas:
+    TemplatedMessageRequest_data:
+      required:
+      - message
+      - template_name
+      - template_values
+      type: object
+      properties:
+        template_name:
+          type: string
+          description: The name of the template to use (must match exactly)
+          example: detailed_test
+        template_values:
+          type: string
+          description: JSON-formatted string containing template variable values
+          example: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
+        message:
+          $ref: '#/components/schemas/TemplatedMessage'
+    dynamic_templates_id_body:
+      type: object
+      properties:
+        data[name]:
+          type: string
+          description: Updated name for the template
+          example: updated_welcome_template
+        data[body]:
+          type: string
+          description: Updated Handlebars template file (.hbs)
+          format: binary
+    inline_response_200:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Template deleted successfully
+    dynamic_templates_body:
+      required:
+      - data[body]
+      - data[name]
+      type: object
+      properties:
+        data[name]:
+          type: string
+          description: Name for the template
+          example: welcome_template
+        data[body]:
+          type: string
+          description: Handlebars template file (.hbs)
+          format: binary
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errors'
+    Attachment:
+      required:
+      - content
+      - contentType
+      - fileName
+      type: object
+      properties:
+        fileName:
+          type: string
+        contentType:
+          type: string
+          description: Valid MIME type, e.g., application/pdf.
+        content:
+          type: string
+          description: Base64-encoded file contents.
+    SingleSendResponse:
+      type: object
+      properties:
+        sourceTrackingId:
+          type: string
+          description: Identifier for tracking the message source.
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        data:
+          type: string
+          example: Service OK
+    DynamicTemplateListResponse:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DynamicTemplateResponse'
+    ErrorResponse_errors:
+      type: object
+      properties:
+        code:
+          type: integer
+        title:
+          type: string
+        details:
+          type: string
+    TemplatedMessage:
+      required:
+      - headers
+      - recipients
+      type: object
+      properties:
+        recipients:
+          minItems: 1
+          type: array
+          items:
+            type: string
+            description: Email address, optionally with display name (e.g., "J. Smith <jsmith@host.com>").
+        bcc:
+          type: array
+          items:
+            type: string
+        cc:
+          type: array
+          items:
+            type: string
+        headers:
+          $ref: '#/components/schemas/TemplatedMessageHeaders'
+        allowNonTLS:
+          type: boolean
+          description: 'Allow delivery over non-TLS rather than converting to a Secure Portal message. Not HIPAA compliant if the message contains PHI.
+
+            '
+          default: false
+        forceSecureNotification:
+          type: boolean
+          description: 'Force delivery as a Paubox Secure Message; recipient gets a pickup notification with a link.
+
+            '
+          default: false
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+    DynamicTemplateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Template ID
+          example: template_123
+        name:
+          type: string
+          description: Template name
+          example: welcome_template
+        body:
+          type: string
+          description: Template content (Handlebars)
+          example: Hello {{name}}, welcome to our service!
+        created_at:
+          type: string
+          description: Template creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Template last update timestamp
+          format: date-time
+    TemplatedMessageRequest:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TemplatedMessageRequest_data'
+    TemplatedMessageHeaders:
+      required:
+      - from
+      - subject
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Message subject (can include template variables)
+        from:
+          type: string
+          description: Must match the verified domain of your API key.
+        reply-to:
+          type: string
+          description: Reply-to address; must match a verified domain if different from from.
+        List-Unsubscribe:
+          type: string
+          description: 'Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.
+
+            '
+        List-Unsubscribe-Post:
+          type: string
+          description: Used in conjunction with List-Unsubscribe header.
+        additionalProperties:
+          type: string
+          description: Any additional custom header values.
+  securitySchemes:
+    PauboxToken:
+      type: http
+      scheme: bearer
+      description: 'Paubox API uses Bearer token authentication in the Authorization header.
+
+
+        Format: `Authorization: Bearer YOUR_API_KEY_HERE`
+
+
+        Example: `Authorization: Bearer 9e5b092b632445b8f570c62ae54f30fda1044305`
+
+
+        The legacy format `Authorization: Token token=YOUR_API_KEY_HERE` is also supported.
+
+        '

@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  title: Paubox Marketing Tracking Links API
+  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  contact:
+    name: Paubox Support
+    url: https://www.paubox.com
+  version: 1.0.0
+servers:
+- url: https://api.paubox.com/v1/marketing
+  description: Production server
+security:
+- TokenAuth: []
+tags:
+- name: tracking_links
+  description: Tracking link analytics and data operations
+paths:
+  /tracking_links:
+    get:
+      tags:
+      - tracking_links
+      summary: Fetch tracking links
+      description: 'Return a list of json data for all tracking links associated to a campaign mailing send or campaign mailing delivery.
+
+
+        **Note:** The campaign_mailing_send_id is available from the Paubox Marketing interface analytics page. Click a sent campaign and the URL will show a selectedId.
+
+
+        If you pass in the campaign_mailing_send_id, it will return a list of every link in every email sent in the campaign and the tracking info.
+
+        '
+      operationId: getTrackingLinks
+      parameters:
+      - name: campaign_mailing_send_id
+        in: query
+        description: UUID string, available from the Paubox Marketing interface analytics page. Click a sent campaign and the URL will show a selectedId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 1308ab8d-a128-498c-8367-f71ac16934e8
+      - name: order_by
+        in: query
+        description: Attribute to sort on. Default value is created_at
+        required: false
+        schema:
+          type: string
+          default: created_at
+      - name: order
+        in: query
+        description: Direction to sort. Default value is descending
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: Tracking links data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLinksDetailResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    TrackingLinksDetailResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
+    TrackingLinksDetailResponse_attributes:
+      type: object
+      properties:
+        target_url:
+          type: string
+          description: The target URL of the tracking link
+        opened_at:
+          type: string
+          description: Timestamp when the link was opened
+          format: date-time
+        clicked:
+          type: integer
+          description: Number of times the link was clicked
+        campaign_mailing_delivery_id:
+          type: string
+          description: ID of the campaign mailing delivery associated with this tracking link
+    TrackingLinksDetailResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Tracking link ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - tracking_link
+        attributes:
+          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      description: 'Token-based authentication. Use format: "Token token=<API_KEY>" where <API_KEY> is your API key'
+      name: authorization
+      in: header
