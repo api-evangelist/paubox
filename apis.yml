@@ -71,6 +71,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -92,7 +94,8 @@ apis:
   description: Campaign mailing management and sending operations
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
-  tags:
+  tags: []
+  tags_raw:
   - campaign_mailings
   properties:
   - type: OpenAPI
@@ -115,6 +118,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Drip Campaigns
+  tags_raw:
   - drip_campaigns
   properties:
   - type: OpenAPI
@@ -203,6 +208,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -247,6 +254,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Subscribers
+  tags_raw:
   - subscribers
   properties:
   - type: OpenAPI
@@ -269,6 +278,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Subscription Lists
+  tags_raw:
   - subscription_lists
   properties:
   - type: OpenAPI
@@ -291,6 +302,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Subscription
+  tags_raw:
   - subscriptions
   properties:
   - type: OpenAPI
@@ -313,6 +326,8 @@ apis:
   humanURL: https://docs.paubox.com/email-api
   baseURL: https://api.paubox.com/v1/email
   tags:
+  - Tracking Links
+  tags_raw:
   - tracking_links
   properties:
   - type: OpenAPI
