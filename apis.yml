@@ -1,20 +1,16 @@
 aid: paubox
 name: Paubox
-description: >-
-  Paubox is a HIPAA compliant, HITRUST certified email infrastructure company serving
-  healthcare organizations in the United States. Its products encrypt outbound email
-  without recipient portals, passwords, or plugins, and work alongside Google Workspace
-  and Microsoft 365. The developer surface is three REST APIs on api.paubox.com — the
-  Paubox Email API for transactional email (send, bulk send, message receipt, Handlebars
-  dynamic templates, templated messages) with an SMTP relay alternative at
-  smtp.paubox.com:587; the Paubox Marketing API for HIPAA compliant campaign mailings,
-  drip campaigns, subscribers, subscription lists, tracking links and campaign analytics;
-  and the Paubox Forms API for building, hosting and processing secure patient intake
-  forms with public respondent endpoints and scoped management endpoints. Paubox
-  publishes OpenAPI 3.0 definitions for all three, official SDKs for ten languages, a
-  Node-based CLI, delivery webhooks, an llms.txt, an A2A agent card, a published Agent
-  Skill, and a hosted MCP server at mcp.paubox.com exposing 30 tools across email,
-  forms and marketing.
+description: Paubox is a HIPAA compliant, HITRUST certified email infrastructure company serving healthcare
+  organizations in the United States. Its products encrypt outbound email without recipient portals, passwords,
+  or plugins, and work alongside Google Workspace and Microsoft 365. The developer surface is three REST
+  APIs on api.paubox.com — the Paubox Email API for transactional email (send, bulk send, message receipt,
+  Handlebars dynamic templates, templated messages) with an SMTP relay alternative at smtp.paubox.com:587;
+  the Paubox Marketing API for HIPAA compliant campaign mailings, drip campaigns, subscribers, subscription
+  lists, tracking links and campaign analytics; and the Paubox Forms API for building, hosting and processing
+  secure patient intake forms with public respondent endpoints and scoped management endpoints. Paubox
+  publishes OpenAPI 3.0 definitions for all three, official SDKs for ten languages, a Node-based CLI,
+  delivery webhooks, an llms.txt, an A2A agent card, a published Agent Skill, and a hosted MCP server
+  at mcp.paubox.com exposing 30 tools across email, forms and marketing.
 deliveryModel:
   model: saas
   open_source: false
@@ -61,12 +57,11 @@ tags:
 - Encryption
 - Messaging
 apis:
-- aid: paubox-mcp-server
+- aid: paubox:paubox-mcp-server
   name: Paubox MCP Server
-  description: >-
-    Hosted Model Context Protocol server exposing 30 Paubox tools across email, forms and email marketing
-    to MCP-compatible AI clients. Reachable over streamable HTTP at https://mcp.paubox.com/mcp with OAuth
-    or an `x-paubox-api-key` header, and over stdio via the `@paubox/mcp` package.
+  description: Hosted Model Context Protocol server exposing 30 Paubox tools across email, forms and email
+    marketing to MCP-compatible AI clients. Reachable over streamable HTTP at https://mcp.paubox.com/mcp
+    with OAuth or an `x-paubox-api-key` header, and over stdio via the `@paubox/mcp` package.
   humanURL: https://docs.paubox.com/mcp-server/index
   baseURL: https://mcp.paubox.com/mcp
   tags:
