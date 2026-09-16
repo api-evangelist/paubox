@@ -439,6 +439,8 @@ common:
   url: asyncapi/paubox-email-webhooks.yml
 - type: WellKnown
   url: well-known/paubox-well-known.yml
+- type: Contact
+  url: mailto:support@paubox.com
 x-enrichment:
   date: '2026-08-26'
   status: enriched
