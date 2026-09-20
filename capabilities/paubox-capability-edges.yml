@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 5
+edge_count: 6
 edges:
 - tag: campaign_mailings
   spec_file: paubox-campaign-mailings-api-openapi.yml
@@ -53,6 +53,18 @@ edges:
   reason: Management of email marketing subscriber records with custom fields, statistics and list memberships
     — marketing contact-base management. Which L2 (digital marketing vs marketing ops) is not determinable,
     so L1 only.
+- tag: subscription_lists
+  spec_file: paubox-subscription-lists-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: '"Fetch subscription lists", "Create subscription list", "Delete subscription list" (Paubox
+    Marketing API)'
+  reason: Marketing email list (audience segment) administration. Not SaaS subscription commerce despite
+    the tag string — the base URL is /v1/marketing and the objects are mailing lists. Marketing automation
+    audience management.
+  recovered_from: vertical-healthcare-providers-edges.json
 - tag: subscriptions
   spec_file: paubox-subscriptions-api-openapi.yml
   capability_id: BC-400
