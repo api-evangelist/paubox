@@ -1,7 +1,23 @@
 openapi: 3.2.0
 info:
   title: Paubox Marketing Tracking Links API
-  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  description: 'Public documentation Paubox Marketing API.
+
+
+    All Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.
+
+
+    ## Authentication
+
+    Use the authorization header in requests with the format: `authorization: Token token=`
+
+
+    Replace `` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).
+
+
+    ## Base URL
+
+    `https://api.paubox.com/v1/marketing`'
   contact:
     name: Paubox Support
     url: https://www.paubox.com
@@ -12,13 +28,13 @@ servers:
 security:
 - TokenAuth: []
 tags:
-- name: tracking_links
+- name: Tracking Links
   description: Tracking link analytics and data operations
 paths:
   /tracking_links:
     get:
       tags:
-      - tracking_links
+      - Tracking Links
       summary: Fetch tracking links
       description: 'Return a list of json data for all tracking links associated to a campaign mailing send or campaign mailing delivery.
 
@@ -26,9 +42,7 @@ paths:
         **Note:** The campaign_mailing_send_id is available from the Paubox Marketing interface analytics page. Click a sent campaign and the URL will show a selectedId.
 
 
-        If you pass in the campaign_mailing_send_id, it will return a list of every link in every email sent in the campaign and the tracking info.
-
-        '
+        If you pass in the campaign_mailing_send_id, it will return a list of every link in every email sent in the campaign and the tracking info.'
       operationId: getTrackingLinks
       parameters:
       - name: campaign_mailing_send_id
@@ -73,6 +87,19 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    TrackingLinksDetailResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Tracking link ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - tracking_link
+        attributes:
+          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
     TrackingLinksDetailResponse:
       type: object
       properties:
@@ -80,6 +107,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
     TrackingLinksDetailResponse_attributes:
       type: object
       properties:
@@ -96,52 +135,27 @@ components:
         campaign_mailing_delivery_id:
           type: string
           description: ID of the campaign mailing delivery associated with this tracking link
-    TrackingLinksDetailResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Tracking link ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - tracking_link
-        attributes:
-          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
   responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     UnprocessableEntity:
       description: Unprocessable entity
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

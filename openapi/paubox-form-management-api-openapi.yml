@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Paubox Forms Form management API
-  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.
-
-    '
+  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.'
   version: 1.0.0
 servers:
 - url: https://api.paubox.com/v1/forms
@@ -20,9 +18,7 @@ paths:
       operationId: listForms
       security:
       - bearerAuth: []
-      description: 'Returns a paginated list of forms belonging to a customer. Supports filtering by form ID, title/description search, and archived/active state, plus ordering and pagination.
-
-        '
+      description: Returns a paginated list of forms belonging to a customer. Supports filtering by form ID, title/description search, and archived/active state, plus ordering and pagination.
       parameters:
       - name: customer_id
         in: query
@@ -147,9 +143,7 @@ paths:
       operationId: createForm
       security:
       - bearerAuth: []
-      description: 'Creates a new form. Returns the UUID of the created form.
-
-        '
+      description: Creates a new form. Returns the UUID of the created form.
       requestBody:
         required: true
         content:
@@ -215,9 +209,7 @@ paths:
       operationId: getFormStats
       security:
       - bearerAuth: []
-      description: 'Returns aggregate form statistics for a customer: the number of active forms, the total submission count, and the number of submissions received in the last 7 days.
-
-        '
+      description: 'Returns aggregate form statistics for a customer: the number of active forms, the total submission count, and the number of submissions received in the last 7 days.'
       parameters:
       - name: customer_id
         in: query
@@ -253,9 +245,7 @@ paths:
       operationId: copyForm
       security:
       - bearerAuth: []
-      description: 'Creates a copy of an existing form with a new title. The copy starts with a submission count of 0 and no vanity URL. Returns the full new form object.
-
-        '
+      description: Creates a copy of an existing form with a new title. The copy starts with a submission count of 0 and no vanity URL. Returns the full new form object.
       requestBody:
         required: true
         content:
@@ -314,9 +304,7 @@ paths:
       operationId: getForm
       security:
       - bearerAuth: []
-      description: 'Returns the full form definition by ID, including inactive and archived forms (unlike the public endpoint, which only serves renderable forms to respondents).
-
-        '
+      description: Returns the full form definition by ID, including inactive and archived forms (unlike the public endpoint, which only serves renderable forms to respondents).
       parameters:
       - name: form_id
         in: path
@@ -376,9 +364,7 @@ paths:
       operationId: updateForm
       security:
       - bearerAuth: []
-      description: 'Updates a form. This is a partial update: any fields omitted from the request body are left unchanged.
-
-        '
+      description: 'Updates a form. This is a partial update: any fields omitted from the request body are left unchanged.'
       parameters:
       - name: form_id
         in: path
@@ -432,9 +418,7 @@ paths:
       operationId: archiveForm
       security:
       - bearerAuth: []
-      description: 'Archives a form. Archiving also deactivates the form (sets `active` to false), so it stops accepting submissions. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
-
-        '
+      description: 'Archives a form. Archiving also deactivates the form (sets `active` to false), so it stops accepting submissions. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.'
       parameters:
       - name: form_id
         in: path
@@ -468,9 +452,7 @@ paths:
       operationId: unarchiveForm
       security:
       - bearerAuth: []
-      description: 'Unarchives a form. This does not re-activate it: `active` stays false until the form is updated with `active: true`. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.
-
-        '
+      description: 'Unarchives a form. This does not re-activate it: `active` stays false until the form is updated with `active: true`. The endpoint does not verify that the form exists: an unknown form ID still returns a 200 success response.'
       parameters:
       - name: form_id
         in: path
@@ -498,42 +480,6 @@ paths:
           description: Missing or invalid API key, or the key lacks the "forms" scope
 components:
   schemas:
-    FormListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Form'
-        page_info:
-          $ref: '#/components/schemas/PageInfo'
-    PageInfo:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Total number of matching forms
-        pages:
-          type: integer
-          description: Total number of pages
-        page:
-          type: integer
-          description: Current page number
-        items:
-          type: integer
-          description: Number of items per page
-    FormStats:
-      type: object
-      properties:
-        active_form_count:
-          type: integer
-          description: Number of active forms
-        total_submission_count:
-          type: integer
-          description: Total submissions across all forms
-        submissions_last_7_days:
-          type: integer
-          description: Submissions received in the last 7 days
     CreateFormRequest:
       type: object
       required:
@@ -585,19 +531,6 @@ components:
         submission_count:
           type: integer
           default: 0
-    CopyFormRequest:
-      type: object
-      required:
-      - form_id
-      - title
-      properties:
-        form_id:
-          type: string
-          format: uuid
-          description: UUID of the form to copy
-        title:
-          type: string
-          description: Title for the copy
     UpdateFormRequest:
       type: object
       description: 'Partial update. All fields are optional; omitted fields are left unchanged.
@@ -625,6 +558,31 @@ components:
           description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
 
             '
+    FormStats:
+      type: object
+      properties:
+        active_form_count:
+          type: integer
+          description: Number of active forms
+        total_submission_count:
+          type: integer
+          description: Total submissions across all forms
+        submissions_last_7_days:
+          type: integer
+          description: Submissions received in the last 7 days
+    CopyFormRequest:
+      type: object
+      required:
+      - form_id
+      - title
+      properties:
+        form_id:
+          type: string
+          format: uuid
+          description: UUID of the form to copy
+        title:
+          type: string
+          description: Title for the copy
     Form:
       type: object
       properties:
@@ -699,6 +657,30 @@ components:
         updated_at:
           type: string
           format: date-time
+    FormListResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Form'
+        page_info:
+          $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of matching forms
+        pages:
+          type: integer
+          description: Total number of pages
+        page:
+          type: integer
+          description: Current page number
+        items:
+          type: integer
+          description: Number of items per page
   securitySchemes:
     bearerAuth:
       type: http

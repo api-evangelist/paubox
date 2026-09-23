@@ -1,18 +1,11 @@
 generated: '2026-08-26'
 method: probed
 source: https://docs.paubox.com/.well-known/agent-card.json
-description: >-
-  Paubox serves an A2A Agent Card from its documentation host. The card is scoped to the
-  documentation site rather than to the API hosts: name, url, provider and
-  documentationUrl all point at https://docs.paubox.com/, and its single skill links to a
-  Paubox-authored Agent Skill markdown file served from the same host. No card is served
-  on www.paubox.com, api.paubox.com or mcp.paubox.com (all 404).
-
+description: 'Paubox serves an A2A Agent Card from its documentation host. The card is scoped to the documentation site rather than to the API hosts: name, url, provider and documentationUrl all point at https://docs.paubox.com/, and its single skill links to a Paubox-authored Agent Skill markdown file served from the same host. No card is served on www.paubox.com, api.paubox.com or mcp.paubox.com (all 404).'
 discovery:
   path: /.well-known/agent-card.json
   canonical: true
   host: docs.paubox.com
-
 x-evidence:
   fetched: '2026-08-26'
   url: https://docs.paubox.com/.well-known/agent-card.json
@@ -20,7 +13,6 @@ x-evidence:
   content_type: application/json
   body_bytes: 963
   parses_as: JSON object with AgentCard shape (name, url, version, protocolVersion, capabilities, skills)
-
 card:
   file: paubox-agent-card.json
   name: Paubox API Docs
@@ -34,39 +26,23 @@ card:
     streaming: false
     pushNotifications: false
   skills:
-    - id: paubox
-      name: Paubox
-      url: https://docs.paubox.com/.well-known/agent-skills/paubox/skill.md
-      captured: ../skills/paubox-provider-published-skill.md
-
-grade: near-conformant
-grade_basis: >-
-  Graded against A2A 1.0.0. Hard checks all pass: capabilities is an object,
-  protocolVersion is present, skills is an array. preferredTransport,
-  defaultInputModes and defaultOutputModes are all present. The card falls short of
-  conformant on completeness rather than shape — see deviations[].
+  - id: paubox
+    name: Paubox
+    url: https://docs.paubox.com/.well-known/agent-skills/paubox/skill.md
+    captured: ../skills/paubox-provider-published-skill.md
+grade_basis: 'Graded against A2A 1.0.0. Hard checks all pass: capabilities is an object, protocolVersion is present, skills is an array. preferredTransport, defaultInputModes and defaultOutputModes are all present. The card falls short of conformant on completeness rather than shape — see deviations[].'
 deviations:
-  - field: protocolVersion
-    observed: '0.3'
-    note: >-
-      Declares A2A 0.3, not 1.0.0. The card is a valid 0.3-era document; it is not
-      claiming 1.0 conformance.
-  - field: skills[].tags
-    observed: '[]'
-    note: >-
-      The single skill declares an empty tags array. A2A expects tags to be usable for
-      skill matching; an empty array gives a routing agent nothing to match on beyond the
-      description.
-  - field: url / supportedInterfaces[].url
-    observed: https://docs.paubox.com/
-    note: >-
-      The card's url and its one supportedInterface both point at the documentation site
-      root, not at an A2A JSON-RPC endpoint or the MCP endpoint at
-      https://mcp.paubox.com/mcp. An A2A client following this card reaches an HTML docs
-      site, not an agent it can call. The card functions as a discovery signpost to the
-      published Agent Skill rather than as an invocable agent descriptor.
-  - field: provider.organization
-    observed: Paubox API Docs
-    note: >-
-      Names the documentation property rather than the legal entity (Paubox, Inc.), which
-      is what the security page uses.
+- field: protocolVersion
+  observed: '0.3'
+  note: Declares A2A 0.3, not 1.0.0. The card is a valid 0.3-era document; it is not claiming 1.0 conformance.
+- field: skills[].tags
+  observed: '[]'
+  note: The single skill declares an empty tags array. A2A expects tags to be usable for skill matching; an empty array gives a routing agent nothing to match on beyond the description.
+- field: url / supportedInterfaces[].url
+  observed: https://docs.paubox.com/
+  note: The card's url and its one supportedInterface both point at the documentation site root, not at an A2A JSON-RPC endpoint or the MCP endpoint at https://mcp.paubox.com/mcp. An A2A client following this card reaches an HTML docs site, not an agent it can call. The card functions as a discovery signpost to the published Agent Skill rather than as an invocable agent descriptor.
+- field: provider.organization
+  observed: Paubox API Docs
+  note: Names the documentation property rather than the legal entity (Paubox, Inc.), which is what the security page uses.
+conformance:
+  grade: near-conformant

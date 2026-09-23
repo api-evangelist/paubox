@@ -1,7 +1,23 @@
 openapi: 3.2.0
 info:
   title: Paubox Marketing Drip Campaigns API
-  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  description: 'Public documentation Paubox Marketing API.
+
+
+    All Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.
+
+
+    ## Authentication
+
+    Use the authorization header in requests with the format: `authorization: Token token=`
+
+
+    Replace `` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).
+
+
+    ## Base URL
+
+    `https://api.paubox.com/v1/marketing`'
   contact:
     name: Paubox Support
     url: https://www.paubox.com
@@ -199,15 +215,7 @@ components:
       properties:
         drip_campaign:
           $ref: '#/components/schemas/UpdateDripCampaignRequest_drip_campaign'
-    StartDripCampaignResponse_data:
-      type: object
-      properties:
-        jids:
-          type: array
-          description: Array of job IDs for the started drip campaign
-          items:
-            type: string
-    DripCampaignsResponse_data:
+    DripCampaignResponse_data:
       type: object
       properties:
         id:
@@ -219,7 +227,7 @@ components:
           enum:
           - drip_campaign
         attributes:
-          $ref: '#/components/schemas/DripCampaignsResponse_attributes'
+          $ref: '#/components/schemas/DripCampaignResponse_data_attributes'
     DripCampaignsResponse:
       type: object
       properties:
@@ -227,48 +235,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DripCampaignsResponse_data'
-    DripCampaignsResponse_attributes:
+    StartDripCampaignResponse_data:
       type: object
       properties:
-        name:
-          type: string
-          description: Name of the drip campaign
-        subscription_list_id:
-          type: string
-          description: Subscription list ID
-        subscription_list_name:
-          type: string
-          description: Name of the subscription list
-        state:
-          type: string
-          description: Current state of the drip campaign
-        updated_at:
-          type: string
-          description: Last update timestamp
-          format: date-time
-        start_trigger:
-          type: string
-          description: Trigger condition to start the drip campaign
-        subscriber_count:
-          type: integer
-          description: Number of subscribers in the campaign
-        subscriber_completed_count:
-          type: integer
-          description: Number of subscribers who completed the campaign
-    StartDripCampaignResponse:
+        jids:
+          type: array
+          description: Array of job IDs for the started drip campaign
+          items:
+            type: string
+    PauseDripCampaignResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/StartDripCampaignResponse_data'
-    PauseDripCampaignResponse_data:
-      type: object
-      properties:
-        drip_campaign_id:
-          type: string
-          description: ID of the paused drip campaign
-        status:
-          type: string
-          description: Status of the drip campaign after pausing
+          $ref: '#/components/schemas/PauseDripCampaignResponse_data'
     DripCampaignResponse:
       type: object
       properties:
@@ -290,31 +269,6 @@ components:
         drip_campaign_nodes:
           type: string
           description: JSON string containing drip campaign node configuration
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    DripCampaignResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Drip campaign ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - drip_campaign
-        attributes:
-          $ref: '#/components/schemas/DripCampaignResponse_data_attributes'
     DripCampaignResponse_data_attributes:
       type: object
       properties:
@@ -349,26 +303,88 @@ components:
         drip_campaign_tree_blob:
           type: string
           description: JSON string containing drip campaign tree structure
-    PauseDripCampaignResponse:
+    DripCampaignsResponse_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+        state:
+          type: string
+          description: Current state of the drip campaign
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in the campaign
+        subscriber_completed_count:
+          type: integer
+          description: Number of subscribers who completed the campaign
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    PauseDripCampaignResponse_data:
+      type: object
+      properties:
+        drip_campaign_id:
+          type: string
+          description: ID of the paused drip campaign
+        status:
+          type: string
+          description: Status of the drip campaign after pausing
+    DripCampaignsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drip campaign ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - drip_campaign
+        attributes:
+          $ref: '#/components/schemas/DripCampaignsResponse_attributes'
+    StartDripCampaignResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/PauseDripCampaignResponse_data'
+          $ref: '#/components/schemas/StartDripCampaignResponse_data'
   responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     UnprocessableEntity:
       description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
@@ -379,8 +395,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

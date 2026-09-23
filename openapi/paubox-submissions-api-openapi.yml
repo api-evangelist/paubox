@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Paubox Forms Submissions API
-  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.
-
-    '
+  description: 'The Paubox Forms API has two kinds of endpoints. Public, respondent-facing endpoints (retrieving a form definition for rendering and submitting a form response) require no authentication. Authenticated management endpoints (creating, listing, updating, copying, archiving forms, and reading or exporting submissions) require a Paubox API key with the "forms" scope, sent as `Authorization: Bearer YOUR_API_KEY`. API keys are generated in the Paubox dashboard.'
   version: 1.0.0
 servers:
 - url: https://api.paubox.com/v1/forms
@@ -20,9 +18,7 @@ paths:
       operationId: listFormSubmissions
       security:
       - bearerAuth: []
-      description: 'Returns a paginated list of submissions for a form. Each submission''s `form_data` field is a JSON-encoded string of the respondent''s answers.
-
-        '
+      description: Returns a paginated list of submissions for a form. Each submission's `form_data` field is a JSON-encoded string of the respondent's answers.
       parameters:
       - name: form_id
         in: path
@@ -114,9 +110,7 @@ paths:
       operationId: exportSubmissionsCsv
       security:
       - bearerAuth: []
-      description: 'Exports all submissions of a form as a CSV attachment (filename `form_data.csv`). The first column is "Created At", followed by one column per form field, using the field labels from the form definition.
-
-        '
+      description: Exports all submissions of a form as a CSV attachment (filename `form_data.csv`). The first column is "Created At", followed by one column per form field, using the field labels from the form definition.
       parameters:
       - name: form_id
         in: path
@@ -154,9 +148,7 @@ paths:
       operationId: exportSubmissionCsv
       security:
       - bearerAuth: []
-      description: 'Exports a single submission as a CSV attachment (filename `form_data.csv`). Uses the same column layout as the full export (a "Created At" column followed by one column per form field), with a single data row.
-
-        '
+      description: Exports a single submission as a CSV attachment (filename `form_data.csv`). Uses the same column layout as the full export (a "Created At" column followed by one column per form field), with a single data row.
       parameters:
       - name: form_id
         in: path
@@ -199,9 +191,7 @@ paths:
       operationId: exportSubmissionPdf
       security:
       - bearerAuth: []
-      description: 'Exports a single submission as a PDF attachment (filename `form_data.pdf`). For signable forms, the PDF includes the respondent''s signature images.
-
-        '
+      description: Exports a single submission as a PDF attachment (filename `form_data.pdf`). For signable forms, the PDF includes the respondent's signature images.
       parameters:
       - name: form_id
         in: path
@@ -233,6 +223,22 @@ paths:
             '
 components:
   schemas:
+    FormSubmissionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormSubmission'
+        total:
+          type: integer
+          description: Total number of matching submissions
+        page:
+          type: integer
+          description: Current page number
+        items:
+          type: integer
+          description: Number of items per page
     FormSubmission:
       type: object
       properties:
@@ -277,22 +283,6 @@ components:
         created_at:
           type: string
           format: date-time
-    FormSubmissionListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormSubmission'
-        total:
-          type: integer
-          description: Total number of matching submissions
-        page:
-          type: integer
-          description: Current page number
-        items:
-          type: integer
-          description: Number of items per page
   securitySchemes:
     bearerAuth:
       type: http

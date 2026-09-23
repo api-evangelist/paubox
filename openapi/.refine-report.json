@@ -1,0 +1,46 @@
+{
+  "provider": "paubox",
+  "sources": [
+    "_original/paubox-email-api-openapi.yaml",
+    "_original/paubox-forms-api-openapi.yaml",
+    "_original/paubox-marketing-api-openapi.yaml"
+  ],
+  "outputs": [
+    "paubox-dynamic-templates-api-openapi.yml",
+    "paubox-messages-api-openapi.yml",
+    "paubox-form-management-api-openapi.yml",
+    "paubox-forms-api-openapi.yml",
+    "paubox-submissions-api-openapi.yml",
+    "paubox-analytics-api-openapi.yml",
+    "paubox-campaign-mailings-api-openapi.yml",
+    "paubox-drip-campaigns-api-openapi.yml",
+    "paubox-subscribers-api-openapi.yml",
+    "paubox-subscription-lists-api-openapi.yml",
+    "paubox-subscriptions-api-openapi.yml",
+    "paubox-tracking-links-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "paubox-email-api-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "paubox-forms-api-openapi.yaml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "paubox-marketing-api-openapi.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "paubox-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-campaign-mailings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-drip-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-dynamic-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-form-management-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-forms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-messages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-submissions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-subscribers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-subscription-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "paubox-tracking-links-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

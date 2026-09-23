@@ -1,7 +1,23 @@
 openapi: 3.2.0
 info:
   title: Paubox Marketing Subscribers API
-  description: "Public documentation Paubox Marketing API. \n\nAll Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.\n\n## Authentication\nUse the authorization header in requests with the format: `authorization: Token token=<API_KEY>`\n\nReplace `<API_KEY>` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).\n\n## Base URL\n`https://api.paubox.com/v1/marketing`\n"
+  description: 'Public documentation Paubox Marketing API.
+
+
+    All Paubox Marketing customers have access to the Paubox Marketing API to automate various tasks.
+
+
+    ## Authentication
+
+    Use the authorization header in requests with the format: `authorization: Token token=`
+
+
+    Replace `` with your API key. Find your API key in the address bar from the email builder (note: each API Key is displayed only once upon creation).
+
+
+    ## Base URL
+
+    `https://api.paubox.com/v1/marketing`'
   contact:
     name: Paubox Support
     url: https://www.paubox.com
@@ -12,13 +28,13 @@ servers:
 security:
 - TokenAuth: []
 tags:
-- name: subscribers
+- name: Subscribers
   description: Subscriber management operations
 paths:
   /subscribers:
     get:
       tags:
-      - subscribers
+      - Subscribers
       summary: Fetch subscribers
       description: Return json data about subscribers
       operationId: getSubscribers
@@ -91,9 +107,38 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     post:
       tags:
-      - subscribers
+      - Subscribers
       summary: Create subscriber
-      description: "Creates a subscriber record. Adds record to subscription list if specified otherwise adds to all contacts.\n\n**Example curl command:**\n```bash\ncurl -X POST \\\nhttps://api.paubox.com/v1/marketing/subscribers \\\n  -H 'authorization: Token token=<API_KEY>' \\\n  -H 'content-type: application/json' \\\n  -d '{\n    \"subscriber\": {\n        \"email\": \"test@example.com\",\n        \"first_name\": \"test\",\n        \"last_name\": \"example\"\n    }\n  }'\n```\n"
+      description: 'Creates a subscriber record. Adds record to subscription list if specified otherwise adds to all contacts.
+
+
+        **Example curl command:**
+
+        ```bash
+
+        curl -X POST \
+
+        https://api.paubox.com/v1/marketing/subscribers \
+
+        -H ''authorization: Token token='' \
+
+        -H ''content-type: application/json'' \
+
+        -d ''{
+
+        "subscriber": {
+
+        "email": "test@example.com",
+
+        "first_name": "test",
+
+        "last_name": "example"
+
+        }
+
+        }''
+
+        ```'
       operationId: createSubscriber
       requestBody:
         content:
@@ -124,7 +169,7 @@ paths:
   /subscribers/{subscriber_id}:
     get:
       tags:
-      - subscribers
+      - Subscribers
       summary: Fetch subscriber
       description: Return json data about subscriber
       operationId: getSubscriber
@@ -159,7 +204,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     put:
       tags:
-      - subscribers
+      - Subscribers
       summary: Update subscriber
       description: Updates a subscriber record
       operationId: updateSubscriberPut
@@ -195,7 +240,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     patch:
       tags:
-      - subscribers
+      - Subscribers
       summary: Update subscriber
       description: Updates a subscriber record
       operationId: updateSubscriberPatch
@@ -232,7 +277,7 @@ paths:
   /subscribers_bulk_create:
     post:
       tags:
-      - subscribers
+      - Subscribers
       summary: Bulk create subscribers
       description: Creates one or more subscriber records. Adds to subscription list if specified, otherwise adds to all contacts.
       operationId: bulkCreateSubscribers
@@ -260,7 +305,7 @@ paths:
   /subscribers_bulk_delete:
     delete:
       tags:
-      - subscribers
+      - Subscribers
       summary: Bulk delete subscribers
       description: 'Deletes one or more subscriber records. Removes from subscription list if specified, otherwise removed from all contacts.
 
@@ -271,9 +316,7 @@ paths:
 
         DELETE /subscribers_bulk_delete?subscriber_ids=id1,id2,id3&subscription_list_id=list123
 
-        ```
-
-        '
+        ```'
       operationId: bulkDeleteSubscribers
       parameters:
       - name: subscriber_ids
@@ -305,45 +348,28 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    SubscribersResponse:
+    Subscriber:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Subscriber'
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - subscriber
+        attributes:
+          $ref: '#/components/schemas/Subscriber_attributes'
+    CreateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/CreateSubscriberRequest_subscriber'
+        subscription_list_id:
+          type: string
+          description: Optional subscription list ID
     DetailedSubscriber_attributes:
       type: object
       properties:
@@ -378,46 +404,49 @@ components:
             $ref: '#/components/schemas/DetailedSubscriber_attributes_subscription_lists'
         statistics:
           $ref: '#/components/schemas/DetailedSubscriber_attributes_statistics'
-    BulkCreateResponse_data:
+    DetailedSubscriber_attributes_custom_fields:
       type: object
       properties:
-        num_subscribers_added:
-          type: integer
-          description: Number of subscribers successfully added
+        subscriber_custom_field_type_id:
+          type: string
+          description: ID of the custom field type
+        custom_field_name:
+          type: string
+          description: Name of the custom field
+        custom_field_value:
+          type: string
+          description: Value of the custom field
+    Subscriber_attributes:
+      required:
+      - email
+      - unsubscribed
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        unsubscribed:
+          type: boolean
+          description: Whether the subscriber is unsubscribed
+    SubscribersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscriber'
     DetailedSubscriberResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/DetailedSubscriber'
-    DetailedSubscriber:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the subscriber
-        type:
-          type: string
-          description: Resource type
-        attributes:
-          $ref: '#/components/schemas/DetailedSubscriber_attributes'
-    UpdateSubscriberRequest:
-      type: object
-      properties:
-        subscriber:
-          $ref: '#/components/schemas/UpdateSubscriberRequest_subscriber'
-    SubscriberResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Subscriber'
-    CreateSubscriberRequest:
-      type: object
-      properties:
-        subscriber:
-          $ref: '#/components/schemas/CreateSubscriberRequest_subscriber'
-        subscription_list_id:
-          type: string
-          description: Optional subscription list ID
     BulkCreateSubscribersRequest_subscribers:
       required:
       - email
@@ -440,61 +469,6 @@ components:
             type: object
             additionalProperties:
               type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    DetailedSubscriber_attributes_custom_fields:
-      type: object
-      properties:
-        subscriber_custom_field_type_id:
-          type: string
-          description: ID of the custom field type
-        custom_field_name:
-          type: string
-          description: Name of the custom field
-        custom_field_value:
-          type: string
-          description: Value of the custom field
-    DetailedSubscriber_attributes_subscription_lists:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Subscription list ID
-        name:
-          type: string
-          description: Subscription list name
-        unsubscribed:
-          type: boolean
-          description: Whether subscriber is unsubscribed from this list
-    Subscriber_attributes:
-      required:
-      - email
-      - unsubscribed
-      type: object
-      properties:
-        email:
-          type: string
-          description: Subscriber's email address
-          format: email
-        first_name:
-          type: string
-          description: Subscriber's first name
-        last_name:
-          type: string
-          description: Subscriber's last name
-        unsubscribed:
-          type: boolean
-          description: Whether the subscriber is unsubscribed
     DetailedSubscriber_attributes_statistics:
       type: object
       properties:
@@ -522,17 +496,6 @@ components:
         global_unsubscribed:
           type: integer
           description: Number of global unsubscribes
-    BulkCreateSubscribersRequest:
-      type: object
-      properties:
-        subscribers:
-          type: array
-          description: Array of subscribers to create
-          items:
-            $ref: '#/components/schemas/BulkCreateSubscribersRequest_subscribers'
-        subscription_list_id:
-          type: string
-          description: Optional subscription list ID
     UpdateSubscriberRequest_subscriber:
       type: object
       properties:
@@ -549,19 +512,45 @@ components:
         last_name:
           type: string
           description: Subscriber's last name
-    Subscriber:
+    BulkCreateResponse:
       type: object
       properties:
-        id:
+        data:
+          $ref: '#/components/schemas/BulkCreateResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
           type: string
-          description: Unique identifier for the subscriber
-        type:
+          description: Error message
+        code:
           type: string
-          description: Resource type
-          enum:
-          - subscriber
-        attributes:
-          $ref: '#/components/schemas/Subscriber_attributes'
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    SubscriberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscriber'
+    BulkCreateSubscribersRequest:
+      type: object
+      properties:
+        subscribers:
+          type: array
+          description: Array of subscribers to create
+          items:
+            $ref: '#/components/schemas/BulkCreateSubscribersRequest_subscribers'
+        subscription_list_id:
+          type: string
+          description: Optional subscription list ID
+    BulkCreateResponse_data:
+      type: object
+      properties:
+        num_subscribers_added:
+          type: integer
+          description: Number of subscribers successfully added
     CreateSubscriberRequest_subscriber:
       type: object
       properties:
@@ -585,11 +574,65 @@ components:
             type: object
             additionalProperties:
               type: string
-    BulkCreateResponse:
+    DetailedSubscriber:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/BulkCreateResponse_data'
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes'
+    UpdateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/UpdateSubscriberRequest_subscriber'
+    DetailedSubscriber_attributes_subscription_lists:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        name:
+          type: string
+          description: Subscription list name
+        unsubscribed:
+          type: boolean
+          description: Whether subscriber is unsubscribed from this list
+  responses:
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     TokenAuth:
       type: apiKey
