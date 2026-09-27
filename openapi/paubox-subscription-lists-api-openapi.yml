@@ -191,7 +191,62 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    SubscriptionListsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    SubscriptionListResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SubscriptionListsResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
     UpdateSubscriptionListRequest:
       required:
       - name
@@ -200,13 +255,6 @@ components:
         name:
           type: string
           description: Name of the subscription list
-    SubscriptionListsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionListsResponse_data'
     SubscriptionListsResponse_attributes:
       type: object
       properties:
@@ -222,26 +270,6 @@ components:
         form_id:
           type: string
           description: Form ID for use with Paubox Secure Forms
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    CreateSubscriptionListRequest:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the subscription list (cannot be 'default')
     SubscriptionListsResponse_data:
       type: object
       properties:
@@ -255,42 +283,14 @@ components:
           - subscription_list
         attributes:
           $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
-    SubscriptionListResponse:
+    CreateSubscriptionListRequest:
+      required:
+      - name
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/SubscriptionListsResponse_data'
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+        name:
+          type: string
+          description: Name of the subscription list (cannot be 'default')
   securitySchemes:
     TokenAuth:
       type: apiKey

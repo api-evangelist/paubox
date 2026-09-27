@@ -86,58 +86,9 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  schemas:
-    TrackingLinksDetailResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Tracking link ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - tracking_link
-        attributes:
-          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
-    TrackingLinksDetailResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    TrackingLinksDetailResponse_attributes:
-      type: object
-      properties:
-        target_url:
-          type: string
-          description: The target URL of the tracking link
-        opened_at:
-          type: string
-          description: Timestamp when the link was opened
-          format: date-time
-        clicked:
-          type: integer
-          description: Number of times the link was clicked
-        campaign_mailing_delivery_id:
-          type: string
-          description: ID of the campaign mailing delivery associated with this tracking link
   responses:
-    UnprocessableEntity:
-      description: Unprocessable entity
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -154,12 +105,61 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
+    UnprocessableEntity:
+      description: Unprocessable entity
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  schemas:
+    TrackingLinksDetailResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
+    TrackingLinksDetailResponse_attributes:
+      type: object
+      properties:
+        target_url:
+          type: string
+          description: The target URL of the tracking link
+        opened_at:
+          type: string
+          description: Timestamp when the link was opened
+          format: date-time
+        clicked:
+          type: integer
+          description: Number of times the link was clicked
+        campaign_mailing_delivery_id:
+          type: string
+          description: ID of the campaign mailing delivery associated with this tracking link
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    TrackingLinksDetailResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Tracking link ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - tracking_link
+        attributes:
+          $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
   securitySchemes:
     TokenAuth:
       type: apiKey

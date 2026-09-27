@@ -348,7 +348,130 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    CreateSubscriberRequest_subscriber:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address (required unless phone_number is provided)
+          format: email
+        phone_number:
+          type: string
+          description: E.164 formatted phone number (required unless email is provided)
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          description: Optional custom fields (unlimited)
+          items:
+            type: object
+            additionalProperties:
+              type: string
+    DetailedSubscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the subscriber
+        type:
+          type: string
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    DetailedSubscriber_attributes_subscription_lists:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        name:
+          type: string
+          description: Subscription list name
+        unsubscribed:
+          type: boolean
+          description: Whether subscriber is unsubscribed from this list
+    UpdateSubscriberRequest_subscriber:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        phone_number:
+          type: string
+          description: E.164 formatted phone number
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+    UpdateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/UpdateSubscriberRequest_subscriber'
+    SubscriberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Subscriber'
+    CreateSubscriberRequest:
+      type: object
+      properties:
+        subscriber:
+          $ref: '#/components/schemas/CreateSubscriberRequest_subscriber'
+        subscription_list_id:
+          type: string
+          description: Optional subscription list ID
     Subscriber:
       type: object
       properties:
@@ -362,14 +485,34 @@ components:
           - subscriber
         attributes:
           $ref: '#/components/schemas/Subscriber_attributes'
-    CreateSubscriberRequest:
+    SubscribersResponse:
       type: object
       properties:
-        subscriber:
-          $ref: '#/components/schemas/CreateSubscriberRequest_subscriber'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscriber'
+    BulkCreateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BulkCreateResponse_data'
+    BulkCreateSubscribersRequest:
+      type: object
+      properties:
+        subscribers:
+          type: array
+          description: Array of subscribers to create
+          items:
+            $ref: '#/components/schemas/BulkCreateSubscribersRequest_subscribers'
         subscription_list_id:
           type: string
           description: Optional subscription list ID
+    DetailedSubscriberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DetailedSubscriber'
     DetailedSubscriber_attributes:
       type: object
       properties:
@@ -416,37 +559,6 @@ components:
         custom_field_value:
           type: string
           description: Value of the custom field
-    Subscriber_attributes:
-      required:
-      - email
-      - unsubscribed
-      type: object
-      properties:
-        email:
-          type: string
-          description: Subscriber's email address
-          format: email
-        first_name:
-          type: string
-          description: Subscriber's first name
-        last_name:
-          type: string
-          description: Subscriber's last name
-        unsubscribed:
-          type: boolean
-          description: Whether the subscriber is unsubscribed
-    SubscribersResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Subscriber'
-    DetailedSubscriberResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/DetailedSubscriber'
     BulkCreateSubscribersRequest_subscribers:
       required:
       - email
@@ -469,6 +581,12 @@ components:
             type: object
             additionalProperties:
               type: string
+    BulkCreateResponse_data:
+      type: object
+      properties:
+        num_subscribers_added:
+          type: integer
+          description: Number of subscribers successfully added
     DetailedSubscriber_attributes_statistics:
       type: object
       properties:
@@ -496,143 +614,25 @@ components:
         global_unsubscribed:
           type: integer
           description: Number of global unsubscribes
-    UpdateSubscriberRequest_subscriber:
+    Subscriber_attributes:
+      required:
+      - email
+      - unsubscribed
       type: object
       properties:
         email:
           type: string
           description: Subscriber's email address
           format: email
-        phone_number:
-          type: string
-          description: E.164 formatted phone number
         first_name:
           type: string
           description: Subscriber's first name
         last_name:
           type: string
           description: Subscriber's last name
-    BulkCreateResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BulkCreateResponse_data'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    SubscriberResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Subscriber'
-    BulkCreateSubscribersRequest:
-      type: object
-      properties:
-        subscribers:
-          type: array
-          description: Array of subscribers to create
-          items:
-            $ref: '#/components/schemas/BulkCreateSubscribersRequest_subscribers'
-        subscription_list_id:
-          type: string
-          description: Optional subscription list ID
-    BulkCreateResponse_data:
-      type: object
-      properties:
-        num_subscribers_added:
-          type: integer
-          description: Number of subscribers successfully added
-    CreateSubscriberRequest_subscriber:
-      type: object
-      properties:
-        email:
-          type: string
-          description: Subscriber's email address (required unless phone_number is provided)
-          format: email
-        phone_number:
-          type: string
-          description: E.164 formatted phone number (required unless email is provided)
-        first_name:
-          type: string
-          description: Subscriber's first name
-        last_name:
-          type: string
-          description: Subscriber's last name
-        custom_fields:
-          type: array
-          description: Optional custom fields (unlimited)
-          items:
-            type: object
-            additionalProperties:
-              type: string
-    DetailedSubscriber:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the subscriber
-        type:
-          type: string
-          description: Resource type
-        attributes:
-          $ref: '#/components/schemas/DetailedSubscriber_attributes'
-    UpdateSubscriberRequest:
-      type: object
-      properties:
-        subscriber:
-          $ref: '#/components/schemas/UpdateSubscriberRequest_subscriber'
-    DetailedSubscriber_attributes_subscription_lists:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Subscription list ID
-        name:
-          type: string
-          description: Subscription list name
         unsubscribed:
           type: boolean
-          description: Whether subscriber is unsubscribed from this list
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          description: Whether the subscriber is unsubscribed
   securitySchemes:
     TokenAuth:
       type: apiKey

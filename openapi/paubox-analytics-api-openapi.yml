@@ -232,122 +232,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    SubscribersByTrackingLinkResponse_attributes_custom_fields:
-      type: object
-      properties:
-        subscriber_custom_field_type_id:
-          type: string
-          description: Custom field type ID
-        value:
-          type: string
-          description: Custom field value
-    CampaignDeliveriesTableResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CampaignDeliveriesTableResponse_data'
-    TrackingLinksResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingLinksResponse_data'
-    CampaignAnalyticsResponse_data:
-      type: object
-      properties:
-        delivered:
-          type: integer
-          description: Number of delivered emails
-        viewed:
-          type: integer
-          description: Number of viewed emails
-        clicked:
-          type: integer
-          description: Number of clicked emails
-        bounced:
-          type: integer
-          description: Number of bounced emails
-        soft_bounced:
-          type: integer
-          description: Number of soft bounced emails
-        hard_bounced:
-          type: integer
-          description: Number of hard bounced emails
-        unsubscribed:
-          type: integer
-          description: Number of unsubscribed emails
-        global_unsubscribed:
-          type: integer
-          description: Number of global unsubscribed emails
-    CampaignTableResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CampaignTableResponse_data'
-    CampaignTableResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Campaign table entry ID
-        marketing_email_id:
-          type: string
-          description: Marketing email ID
-        campaign_mailing_id:
-          type: string
-          description: Campaign mailing ID
-        campaign_mailing_created_at:
-          type: string
-          description: Campaign mailing creation timestamp
-          format: date-time
-        sent_at:
-          type: string
-          description: Campaign sent timestamp
-          format: date-time
-        subscription_list_name:
-          type: string
-          description: Name of the subscription list
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    SubscribersByTrackingLinkResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_data'
-    SubscribersByTrackingLinkResponse_attributes:
-      type: object
-      properties:
-        email:
-          type: string
-          description: Subscriber's email address
-          format: email
-        first_name:
-          type: string
-          description: Subscriber's first name
-        last_name:
-          type: string
-          description: Subscriber's last name
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes_custom_fields'
     SubscribersByTrackingLinkResponse_data:
       type: object
       properties:
@@ -359,18 +243,6 @@ components:
           description: Resource type
         attributes:
           $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes'
-    TrackingLinksResponse_data:
-      type: object
-      properties:
-        html_id:
-          type: integer
-          description: HTML ID of the tracking link
-        target_url:
-          type: string
-          description: Target URL of the tracking link
-        clicked:
-          type: integer
-          description: Number of clicks on this link
     CampaignDeliveriesTableResponse_data:
       type: object
       properties:
@@ -401,12 +273,146 @@ components:
           additionalProperties:
             type: string
           description: Tracking link information (dynamic property names based on actual URLs)
+    CampaignTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignTableResponse_data'
+    CampaignTableResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign table entry ID
+        marketing_email_id:
+          type: string
+          description: Marketing email ID
+        campaign_mailing_id:
+          type: string
+          description: Campaign mailing ID
+        campaign_mailing_created_at:
+          type: string
+          description: Campaign mailing creation timestamp
+          format: date-time
+        sent_at:
+          type: string
+          description: Campaign sent timestamp
+          format: date-time
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+    CampaignDeliveriesTableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignDeliveriesTableResponse_data'
+    SubscribersByTrackingLinkResponse_attributes:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Subscriber's email address
+          format: email
+        first_name:
+          type: string
+          description: Subscriber's first name
+        last_name:
+          type: string
+          description: Subscriber's last name
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_attributes_custom_fields'
+    CampaignAnalyticsResponse_data:
+      type: object
+      properties:
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        viewed:
+          type: integer
+          description: Number of viewed emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        bounced:
+          type: integer
+          description: Number of bounced emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounced emails
+        hard_bounced:
+          type: integer
+          description: Number of hard bounced emails
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribed emails
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribed emails
+    TrackingLinksResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksResponse_data'
     CampaignAnalyticsResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/CampaignAnalyticsResponse_data'
+    TrackingLinksResponse_data:
+      type: object
+      properties:
+        html_id:
+          type: integer
+          description: HTML ID of the tracking link
+        target_url:
+          type: string
+          description: Target URL of the tracking link
+        clicked:
+          type: integer
+          description: Number of clicks on this link
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    SubscribersByTrackingLinkResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscribersByTrackingLinkResponse_data'
+    SubscribersByTrackingLinkResponse_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: Custom field type ID
+        value:
+          type: string
+          description: Custom field value
   responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     BadRequest:
       description: Bad request
       content:
@@ -415,12 +421,6 @@ components:
             $ref: '#/components/schemas/Error'
     InternalServerError:
       description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
       content:
         application/json:
           schema:

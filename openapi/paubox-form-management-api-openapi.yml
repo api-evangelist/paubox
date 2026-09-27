@@ -480,6 +480,105 @@ paths:
           description: Missing or invalid API key, or the key lacks the "forms" scope
 components:
   schemas:
+    Form:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        form_html:
+          type:
+          - string
+          - 'null'
+        form_json:
+          type:
+          - object
+          - 'null'
+        form_css:
+          type:
+          - string
+          - 'null'
+        vanity_url:
+          type:
+          - string
+          - 'null'
+        version:
+          type: integer
+        active:
+          type: boolean
+        customer_id:
+          type: integer
+        old_form_id:
+          type:
+          - integer
+          - 'null'
+        recipient:
+          type:
+          - string
+          - 'null'
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        signable:
+          type: boolean
+        signature_confirmation_label:
+          type:
+          - string
+          - 'null'
+        submission_count:
+          type: integer
+        type:
+          type:
+          - string
+          - 'null'
+        subscription_list_id:
+          type:
+          - string
+          - 'null'
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+        deleted:
+          type: boolean
+        archived:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CopyFormRequest:
+      type: object
+      required:
+      - form_id
+      - title
+      properties:
+        form_id:
+          type: string
+          format: uuid
+          description: UUID of the form to copy
+        title:
+          type: string
+          description: Title for the copy
+    FormStats:
+      type: object
+      properties:
+        active_form_count:
+          type: integer
+          description: Number of active forms
+        total_submission_count:
+          type: integer
+          description: Total submissions across all forms
+        submissions_last_7_days:
+          type: integer
+          description: Submissions received in the last 7 days
     CreateFormRequest:
       type: object
       required:
@@ -558,114 +657,6 @@ components:
           description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
 
             '
-    FormStats:
-      type: object
-      properties:
-        active_form_count:
-          type: integer
-          description: Number of active forms
-        total_submission_count:
-          type: integer
-          description: Total submissions across all forms
-        submissions_last_7_days:
-          type: integer
-          description: Submissions received in the last 7 days
-    CopyFormRequest:
-      type: object
-      required:
-      - form_id
-      - title
-      properties:
-        form_id:
-          type: string
-          format: uuid
-          description: UUID of the form to copy
-        title:
-          type: string
-          description: Title for the copy
-    Form:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        title:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        form_html:
-          type:
-          - string
-          - 'null'
-        form_json:
-          type:
-          - object
-          - 'null'
-        form_css:
-          type:
-          - string
-          - 'null'
-        vanity_url:
-          type:
-          - string
-          - 'null'
-        version:
-          type: integer
-        active:
-          type: boolean
-        customer_id:
-          type: integer
-        old_form_id:
-          type:
-          - integer
-          - 'null'
-        recipient:
-          type:
-          - string
-          - 'null'
-          description: 'Comma-separated email addresses notified on each submission.
-
-            '
-        signable:
-          type: boolean
-        signature_confirmation_label:
-          type:
-          - string
-          - 'null'
-        submission_count:
-          type: integer
-        type:
-          type:
-          - string
-          - 'null'
-        subscription_list_id:
-          type:
-          - string
-          - 'null'
-          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
-
-            '
-        deleted:
-          type: boolean
-        archived:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    FormListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Form'
-        page_info:
-          $ref: '#/components/schemas/PageInfo'
     PageInfo:
       type: object
       properties:
@@ -681,6 +672,15 @@ components:
         items:
           type: integer
           description: Number of items per page
+    FormListResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Form'
+        page_info:
+          $ref: '#/components/schemas/PageInfo'
   securitySchemes:
     bearerAuth:
       type: http
