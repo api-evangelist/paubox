@@ -235,6 +235,59 @@ paths:
       - PauboxToken: []
 components:
   schemas:
+    TemplatedMessageRequest:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TemplatedMessageRequest_data'
+    inline_response_200:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Template deleted successfully
+    dynamic_templates_id_body:
+      type: object
+      properties:
+        data[name]:
+          type: string
+          description: Updated name for the template
+          example: updated_welcome_template
+        data[body]:
+          type: string
+          description: Updated Handlebars template file (.hbs)
+          format: binary
+    dynamic_templates_body:
+      required:
+      - data[body]
+      - data[name]
+      type: object
+      properties:
+        data[name]:
+          type: string
+          description: Name for the template
+          example: welcome_template
+        data[body]:
+          type: string
+          description: Handlebars template file (.hbs)
+          format: binary
+    Attachment:
+      required:
+      - content
+      - contentType
+      - fileName
+      type: object
+      properties:
+        fileName:
+          type: string
+        contentType:
+          type: string
+          description: Valid MIME type, e.g., application/pdf.
+        content:
+          type: string
+          description: Base64-encoded file contents.
     DynamicTemplateListResponse:
       type: object
       properties:
@@ -259,24 +312,35 @@ components:
           example: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
         message:
           $ref: '#/components/schemas/TemplatedMessage'
-    dynamic_templates_id_body:
+    SingleSendResponse:
       type: object
       properties:
-        data[name]:
+        sourceTrackingId:
           type: string
-          description: Updated name for the template
-          example: updated_welcome_template
-        data[body]:
-          type: string
-          description: Updated Handlebars template file (.hbs)
-          format: binary
-    TemplatedMessageRequest:
-      required:
-      - data
-      type: object
-      properties:
+          description: Identifier for tracking the message source.
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
         data:
-          $ref: '#/components/schemas/TemplatedMessageRequest_data'
+          type: string
+          example: Service OK
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errors'
+    ErrorResponse_errors:
+      type: object
+      properties:
+        code:
+          type: integer
+        title:
+          type: string
+        details:
+          type: string
     TemplatedMessage:
       required:
       - headers
@@ -315,41 +379,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Attachment'
-    inline_response_200:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Template deleted successfully
-    SingleSendResponse:
-      type: object
-      properties:
-        sourceTrackingId:
-          type: string
-          description: Identifier for tracking the message source.
-        customHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        data:
-          type: string
-          example: Service OK
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errors'
-    ErrorResponse_errors:
-      type: object
-      properties:
-        code:
-          type: integer
-        title:
-          type: string
-        details:
-          type: string
     TemplatedMessageHeaders:
       required:
       - from
@@ -376,35 +405,6 @@ components:
         additionalProperties:
           type: string
           description: Any additional custom header values.
-    dynamic_templates_body:
-      required:
-      - data[body]
-      - data[name]
-      type: object
-      properties:
-        data[name]:
-          type: string
-          description: Name for the template
-          example: welcome_template
-        data[body]:
-          type: string
-          description: Handlebars template file (.hbs)
-          format: binary
-    Attachment:
-      required:
-      - content
-      - contentType
-      - fileName
-      type: object
-      properties:
-        fileName:
-          type: string
-        contentType:
-          type: string
-          description: Valid MIME type, e.g., application/pdf.
-        content:
-          type: string
-          description: Base64-encoded file contents.
     DynamicTemplateResponse:
       type: object
       properties:

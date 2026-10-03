@@ -192,12 +192,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Unauthorized
       content:
@@ -222,14 +216,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    SubscriptionListsResponse:
+    CreateSubscriptionListRequest:
+      required:
+      - name
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionListsResponse_data'
+        name:
+          type: string
+          description: Name of the subscription list (cannot be 'default')
     SubscriptionListResponse:
       type: object
       properties:
@@ -247,6 +248,19 @@ components:
         details:
           type: object
           description: Additional error details
+    SubscriptionListsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - subscription_list
+        attributes:
+          $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
     UpdateSubscriptionListRequest:
       required:
       - name
@@ -255,6 +269,13 @@ components:
         name:
           type: string
           description: Name of the subscription list
+    SubscriptionListsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionListsResponse_data'
     SubscriptionListsResponse_attributes:
       type: object
       properties:
@@ -270,27 +291,6 @@ components:
         form_id:
           type: string
           description: Form ID for use with Paubox Secure Forms
-    SubscriptionListsResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Subscription list ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - subscription_list
-        attributes:
-          $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
-    CreateSubscriptionListRequest:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the subscription list (cannot be 'default')
   securitySchemes:
     TokenAuth:
       type: apiKey

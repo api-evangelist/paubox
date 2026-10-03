@@ -104,6 +104,31 @@ paths:
             '
 components:
   schemas:
+    FormSubmissionRequest:
+      type: object
+      required:
+      - form_data
+      properties:
+        form_data:
+          type: object
+          description: 'Key-value pairs matching the form''s field schema (`form_json`). Structure varies per form.
+
+            '
+        attachments:
+          type: array
+          description: Optional file attachments
+          items:
+            type: object
+            required:
+            - name
+            - content
+            properties:
+              name:
+                type: string
+                description: Filename
+              content:
+                type: string
+                description: Base64-encoded file content
     Form:
       type: object
       properties:
@@ -178,31 +203,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    FormSubmissionRequest:
-      type: object
-      required:
-      - form_data
-      properties:
-        form_data:
-          type: object
-          description: 'Key-value pairs matching the form''s field schema (`form_json`). Structure varies per form.
-
-            '
-        attachments:
-          type: array
-          description: Optional file attachments
-          items:
-            type: object
-            required:
-            - name
-            - content
-            properties:
-              name:
-                type: string
-                description: Filename
-              content:
-                type: string
-                description: Base64-encoded file content
   securitySchemes:
     bearerAuth:
       type: http

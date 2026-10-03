@@ -112,13 +112,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    TrackingLinksDetailResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
     TrackingLinksDetailResponse_attributes:
       type: object
       properties:
@@ -135,18 +128,6 @@ components:
         campaign_mailing_delivery_id:
           type: string
           description: ID of the campaign mailing delivery associated with this tracking link
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
     TrackingLinksDetailResponse_data:
       type: object
       properties:
@@ -160,6 +141,25 @@ components:
           - tracking_link
         attributes:
           $ref: '#/components/schemas/TrackingLinksDetailResponse_attributes'
+    TrackingLinksDetailResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLinksDetailResponse_data'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
   securitySchemes:
     TokenAuth:
       type: apiKey

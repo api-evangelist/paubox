@@ -457,18 +457,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Unauthorized
       content:
@@ -487,108 +475,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    CampaignMailing_attributes:
-      type: object
-      properties:
-        subject:
-          type: string
-          description: Campaign mailing subject
-        default_subject:
-          type:
-          - string
-          - 'null'
-          description: Fallback subject used when no subject is set on a send
-        template_type:
-          type: string
-          description: Editor the mailing was authored in, for example `quill`, `bee` or `html`
-        created_at:
-          type: string
-          description: Creation timestamp
-          format: date-time
-        updated_at:
-          type: string
-          description: Last update timestamp
-          format: date-time
-        form_data:
-          type: string
-          description: JSON-encoded editor state for the mailing
-        html_part:
-          type: string
-          description: HTML body of the mailing, including the unsubscribe footer
-        text_part:
-          type:
-          - string
-          - 'null'
-          description: Plain-text body of the mailing
-        image_data:
-          type: string
-          description: Image payload for the mailing. Only present when `with_images` is supplied.
-    UpdateCampaignMailingRequest:
-      type: object
-      properties:
-        campaign_mailing:
-          $ref: '#/components/schemas/UpdateCampaignMailingRequest_campaign_mailing'
-    CampaignMailingsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CampaignMailingsResponse_data'
-    UpdateCampaignMailingRequest_campaign_mailing:
-      type: object
-      description: Only the fields supplied are changed.
-      properties:
-        subject:
-          type: string
-          description: Subject line. Must remain unique within your account.
-        default_subject:
-          type: string
-          description: Fallback subject used when no subject is set on a send
-        from:
-          type: string
-          description: From address for the mailing
-        reply_to:
-          type: string
-          description: Reply-to address for the mailing
-        html_part:
-          type: string
-          description: HTML body. The unsubscribe footer is reapplied on save.
-        text_part:
-          type: string
-          description: Plain-text body
-        form_data:
-          type: string
-          description: JSON-encoded editor state, for mailings built in an editor
-        template_type:
-          type: string
-          description: Editor the mailing is authored in, for example `quill`, `bee` or `html`
-    SendCampaignMailingRequest:
-      required:
-      - campaign_mailing_id
-      - campaign_mailing_send
-      type: object
-      properties:
-        campaign_mailing_id:
-          type: string
-          description: UUID string, can be retrieved from the id= part of the URL when editing a marketing email
-          format: uuid
-        campaign_mailing_send:
-          $ref: '#/components/schemas/SendCampaignMailingRequest_campaign_mailing_send'
-    CampaignMailingsResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Campaign mailing ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - campaign_mailing
-        attributes:
-          $ref: '#/components/schemas/CampaignMailingsResponse_attributes'
     Error:
       type: object
       properties:
@@ -601,29 +500,6 @@ components:
         details:
           type: object
           description: Additional error details
-    CreateCampaignMailingRequest:
-      type: object
-      properties:
-        campaign_mailing:
-          $ref: '#/components/schemas/CreateCampaignMailingRequest_campaign_mailing'
-    ScheduleCampaignMailingResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ScheduleCampaignMailingResponse_data'
-    ScheduleCampaignMailingResponse_data:
-      type: object
-      properties:
-        send_at:
-          type: string
-          description: The scheduled send time in RFC3339 format
-          format: date-time
-        send_at_timestamp:
-          type: string
-          description: The scheduled send time as a Unix timestamp string
-        jid:
-          type: string
-          description: Job ID string for the scheduled campaign
     CreateCampaignMailingRequest_campaign_mailing:
       required:
       - subject
@@ -654,47 +530,18 @@ components:
           type: string
           description: Editor the mailing is authored in, for example `quill`, `bee` or `html`. Defaults to `quill`.
           default: quill
-    BulkDeleteCampaignMailingsRequest:
-      type: object
-      properties:
-        campaign_mailing_ids:
-          type: array
-          description: UUIDs of the campaign mailings to delete. Omit for a no-op.
-          items:
-            type: string
-    SendCampaignMailingRequest_campaign_mailing_send:
+    SendCampaignMailingRequest:
       required:
-      - sender_email
-      - subscription_list_id
+      - campaign_mailing_id
+      - campaign_mailing_send
       type: object
       properties:
-        sender_email:
+        campaign_mailing_id:
           type: string
-          description: Email for a Paubox Marketing user to track who sent it. This is NOT the "From email" that will be used to send the message
-          format: email
-        subscription_list_id:
-          type: string
-          description: UUID string, can be retrieved from the listId= part of the URL of any Contact List page
+          description: UUID string, can be retrieved from the id= part of the URL when editing a marketing email
           format: uuid
-        recipient_emails:
-          type: array
-          description: Optional - will send preview message equivalent (no smart text replacements)
-          items:
-            type: string
-            format: email
-        customer_name:
-          type: string
-          description: Optional for footer. Leave empty to use default information
-        from_email:
-          type: string
-          description: Optional - the email the user will see the email is sent from. Leave empty to use default information
-          format: email
-        from_name:
-          type: string
-          description: Optional - the name the user will see the email is from. Leave empty to use default information
-        subject:
-          type: string
-          description: Optional - the subject of the email. Will use the marketing email unique ID if not specified
+        campaign_mailing_send:
+          $ref: '#/components/schemas/SendCampaignMailingRequest_campaign_mailing_send'
     ScheduleCampaignMailingRequest:
       required:
       - from_email
@@ -737,12 +584,142 @@ components:
           items:
             type: string
             format: email
-    CampaignMailingWriteResponse_data:
+    UpdateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/UpdateCampaignMailingRequest_campaign_mailing'
+    SendCampaignMailingRequest_campaign_mailing_send:
+      required:
+      - sender_email
+      - subscription_list_id
+      type: object
+      properties:
+        sender_email:
+          type: string
+          description: Email for a Paubox Marketing user to track who sent it. This is NOT the "From email" that will be used to send the message
+          format: email
+        subscription_list_id:
+          type: string
+          description: UUID string, can be retrieved from the listId= part of the URL of any Contact List page
+          format: uuid
+        recipient_emails:
+          type: array
+          description: Optional - will send preview message equivalent (no smart text replacements)
+          items:
+            type: string
+            format: email
+        customer_name:
+          type: string
+          description: Optional for footer. Leave empty to use default information
+        from_email:
+          type: string
+          description: Optional - the email the user will see the email is sent from. Leave empty to use default information
+          format: email
+        from_name:
+          type: string
+          description: Optional - the name the user will see the email is from. Leave empty to use default information
+        subject:
+          type: string
+          description: Optional - the subject of the email. Will use the marketing email unique ID if not specified
+    CampaignMailingWriteResponse:
+      type: object
+      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailingWriteResponse_data'
+        errors:
+          type: array
+          description: Validation messages, present only when the write failed
+          items:
+            type: string
+    BulkDeleteCampaignMailingsRequest:
+      type: object
+      properties:
+        campaign_mailing_ids:
+          type: array
+          description: UUIDs of the campaign mailings to delete. Omit for a no-op.
+          items:
+            type: string
+    CreateCampaignMailingRequest:
+      type: object
+      properties:
+        campaign_mailing:
+          $ref: '#/components/schemas/CreateCampaignMailingRequest_campaign_mailing'
+    CampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CampaignMailing'
+    CampaignMailing:
       type: object
       properties:
         id:
           type: string
-          description: UUID of the created or updated campaign mailing
+          description: UUID of the campaign mailing
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailing_attributes'
+    ScheduleCampaignMailingResponse_data:
+      type: object
+      properties:
+        send_at:
+          type: string
+          description: The scheduled send time in RFC3339 format
+          format: date-time
+        send_at_timestamp:
+          type: string
+          description: The scheduled send time as a Unix timestamp string
+        jid:
+          type: string
+          description: Job ID string for the scheduled campaign
+    CampaignMailing_attributes:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Campaign mailing subject
+        default_subject:
+          type:
+          - string
+          - 'null'
+          description: Fallback subject used when no subject is set on a send
+        template_type:
+          type: string
+          description: Editor the mailing was authored in, for example `quill`, `bee` or `html`
+        created_at:
+          type: string
+          description: Creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        form_data:
+          type: string
+          description: JSON-encoded editor state for the mailing
+        html_part:
+          type: string
+          description: HTML body of the mailing, including the unsubscribe footer
+        text_part:
+          type:
+          - string
+          - 'null'
+          description: Plain-text body of the mailing
+        image_data:
+          type: string
+          description: Image payload for the mailing. Only present when `with_images` is supplied.
+    CampaignMailingsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignMailingsResponse_data'
     CampaignMailingsResponse_attributes:
       type: object
       properties:
@@ -783,41 +760,64 @@ components:
         unsubscribed_count:
           type: integer
           description: Number of emails that resulted in unsubscribes
-    CampaignMailing:
-      type: object
-      properties:
-        id:
-          type: string
-          description: UUID of the campaign mailing
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - campaign_mailing
-        attributes:
-          $ref: '#/components/schemas/CampaignMailing_attributes'
-    CampaignMailingWriteResponse:
-      type: object
-      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
-      properties:
-        data:
-          $ref: '#/components/schemas/CampaignMailingWriteResponse_data'
-        errors:
-          type: array
-          description: Validation messages, present only when the write failed
-          items:
-            type: string
-    CampaignMailingResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/CampaignMailing'
     inline_response_400:
       type: object
       properties:
         errors:
           type: string
           example: Invalid time format provided, please use RFC3339 format.
+    UpdateCampaignMailingRequest_campaign_mailing:
+      type: object
+      description: Only the fields supplied are changed.
+      properties:
+        subject:
+          type: string
+          description: Subject line. Must remain unique within your account.
+        default_subject:
+          type: string
+          description: Fallback subject used when no subject is set on a send
+        from:
+          type: string
+          description: From address for the mailing
+        reply_to:
+          type: string
+          description: Reply-to address for the mailing
+        html_part:
+          type: string
+          description: HTML body. The unsubscribe footer is reapplied on save.
+        text_part:
+          type: string
+          description: Plain-text body
+        form_data:
+          type: string
+          description: JSON-encoded editor state, for mailings built in an editor
+        template_type:
+          type: string
+          description: Editor the mailing is authored in, for example `quill`, `bee` or `html`
+    CampaignMailingsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Campaign mailing ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - campaign_mailing
+        attributes:
+          $ref: '#/components/schemas/CampaignMailingsResponse_attributes'
+    CampaignMailingWriteResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the created or updated campaign mailing
+    ScheduleCampaignMailingResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ScheduleCampaignMailingResponse_data'
   securitySchemes:
     TokenAuth:
       type: apiKey
