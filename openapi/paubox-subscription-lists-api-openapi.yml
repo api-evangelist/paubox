@@ -191,51 +191,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    CreateSubscriptionListRequest:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the subscription list (cannot be 'default')
-    SubscriptionListResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/SubscriptionListsResponse_data'
     Error:
       type: object
       properties:
@@ -248,6 +204,22 @@ components:
         details:
           type: object
           description: Additional error details
+    UpdateSubscriptionListRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list
+    CreateSubscriptionListRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the subscription list (cannot be 'default')
     SubscriptionListsResponse_data:
       type: object
       properties:
@@ -261,14 +233,11 @@ components:
           - subscription_list
         attributes:
           $ref: '#/components/schemas/SubscriptionListsResponse_attributes'
-    UpdateSubscriptionListRequest:
-      required:
-      - name
+    SubscriptionListResponse:
       type: object
       properties:
-        name:
-          type: string
-          description: Name of the subscription list
+        data:
+          $ref: '#/components/schemas/SubscriptionListsResponse_data'
     SubscriptionListsResponse:
       type: object
       properties:
@@ -291,6 +260,37 @@ components:
         form_id:
           type: string
           description: Form ID for use with Paubox Secure Forms
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     TokenAuth:
       type: apiKey

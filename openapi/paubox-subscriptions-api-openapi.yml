@@ -478,69 +478,28 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    CreateSubscriptionRequest_subscription:
-      required:
-      - subscriber_id
-      - subscription_list_id
+    CreateSubscriptionResponse:
       type: object
+      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
       properties:
-        subscription_list_id:
-          type: string
-          description: UUID of the subscription list to subscribe to
-        subscriber_id:
-          type: integer
-          description: Internal numeric identifier of the subscriber. This is not the subscriber UUID returned by the subscriber endpoints.
-    DetailedSubscriber_attributes_statistics:
-      type: object
-      properties:
-        deliveries:
-          type: integer
-          description: Number of deliveries
-        delivered:
-          type: integer
-          description: Number of delivered emails
-        opened:
-          type: integer
-          description: Number of opened emails
-        clicked:
-          type: integer
-          description: Number of clicked emails
-        soft_bounced:
-          type: integer
-          description: Number of soft bounces
-        hard_bounced:
-          type: integer
-          description: Number of hard bounces
-        unsubscribed:
-          type: integer
-          description: Number of unsubscribes
-        global_unsubscribed:
-          type: integer
-          description: Number of global unsubscribes
-    DetailedSubscriber_attributes_subscription_lists:
+        data:
+          $ref: '#/components/schemas/Subscription'
+        errors:
+          type: array
+          description: Validation messages, present only when the create failed
+          items:
+            type: string
+    DetailedSubscriber:
       type: object
       properties:
         id:
           type: string
-          description: Subscription list ID
-        name:
+          description: Unique identifier for the subscriber
+        type:
           type: string
-          description: Subscription list name
-        unsubscribed:
-          type: boolean
-          description: Whether subscriber is unsubscribed from this list
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
+          description: Resource type
+        attributes:
+          $ref: '#/components/schemas/DetailedSubscriber_attributes'
     BulkSubscriptionChangeResponse:
       type: object
       properties:
@@ -554,6 +513,18 @@ components:
         errors:
           type: string
           description: Error message, present only when the operation failed
+    DetailedSubscriber_attributes_custom_fields:
+      type: object
+      properties:
+        subscriber_custom_field_type_id:
+          type: string
+          description: ID of the custom field type
+        custom_field_name:
+          type: string
+          description: Name of the custom field
+        custom_field_value:
+          type: string
+          description: Value of the custom field
     SubscriptionChangeRequest:
       required:
       - subscriber_ids
@@ -569,29 +540,17 @@ components:
           description: UUIDs of the subscription lists to update the subscribers on. Omit to act on the subscribers' global opt-out instead.
           items:
             type: string
-    DetailedSubscriber:
+    BulkSubscriptionJob:
       type: object
       properties:
-        id:
+        jid:
           type: string
-          description: Unique identifier for the subscriber
-        type:
-          type: string
-          description: Resource type
-        attributes:
-          $ref: '#/components/schemas/DetailedSubscriber_attributes'
-    DetailedSubscriber_attributes_custom_fields:
+          description: Identifier of the background job processing the change. The change is applied asynchronously.
+    SubscriptionResponse:
       type: object
       properties:
-        subscriber_custom_field_type_id:
-          type: string
-          description: ID of the custom field type
-        custom_field_name:
-          type: string
-          description: Name of the custom field
-        custom_field_value:
-          type: string
-          description: Value of the custom field
+        data:
+          $ref: '#/components/schemas/Subscription'
     DetailedSubscriber_attributes:
       type: object
       properties:
@@ -626,17 +585,114 @@ components:
             $ref: '#/components/schemas/DetailedSubscriber_attributes_subscription_lists'
         statistics:
           $ref: '#/components/schemas/DetailedSubscriber_attributes_statistics'
-    CreateSubscriptionResponse:
+    SubscriptionsResponse:
       type: object
-      description: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
       properties:
         data:
-          $ref: '#/components/schemas/Subscription'
-        errors:
           type: array
-          description: Validation messages, present only when the create failed
+          items:
+            $ref: '#/components/schemas/Subscription'
+    DetailedSubscriber_attributes_statistics:
+      type: object
+      properties:
+        deliveries:
+          type: integer
+          description: Number of deliveries
+        delivered:
+          type: integer
+          description: Number of delivered emails
+        opened:
+          type: integer
+          description: Number of opened emails
+        clicked:
+          type: integer
+          description: Number of clicked emails
+        soft_bounced:
+          type: integer
+          description: Number of soft bounces
+        hard_bounced:
+          type: integer
+          description: Number of hard bounces
+        unsubscribed:
+          type: integer
+          description: Number of unsubscribes
+        global_unsubscribed:
+          type: integer
+          description: Number of global unsubscribes
+    CreateSubscriptionRequest_subscription:
+      required:
+      - subscriber_id
+      - subscription_list_id
+      type: object
+      properties:
+        subscription_list_id:
+          type: string
+          description: UUID of the subscription list to subscribe to
+        subscriber_id:
+          type: integer
+          description: Internal numeric identifier of the subscriber. This is not the subscriber UUID returned by the subscriber endpoints.
+    BulkSubscriptionChangeRequest:
+      type: object
+      properties:
+        subscriber_ids:
+          type: array
+          description: UUIDs of specific subscribers to update. When present the request is handled synchronously and every other field is ignored.
           items:
             type: string
+        from_subscription_list_id:
+          type: string
+          description: UUID of the list whose members are being updated. Required when `subscriber_ids` is omitted. On the `bulk_global_*` endpoints this is a subscription list UUID; on the `dynamic_bulk_*` endpoints it is a dynamic list UUID.
+        search:
+          type: string
+          description: Search term used to narrow the list's members. Defaults to `*` (all members) on the `bulk_global_*` endpoints.
+        filters:
+          type: string
+          description: 'URL-encoded JSON describing additional subscriber filters, as generated by the subscriber search in the Marketing dashboard. The decoded value is an array of filter groups, each group an array of `{"field": ..., "op": ..., "terms": [...]}` objects. Ignored by the `dynamic_bulk_*` endpoints, which use the filters saved on the dynamic list.'
+        except_ids:
+          type: array
+          description: UUIDs of subscribers to exclude from the operation. Use this to express "select all except these".
+          items:
+            type: string
+    DetailedSubscriber_attributes_subscription_lists:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Subscription list ID
+        name:
+          type: string
+          description: Subscription list name
+        unsubscribed:
+          type: boolean
+          description: Whether subscriber is unsubscribed from this list
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    SubscriptionChangeResponse:
+      type: object
+      description: The affected subscribers in JSON:API form. Returned with HTTP 200; on failure the body carries `errors` instead of `data`.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailedSubscriber'
+        errors:
+          type: string
+          description: Error message, present only when the operation failed
+    CreateSubscriptionRequest:
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/CreateSubscriptionRequest_subscription'
     Subscription:
       type: object
       properties:
@@ -677,69 +733,7 @@ components:
         updated_at:
           type: string
           format: date-time
-    BulkSubscriptionChangeRequest:
-      type: object
-      properties:
-        subscriber_ids:
-          type: array
-          description: UUIDs of specific subscribers to update. When present the request is handled synchronously and every other field is ignored.
-          items:
-            type: string
-        from_subscription_list_id:
-          type: string
-          description: UUID of the list whose members are being updated. Required when `subscriber_ids` is omitted. On the `bulk_global_*` endpoints this is a subscription list UUID; on the `dynamic_bulk_*` endpoints it is a dynamic list UUID.
-        search:
-          type: string
-          description: Search term used to narrow the list's members. Defaults to `*` (all members) on the `bulk_global_*` endpoints.
-        filters:
-          type: string
-          description: 'URL-encoded JSON describing additional subscriber filters, as generated by the subscriber search in the Marketing dashboard. The decoded value is an array of filter groups, each group an array of `{"field": ..., "op": ..., "terms": [...]}` objects. Ignored by the `dynamic_bulk_*` endpoints, which use the filters saved on the dynamic list.'
-        except_ids:
-          type: array
-          description: UUIDs of subscribers to exclude from the operation. Use this to express "select all except these".
-          items:
-            type: string
-    CreateSubscriptionRequest:
-      type: object
-      properties:
-        subscription:
-          $ref: '#/components/schemas/CreateSubscriptionRequest_subscription'
-    SubscriptionChangeResponse:
-      type: object
-      description: The affected subscribers in JSON:API form. Returned with HTTP 200; on failure the body carries `errors` instead of `data`.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DetailedSubscriber'
-        errors:
-          type: string
-          description: Error message, present only when the operation failed
-    BulkSubscriptionJob:
-      type: object
-      properties:
-        jid:
-          type: string
-          description: Identifier of the background job processing the change. The change is applied asynchronously.
-    SubscriptionsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Subscription'
-    SubscriptionResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Subscription'
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     InternalServerError:
       description: Internal server error
       content:
@@ -748,6 +742,12 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

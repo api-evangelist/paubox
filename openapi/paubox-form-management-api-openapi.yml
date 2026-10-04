@@ -480,57 +480,18 @@ paths:
           description: Missing or invalid API key, or the key lacks the "forms" scope
 components:
   schemas:
-    CreateFormRequest:
+    FormStats:
       type: object
-      required:
-      - title
-      - form_json
-      - customer_id
-      - version
       properties:
-        title:
-          type: string
-          description: Title of the form
-        form_json:
-          type: object
-          description: The form field schema
-        customer_id:
+        active_form_count:
           type: integer
-          description: Your Paubox customer ID
-        version:
+          description: Number of active forms
+        total_submission_count:
           type: integer
-          description: Form schema version
-        description:
-          type: string
-        form_html:
-          type: string
-        form_css:
-          type: string
-        recipient:
-          type: string
-          description: 'Comma-separated email addresses notified on each submission.
-
-            '
-        signable:
-          type: boolean
-          default: false
-          description: Whether the form collects a signature
-        signature_confirmation_label:
-          type: string
-        subscription_list_id:
-          type: string
-          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
-
-            '
-        type:
-          type: string
-          description: Form type, for example `marketing_form`
-        active:
-          type: boolean
-          default: false
-        submission_count:
+          description: Total submissions across all forms
+        submissions_last_7_days:
           type: integer
-          default: 0
+          description: Submissions received in the last 7 days
     FormListResponse:
       type: object
       properties:
@@ -540,6 +501,21 @@ components:
             $ref: '#/components/schemas/Form'
         page_info:
           $ref: '#/components/schemas/PageInfo'
+    PageInfo:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of matching forms
+        pages:
+          type: integer
+          description: Total number of pages
+        page:
+          type: integer
+          description: Current page number
+        items:
+          type: integer
+          description: Number of items per page
     UpdateFormRequest:
       type: object
       description: 'Partial update. All fields are optional; omitted fields are left unchanged.
@@ -567,46 +543,6 @@ components:
           description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
 
             '
-    CopyFormRequest:
-      type: object
-      required:
-      - form_id
-      - title
-      properties:
-        form_id:
-          type: string
-          format: uuid
-          description: UUID of the form to copy
-        title:
-          type: string
-          description: Title for the copy
-    PageInfo:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Total number of matching forms
-        pages:
-          type: integer
-          description: Total number of pages
-        page:
-          type: integer
-          description: Current page number
-        items:
-          type: integer
-          description: Number of items per page
-    FormStats:
-      type: object
-      properties:
-        active_form_count:
-          type: integer
-          description: Number of active forms
-        total_submission_count:
-          type: integer
-          description: Total submissions across all forms
-        submissions_last_7_days:
-          type: integer
-          description: Submissions received in the last 7 days
     Form:
       type: object
       properties:
@@ -681,6 +617,70 @@ components:
         updated_at:
           type: string
           format: date-time
+    CreateFormRequest:
+      type: object
+      required:
+      - title
+      - form_json
+      - customer_id
+      - version
+      properties:
+        title:
+          type: string
+          description: Title of the form
+        form_json:
+          type: object
+          description: The form field schema
+        customer_id:
+          type: integer
+          description: Your Paubox customer ID
+        version:
+          type: integer
+          description: Form schema version
+        description:
+          type: string
+        form_html:
+          type: string
+        form_css:
+          type: string
+        recipient:
+          type: string
+          description: 'Comma-separated email addresses notified on each submission.
+
+            '
+        signable:
+          type: boolean
+          default: false
+          description: Whether the form collects a signature
+        signature_confirmation_label:
+          type: string
+        subscription_list_id:
+          type: string
+          description: 'ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.
+
+            '
+        type:
+          type: string
+          description: Form type, for example `marketing_form`
+        active:
+          type: boolean
+          default: false
+        submission_count:
+          type: integer
+          default: 0
+    CopyFormRequest:
+      type: object
+      required:
+      - form_id
+      - title
+      properties:
+        form_id:
+          type: string
+          format: uuid
+          description: UUID of the form to copy
+        title:
+          type: string
+          description: Title for the copy
   securitySchemes:
     bearerAuth:
       type: http

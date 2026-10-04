@@ -235,30 +235,6 @@ paths:
       - PauboxToken: []
 components:
   schemas:
-    TemplatedMessageRequest:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/TemplatedMessageRequest_data'
-    inline_response_200:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Template deleted successfully
-    dynamic_templates_id_body:
-      type: object
-      properties:
-        data[name]:
-          type: string
-          description: Updated name for the template
-          example: updated_welcome_template
-        data[body]:
-          type: string
-          description: Updated Handlebars template file (.hbs)
-          format: binary
     dynamic_templates_body:
       required:
       - data[body]
@@ -273,6 +249,52 @@ components:
           type: string
           description: Handlebars template file (.hbs)
           format: binary
+    TemplatedMessageHeaders:
+      required:
+      - from
+      - subject
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Message subject (can include template variables)
+        from:
+          type: string
+          description: Must match the verified domain of your API key.
+        reply-to:
+          type: string
+          description: Reply-to address; must match a verified domain if different from from.
+        List-Unsubscribe:
+          type: string
+          description: 'Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.
+
+            '
+        List-Unsubscribe-Post:
+          type: string
+          description: Used in conjunction with List-Unsubscribe header.
+        additionalProperties:
+          type: string
+          description: Any additional custom header values.
+    SingleSendResponse:
+      type: object
+      properties:
+        sourceTrackingId:
+          type: string
+          description: Identifier for tracking the message source.
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        data:
+          type: string
+          example: Service OK
+    TemplatedMessageRequest:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TemplatedMessageRequest_data'
     Attachment:
       required:
       - content
@@ -295,6 +317,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DynamicTemplateResponse'
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errors'
     TemplatedMessageRequest_data:
       required:
       - message
@@ -312,35 +341,35 @@ components:
           example: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
         message:
           $ref: '#/components/schemas/TemplatedMessage'
-    SingleSendResponse:
+    inline_response_200:
       type: object
       properties:
-        sourceTrackingId:
+        message:
           type: string
-          description: Identifier for tracking the message source.
-        customHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        data:
-          type: string
-          example: Service OK
-    ErrorResponse:
+          example: Template deleted successfully
+    DynamicTemplateResponse:
       type: object
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errors'
-    ErrorResponse_errors:
-      type: object
-      properties:
-        code:
-          type: integer
-        title:
+        id:
           type: string
-        details:
+          description: Template ID
+          example: template_123
+        name:
           type: string
+          description: Template name
+          example: welcome_template
+        body:
+          type: string
+          description: Template content (Handlebars)
+          example: Hello {{name}}, welcome to our service!
+        created_at:
+          type: string
+          description: Template creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Template last update timestamp
+          format: date-time
     TemplatedMessage:
       required:
       - headers
@@ -379,55 +408,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Attachment'
-    TemplatedMessageHeaders:
-      required:
-      - from
-      - subject
+    ErrorResponse_errors:
       type: object
       properties:
-        subject:
+        code:
+          type: integer
+        title:
           type: string
-          description: Message subject (can include template variables)
-        from:
+        details:
           type: string
-          description: Must match the verified domain of your API key.
-        reply-to:
-          type: string
-          description: Reply-to address; must match a verified domain if different from from.
-        List-Unsubscribe:
-          type: string
-          description: 'Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.
-
-            '
-        List-Unsubscribe-Post:
-          type: string
-          description: Used in conjunction with List-Unsubscribe header.
-        additionalProperties:
-          type: string
-          description: Any additional custom header values.
-    DynamicTemplateResponse:
+    dynamic_templates_id_body:
       type: object
       properties:
-        id:
+        data[name]:
           type: string
-          description: Template ID
-          example: template_123
-        name:
+          description: Updated name for the template
+          example: updated_welcome_template
+        data[body]:
           type: string
-          description: Template name
-          example: welcome_template
-        body:
-          type: string
-          description: Template content (Handlebars)
-          example: Hello {{name}}, welcome to our service!
-        created_at:
-          type: string
-          description: Template creation timestamp
-          format: date-time
-        updated_at:
-          type: string
-          description: Template last update timestamp
-          format: date-time
+          description: Updated Handlebars template file (.hbs)
+          format: binary
   securitySchemes:
     PauboxToken:
       type: http
