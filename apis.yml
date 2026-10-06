@@ -44,7 +44,7 @@ x-type: company
 x-source: harvest:secondary-market
 specificationVersion: '0.20'
 created: '2026-08-26'
-modified: '2026-08-26'
+modified: '2026-10-06'
 tags:
 - Email
 - HIPAA
@@ -361,6 +361,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- url: https://www.paubox.com/blog/rss.xml
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/paubox-capability-edges.yml
   name: Paubox Business Capability Map
