@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-tracking-links-detail-response-schema.json",
+  "title": "TrackingLinksDetailResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-tracking-links-api-openapi.yml#/components/schemas/TrackingLinksDetailResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TrackingLinksDetailResponse_data"
+      }
+    }
+  },
+  "$defs": {
+    "TrackingLinksDetailResponse_attributes": {
+      "type": "object",
+      "properties": {
+        "target_url": {
+          "type": "string",
+          "description": "The target URL of the tracking link"
+        },
+        "opened_at": {
+          "type": "string",
+          "description": "Timestamp when the link was opened",
+          "format": "date-time"
+        },
+        "clicked": {
+          "type": "integer",
+          "description": "Number of times the link was clicked"
+        },
+        "campaign_mailing_delivery_id": {
+          "type": "string",
+          "description": "ID of the campaign mailing delivery associated with this tracking link"
+        }
+      }
+    },
+    "TrackingLinksDetailResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Tracking link ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type",
+          "enum": [
+            "tracking_link"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/TrackingLinksDetailResponse_attributes"
+        }
+      }
+    }
+  }
+}

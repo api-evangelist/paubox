@@ -1,0 +1,78 @@
+generated: '2026-10-12'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: cloudflare
+  name: Cloudflare
+  area: cdn
+  host: www.paubox.com
+  evidence: header:cf-ray
+  signal: header
+  confidence: high
+  kin_score:
+  - https_enforced
+  - hsts
+- vendor: github-discussions
+  name: GitHub Discussions
+  area: community
+  host: github.com
+  evidence: https://github.com/Paubox/community/discussions
+  signal: url:github.com/.*/discussions
+  confidence: high
+  kin_score:
+  - community_present
+- vendor: hubspot
+  name: HubSpot
+  area: hosting
+  host: www.paubox.com
+  evidence: cname:hubspot.net
+  signal: cname
+  confidence: high
+  kin_score: []
+- vendor: vercel
+  name: Vercel
+  area: hosting
+  host: docs.paubox.com
+  evidence: header:x-vercel-id
+  signal: header
+  confidence: high
+  kin_score: []
+reliance:
+  areas_vendor_served:
+  - cdn
+  - community
+  - hosting
+  vendor_count: 4
+  areas_observed: 12
+  share_of_observable_areas: 0.25
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: not probed'
+- www.paubox.com (Website)
+- docs.paubox.com (DeveloperPortal)
+- docs.paubox.com (Documentation)
+- docs.paubox.com (APIReference)
+- docs.paubox.com (GettingStarted)
+- support.paubox.com (Support)
+- github.com (HelpCenter)
+- www.paubox.com (SignUp)
+- next.paubox.com (Login)
+- status.paubox.com (StatusPage)
+- mcp.paubox.com (baseURL)
+- api.paubox.com (baseURL)
+- mcp.paubox.com (mcp)

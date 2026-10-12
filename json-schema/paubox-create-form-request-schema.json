@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-form-request-schema.json",
+  "title": "CreateFormRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-form-management-api-openapi.yml#/components/schemas/CreateFormRequest",
+  "type": "object",
+  "required": [
+    "title",
+    "form_json",
+    "customer_id",
+    "version"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the form"
+    },
+    "form_json": {
+      "type": "object",
+      "description": "The form field schema"
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "Your Paubox customer ID"
+    },
+    "version": {
+      "type": "integer",
+      "description": "Form schema version"
+    },
+    "description": {
+      "type": "string"
+    },
+    "form_html": {
+      "type": "string"
+    },
+    "form_css": {
+      "type": "string"
+    },
+    "recipient": {
+      "type": "string",
+      "description": "Comma-separated email addresses notified on each submission.\n"
+    },
+    "signable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the form collects a signature"
+    },
+    "signature_confirmation_label": {
+      "type": "string"
+    },
+    "subscription_list_id": {
+      "type": "string",
+      "description": "ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.\n"
+    },
+    "type": {
+      "type": "string",
+      "description": "Form type, for example `marketing_form`"
+    },
+    "active": {
+      "type": "boolean",
+      "default": false
+    },
+    "submission_count": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

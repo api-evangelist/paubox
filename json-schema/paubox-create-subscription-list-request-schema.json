@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-subscription-list-request-schema.json",
+  "title": "CreateSubscriptionListRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscription-lists-api-openapi.yml#/components/schemas/CreateSubscriptionListRequest",
+  "required": [
+    "name"
+  ],
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the subscription list (cannot be 'default')"
+    }
+  }
+}

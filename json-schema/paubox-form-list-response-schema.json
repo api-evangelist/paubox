@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-form-list-response-schema.json",
+  "title": "FormListResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-form-management-api-openapi.yml#/components/schemas/FormListResponse",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Form"
+      }
+    },
+    "page_info": {
+      "$ref": "#/$defs/PageInfo"
+    }
+  },
+  "$defs": {
+    "Form": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "form_html": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "form_json": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "form_css": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vanity_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "integer"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "customer_id": {
+          "type": "integer"
+        },
+        "old_form_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "recipient": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Comma-separated email addresses notified on each submission.\n"
+        },
+        "signable": {
+          "type": "boolean"
+        },
+        "signature_confirmation_label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "submission_count": {
+          "type": "integer"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subscription_list_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.\n"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "PageInfo": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "description": "Total number of matching forms"
+        },
+        "pages": {
+          "type": "integer",
+          "description": "Total number of pages"
+        },
+        "page": {
+          "type": "integer",
+          "description": "Current page number"
+        },
+        "items": {
+          "type": "integer",
+          "description": "Number of items per page"
+        }
+      }
+    }
+  }
+}

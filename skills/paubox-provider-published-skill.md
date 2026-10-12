@@ -1,5 +1,5 @@
 ---
-name: Paubox
+name: paubox
 description: Use when building HIPAA-compliant email, marketing campaigns, or secure intake forms. Reach for this skill when agents need to send transactional email, manage subscriber lists, collect patient data via forms, check delivery status, or integrate Paubox into applications via REST API, SMTP, SDKs, CLI, or MCP Server.
 metadata:
     mintlify-proj: paubox

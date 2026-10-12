@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-update-form-request-schema.json",
+  "title": "UpdateFormRequest",
+  "description": "Partial update. All fields are optional; omitted fields are left unchanged.\n",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-form-management-api-openapi.yml#/components/schemas/UpdateFormRequest",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "form_json": {
+      "type": "object",
+      "description": "The form field schema"
+    },
+    "vanity_url": {
+      "type": "string"
+    },
+    "recipient": {
+      "type": "string",
+      "description": "Comma-separated email addresses notified on each submission.\n"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "subscription_list_id": {
+      "type": "string",
+      "description": "ID of the connected Marketing contact list. For marketing forms, new subscribers are added to this list.\n"
+    }
+  }
+}

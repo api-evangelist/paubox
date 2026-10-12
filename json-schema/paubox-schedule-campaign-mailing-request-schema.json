@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-schedule-campaign-mailing-request-schema.json",
+  "title": "ScheduleCampaignMailingRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/ScheduleCampaignMailingRequest",
+  "required": [
+    "from_email",
+    "from_name",
+    "send_at",
+    "sender_email",
+    "subject",
+    "subscription_list_id"
+  ],
+  "type": "object",
+  "properties": {
+    "send_at": {
+      "type": "string",
+      "description": "The time at which to send the campaign, in RFC3339 format",
+      "format": "date-time"
+    },
+    "from_email": {
+      "type": "string",
+      "description": "The email address from which the campaign will be sent. It should be from a verified domain from your Paubox Marketing settings page",
+      "format": "email"
+    },
+    "from_name": {
+      "type": "string",
+      "description": "The name to appear as the sender of the campaign"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "The email address of the person/entity sending this email. Should be a Paubox user email address and is NOT going to appear as the From email",
+      "format": "email"
+    },
+    "subscription_list_id": {
+      "type": "string",
+      "description": "The uuid of the subscription list to which the campaign will be sent",
+      "format": "uuid"
+    },
+    "subject": {
+      "type": "string",
+      "description": "The subject line of the campaign mailing"
+    },
+    "dynamic_list_id": {
+      "type": "string",
+      "description": "The uuid of the dynamic list to which the campaign will be sent (optional)",
+      "format": "uuid"
+    },
+    "recipient_emails": {
+      "type": "array",
+      "description": "A list of extra recipient email addresses for the campaign to be sent to. These are not tracked for analytics purposes and are usually just for verification and/or testing",
+      "items": {
+        "type": "string",
+        "format": "email"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-dynamic-templates-body-schema.json",
+  "title": "dynamic_templates_body",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/dynamic_templates_body",
+  "required": [
+    "data[body]",
+    "data[name]"
+  ],
+  "type": "object",
+  "properties": {
+    "data[name]": {
+      "type": "string",
+      "description": "Name for the template"
+    },
+    "data[body]": {
+      "type": "string",
+      "description": "Handlebars template file (.hbs)",
+      "format": "binary"
+    }
+  }
+}

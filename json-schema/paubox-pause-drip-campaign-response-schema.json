@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-pause-drip-campaign-response-schema.json",
+  "title": "PauseDripCampaignResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/PauseDripCampaignResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/PauseDripCampaignResponse_data"
+    }
+  },
+  "$defs": {
+    "PauseDripCampaignResponse_data": {
+      "type": "object",
+      "properties": {
+        "drip_campaign_id": {
+          "type": "string",
+          "description": "ID of the paused drip campaign"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the drip campaign after pausing"
+        }
+      }
+    }
+  }
+}

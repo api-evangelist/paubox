@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-campaign-mailing-write-response-schema.json",
+  "title": "CampaignMailingWriteResponse",
+  "description": "Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingWriteResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/CampaignMailingWriteResponse_data"
+    },
+    "errors": {
+      "type": "array",
+      "description": "Validation messages, present only when the write failed",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "CampaignMailingWriteResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "UUID of the created or updated campaign mailing"
+        }
+      }
+    }
+  }
+}

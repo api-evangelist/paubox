@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-subscribers-by-tracking-link-response-schema.json",
+  "title": "SubscribersByTrackingLinkResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-analytics-api-openapi.yml#/components/schemas/SubscribersByTrackingLinkResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SubscribersByTrackingLinkResponse_data"
+      }
+    }
+  },
+  "$defs": {
+    "SubscribersByTrackingLinkResponse_attributes": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Subscriber's email address",
+          "format": "email"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Subscriber's first name"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Subscriber's last name"
+        },
+        "custom_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SubscribersByTrackingLinkResponse_attributes_custom_fields"
+          }
+        }
+      }
+    },
+    "SubscribersByTrackingLinkResponse_attributes_custom_fields": {
+      "type": "object",
+      "properties": {
+        "subscriber_custom_field_type_id": {
+          "type": "string",
+          "description": "Custom field type ID"
+        },
+        "value": {
+          "type": "string",
+          "description": "Custom field value"
+        }
+      }
+    },
+    "SubscribersByTrackingLinkResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Subscriber ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type"
+        },
+        "attributes": {
+          "$ref": "#/$defs/SubscribersByTrackingLinkResponse_attributes"
+        }
+      }
+    }
+  }
+}

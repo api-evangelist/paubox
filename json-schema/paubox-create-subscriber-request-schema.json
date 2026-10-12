@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-subscriber-request-schema.json",
+  "title": "CreateSubscriberRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscribers-api-openapi.yml#/components/schemas/CreateSubscriberRequest",
+  "type": "object",
+  "properties": {
+    "subscriber": {
+      "$ref": "#/$defs/CreateSubscriberRequest_subscriber"
+    },
+    "subscription_list_id": {
+      "type": "string",
+      "description": "Optional subscription list ID"
+    }
+  },
+  "$defs": {
+    "CreateSubscriberRequest_subscriber": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Subscriber's email address (required unless phone_number is provided)",
+          "format": "email"
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "E.164 formatted phone number (required unless email is provided)"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Subscriber's first name"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Subscriber's last name"
+        },
+        "custom_fields": {
+          "type": "array",
+          "description": "Optional custom fields (unlimited)",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

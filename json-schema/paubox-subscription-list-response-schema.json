@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-subscription-list-response-schema.json",
+  "title": "SubscriptionListResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscription-lists-api-openapi.yml#/components/schemas/SubscriptionListResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/SubscriptionListsResponse_data"
+    }
+  },
+  "$defs": {
+    "SubscriptionListsResponse_attributes": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the subscription list"
+        },
+        "is_default": {
+          "type": "boolean",
+          "description": "Whether this is the default subscription list"
+        },
+        "subscriber_count": {
+          "type": "integer",
+          "description": "Number of subscribers in this list"
+        },
+        "form_id": {
+          "type": "string",
+          "description": "Form ID for use with Paubox Secure Forms"
+        }
+      }
+    },
+    "SubscriptionListsResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Subscription list ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type",
+          "enum": [
+            "subscription_list"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/SubscriptionListsResponse_attributes"
+        }
+      }
+    }
+  }
+}

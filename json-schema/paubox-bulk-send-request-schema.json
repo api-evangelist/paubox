@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-bulk-send-request-schema.json",
+  "title": "BulkSendRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-messages-api-openapi.yml#/components/schemas/BulkSendRequest",
+  "required": [
+    "data"
+  ],
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/BulkSendRequest_data"
+    }
+  },
+  "$defs": {
+    "Attachment": {
+      "required": [
+        "content",
+        "contentType",
+        "fileName"
+      ],
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Valid MIME type, e.g., application/pdf."
+        },
+        "content": {
+          "type": "string",
+          "description": "Base64-encoded file contents."
+        }
+      }
+    },
+    "BulkSendRequest_data": {
+      "required": [
+        "messages"
+      ],
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "description": "Recommended 50 or fewer per request.",
+          "items": {
+            "$ref": "#/$defs/Message"
+          }
+        }
+      }
+    },
+    "Message": {
+      "required": [
+        "content",
+        "headers",
+        "recipients"
+      ],
+      "type": "object",
+      "properties": {
+        "recipients": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Email address, optionally with display name (e.g., \"J. Smith <jsmith@host.com>\")."
+          }
+        },
+        "bcc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "$ref": "#/$defs/MessageHeaders"
+        },
+        "allowNonTLS": {
+          "type": "boolean",
+          "description": "Allow delivery over non-TLS rather than converting to a Secure Portal message. Not HIPAA compliant if the message contains PHI.\n",
+          "default": false
+        },
+        "forceSecureNotification": {
+          "type": "boolean",
+          "description": "Force delivery as a Paubox Secure Message; recipient gets a pickup notification with a link.\n",
+          "default": false
+        },
+        "content": {
+          "$ref": "#/$defs/MessageContent"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Attachment"
+          }
+        }
+      }
+    },
+    "MessageContent": {
+      "type": "object",
+      "properties": {
+        "text/plain": {
+          "type": "string",
+          "description": "Plain text message body. Required if text/html is not provided."
+        },
+        "text/html": {
+          "type": "string",
+          "description": "HTML message body. May be HTML-escaped, base64-encoded, or a valid unescaped string. CSS in <style> tags will be rendered inline.\n"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "text/plain"
+          ]
+        },
+        {
+          "required": [
+            "text/html"
+          ]
+        }
+      ]
+    },
+    "MessageHeaders": {
+      "required": [
+        "from",
+        "subject"
+      ],
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "Must match the verified domain of your API key."
+        },
+        "reply-to": {
+          "type": "string",
+          "description": "Reply-to address; must match a verified domain if different from from."
+        },
+        "List-Unsubscribe": {
+          "type": "string",
+          "description": "Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.\n"
+        },
+        "List-Unsubscribe-Post": {
+          "type": "string",
+          "description": "Used in conjunction with List-Unsubscribe header."
+        },
+        "x-custom-header": {
+          "type": "string",
+          "description": "Example custom header; any custom header may be added with an X- prefix."
+        },
+        "additionalProperties": {
+          "type": "string",
+          "description": "Any additional X- prefixed custom header values."
+        }
+      }
+    }
+  }
+}

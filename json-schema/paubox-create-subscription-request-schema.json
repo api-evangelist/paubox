@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-subscription-request-schema.json",
+  "title": "CreateSubscriptionRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscriptions-api-openapi.yml#/components/schemas/CreateSubscriptionRequest",
+  "type": "object",
+  "properties": {
+    "subscription": {
+      "$ref": "#/$defs/CreateSubscriptionRequest_subscription"
+    }
+  },
+  "$defs": {
+    "CreateSubscriptionRequest_subscription": {
+      "required": [
+        "subscriber_id",
+        "subscription_list_id"
+      ],
+      "type": "object",
+      "properties": {
+        "subscription_list_id": {
+          "type": "string",
+          "description": "UUID of the subscription list to subscribe to"
+        },
+        "subscriber_id": {
+          "type": "integer",
+          "description": "Internal numeric identifier of the subscriber. This is not the subscriber UUID returned by the subscriber endpoints."
+        }
+      }
+    }
+  }
+}

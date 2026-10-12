@@ -1,0 +1,424 @@
+generated: '2026-10-12'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/paubox-analytics-api-openapi.yml
+- openapi/paubox-campaign-mailings-api-openapi.yml
+- openapi/paubox-drip-campaigns-api-openapi.yml
+- openapi/paubox-dynamic-templates-api-openapi.yml
+- openapi/paubox-form-management-api-openapi.yml
+vocabulary:
+  name: Paubox Domain Vocabulary
+  description: 'Terms declared by Paubox''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-12'
+  terms:
+  - term: Analytics
+    definition: Campaign analytics and reporting operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-analytics-api-openapi.yml
+  - term: campaign_mailings
+    definition: Campaign mailing management and sending operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-campaign-mailings-api-openapi.yml
+  - term: drip_campaigns
+    definition: Drip campaign management and automation operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-drip-campaigns-api-openapi.yml
+  - term: Dynamic Templates
+    definition: Manage and use dynamic Handlebars templates for email content
+    tags:
+    - Resource Group
+    source: openapi/paubox-dynamic-templates-api-openapi.yml
+  - term: Form management
+    definition: Create, list, update, copy, and archive forms (requires API key)
+    tags:
+    - Resource Group
+    source: openapi/paubox-form-management-api-openapi.yml
+  - term: Forms
+    definition: Retrieve form definitions and accept submissions
+    tags:
+    - Resource Group
+    source: openapi/paubox-forms-api-openapi.yml
+  - term: Messages
+    definition: Send individual or bulk transactional email
+    tags:
+    - Resource Group
+    source: openapi/paubox-messages-api-openapi.yml
+  - term: Submissions
+    definition: List and export form submissions (requires API key)
+    tags:
+    - Resource Group
+    source: openapi/paubox-submissions-api-openapi.yml
+  - term: Subscribers
+    definition: Subscriber management operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-subscribers-api-openapi.yml
+  - term: Subscription Lists
+    definition: Subscription list management operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-subscription-lists-api-openapi.yml
+  - term: Subscriptions
+    definition: Subscriber opt-in and opt-out operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-subscriptions-api-openapi.yml
+  - term: Tracking Links
+    definition: Tracking link analytics and data operations
+    tags:
+    - Resource Group
+    source: openapi/paubox-tracking-links-api-openapi.yml
+  - term: TrackingLinksResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/TrackingLinksResponse
+  - term: Error
+    definition: 'Object declared by the contract with fields: error, code, details.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/Error
+  - term: CampaignTableResponse_data
+    definition: 'Object declared by the contract with fields: id, marketing_email_id, campaign_mailing_id, campaign_mailing_created_at, sent_at,
+      subscription_list_name.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignTableResponse_data
+  - term: SubscribersByTrackingLinkResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/SubscribersByTrackingLinkResponse
+  - term: TrackingLinksResponse_data
+    definition: 'Object declared by the contract with fields: html_id, target_url, clicked.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/TrackingLinksResponse_data
+  - term: CampaignTableResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignTableResponse
+  - term: CampaignDeliveriesTableResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignDeliveriesTableResponse
+  - term: CampaignAnalyticsResponse_data
+    definition: 'Object declared by the contract with fields: delivered, viewed, clicked, bounced, soft_bounced, hard_bounced, unsubscribed, global_unsubscribed.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignAnalyticsResponse_data
+  - term: CampaignDeliveriesTableResponse_data
+    definition: 'Object declared by the contract with fields: recipient, created_at, delivered, viewed, clicked, bounced, unsubscribed, tracking_links.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignDeliveriesTableResponse_data
+  - term: SubscribersByTrackingLinkResponse_data
+    definition: 'Object declared by the contract with fields: id, type, attributes.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/SubscribersByTrackingLinkResponse_data
+  - term: SubscribersByTrackingLinkResponse_attributes
+    definition: 'Object declared by the contract with fields: email, first_name, last_name, custom_fields.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/SubscribersByTrackingLinkResponse_attributes
+  - term: SubscribersByTrackingLinkResponse_attributes_custom_fields
+    definition: 'Object declared by the contract with fields: subscriber_custom_field_type_id, value.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/SubscribersByTrackingLinkResponse_attributes_custom_fields
+  - term: CampaignAnalyticsResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignAnalyticsResponse
+  - term: inline_response_400
+    definition: 'Object declared by the contract with fields: errors.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/inline_response_400
+  - term: CampaignMailingWriteResponse_data
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingWriteResponse_data
+  - term: SendCampaignMailingRequest
+    definition: 'Object declared by the contract with fields: campaign_mailing_id, campaign_mailing_send.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/SendCampaignMailingRequest
+  - term: SendCampaignMailingRequest_campaign_mailing_send
+    definition: 'Object declared by the contract with fields: sender_email, subscription_list_id, recipient_emails, customer_name, from_email,
+      from_name, subject.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/SendCampaignMailingRequest_campaign_mailing_send
+  - term: CreateCampaignMailingRequest_campaign_mailing
+    definition: 'Object declared by the contract with fields: subject, default_subject, from, reply_to, html_part, text_part, form_data, template_type.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CreateCampaignMailingRequest_campaign_mailing
+  - term: CampaignMailingWriteResponse
+    definition: Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingWriteResponse
+  - term: UpdateCampaignMailingRequest_campaign_mailing
+    definition: Only the fields supplied are changed.
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/UpdateCampaignMailingRequest_campaign_mailing
+  - term: CampaignMailingsResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingsResponse
+  - term: CampaignMailingResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingResponse
+  - term: BulkDeleteCampaignMailingsRequest
+    definition: 'Object declared by the contract with fields: campaign_mailing_ids.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/BulkDeleteCampaignMailingsRequest
+  - term: UpdateCampaignMailingRequest
+    definition: 'Object declared by the contract with fields: campaign_mailing.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/UpdateCampaignMailingRequest
+  - term: CampaignMailing_attributes
+    definition: 'Object declared by the contract with fields: subject, default_subject, template_type, created_at, updated_at, form_data, html_part,
+      text_part, image_data.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailing_attributes
+  - term: CampaignMailingsResponse_attributes
+    definition: 'Object declared by the contract with fields: subject, default_subject, template_type, created_at, updated_at, sent_count, delivered_count,
+      viewed_count, clicked_count, bounced_count, unsubscribed_count.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingsResponse_attributes
+  - term: CampaignMailingsResponse_data
+    definition: 'Object declared by the contract with fields: id, type, attributes.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingsResponse_data
+  - term: CreateCampaignMailingRequest
+    definition: 'Object declared by the contract with fields: campaign_mailing.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CreateCampaignMailingRequest
+  - term: ScheduleCampaignMailingResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/ScheduleCampaignMailingResponse
+  - term: ScheduleCampaignMailingRequest
+    definition: 'Object declared by the contract with fields: send_at, from_email, from_name, sender_email, subscription_list_id, subject, dynamic_list_id,
+      recipient_emails.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/ScheduleCampaignMailingRequest
+  - term: CampaignMailing
+    definition: 'Object declared by the contract with fields: id, type, attributes.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailing
+  - term: ScheduleCampaignMailingResponse_data
+    definition: 'Object declared by the contract with fields: send_at, send_at_timestamp, jid.'
+    tags:
+    - Object
+    source: openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/ScheduleCampaignMailingResponse_data
+  - term: DripCampaignResponse_data
+    definition: 'Object declared by the contract with fields: id, type, attributes.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignResponse_data
+  - term: DripCampaignsResponse_data
+    definition: 'Object declared by the contract with fields: id, type, attributes.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignsResponse_data
+  - term: UpdateDripCampaignRequest_drip_campaign
+    definition: 'Object declared by the contract with fields: name, subscription_list_id, start_trigger, drip_campaign_nodes.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/UpdateDripCampaignRequest_drip_campaign
+  - term: PauseDripCampaignResponse_data
+    definition: 'Object declared by the contract with fields: drip_campaign_id, status.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/PauseDripCampaignResponse_data
+  - term: PauseDripCampaignResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/PauseDripCampaignResponse
+  - term: UpdateDripCampaignRequest
+    definition: 'Object declared by the contract with fields: drip_campaign.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/UpdateDripCampaignRequest
+  - term: DripCampaignsResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignsResponse
+  - term: StartDripCampaignResponse_data
+    definition: 'Object declared by the contract with fields: jids.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/StartDripCampaignResponse_data
+  - term: StartDripCampaignResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/StartDripCampaignResponse
+  - term: DripCampaignsResponse_attributes
+    definition: 'Object declared by the contract with fields: name, subscription_list_id, subscription_list_name, state, updated_at, start_trigger,
+      subscriber_count, subscriber_completed_count.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignsResponse_attributes
+  - term: DripCampaignResponse_data_attributes
+    definition: 'Object declared by the contract with fields: name, subscription_list_id, subscription_list_name, state, updated_at, start_trigger,
+      subscriber_count, subscriber_completed_count, drip_campaign_nodes, drip_campaign_tree_blob.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignResponse_data_attributes
+  - term: DripCampaignResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignResponse
+  - term: dynamic_templates_body
+    definition: 'Object declared by the contract with fields: data[name], data[body].'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/dynamic_templates_body
+  - term: TemplatedMessageHeaders
+    definition: 'Object declared by the contract with fields: subject, from, reply-to, List-Unsubscribe, List-Unsubscribe-Post, additionalProperties.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/TemplatedMessageHeaders
+  - term: SingleSendResponse
+    definition: 'Object declared by the contract with fields: sourceTrackingId, customHeaders, data.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/SingleSendResponse
+  - term: TemplatedMessageRequest
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/TemplatedMessageRequest
+  - term: Attachment
+    definition: 'Object declared by the contract with fields: fileName, contentType, content.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/Attachment
+  - term: DynamicTemplateListResponse
+    definition: 'Object declared by the contract with fields: templates.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/DynamicTemplateListResponse
+  - term: ErrorResponse
+    definition: 'Object declared by the contract with fields: errors.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/ErrorResponse
+  - term: TemplatedMessageRequest_data
+    definition: 'Object declared by the contract with fields: template_name, template_values, message.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/TemplatedMessageRequest_data
+  - term: inline_response_200
+    definition: 'Object declared by the contract with fields: message.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/inline_response_200
+  - term: DynamicTemplateResponse
+    definition: 'Object declared by the contract with fields: id, name, body, created_at, updated_at.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/DynamicTemplateResponse
+  - term: TemplatedMessage
+    definition: 'Object declared by the contract with fields: recipients, bcc, cc, headers, allowNonTLS, forceSecureNotification, attachments.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/TemplatedMessage
+  - term: ErrorResponse_errors
+    definition: 'Object declared by the contract with fields: code, title, details.'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/ErrorResponse_errors
+  - term: dynamic_templates_id_body
+    definition: 'Object declared by the contract with fields: data[name], data[body].'
+    tags:
+    - Object
+    source: openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/dynamic_templates_id_body
+  - term: FormStats
+    definition: 'Object declared by the contract with fields: active_form_count, total_submission_count, submissions_last_7_days.'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/FormStats
+  - term: FormListResponse
+    definition: 'Object declared by the contract with fields: results, page_info.'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/FormListResponse
+  - term: PageInfo
+    definition: 'Object declared by the contract with fields: count, pages, page, items.'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/PageInfo
+  - term: UpdateFormRequest
+    definition: Partial update. All fields are optional; omitted fields are left unchanged.
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/UpdateFormRequest
+  - term: Form
+    definition: 'Object declared by the contract with fields: id, title, description, form_html, form_json, form_css, vanity_url, version, active,
+      customer_id, old_form_id, recipient. (9 more)'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/Form
+  - term: CreateFormRequest
+    definition: 'Object declared by the contract with fields: title, form_json, customer_id, version, description, form_html, form_css, recipient,
+      signable, signature_confirmation_label, subscription_list_id, type. (2 more)'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/CreateFormRequest
+  - term: CopyFormRequest
+    definition: 'Object declared by the contract with fields: form_id, title.'
+    tags:
+    - Object
+    source: openapi/paubox-form-management-api-openapi.yml#/components/schemas/CopyFormRequest
+  - term: FormSubmissionRequest
+    definition: 'Object declared by the contract with fields: form_data, attachments.'
+    tags:
+    - Object
+    source: openapi/paubox-forms-api-openapi.yml#/components/schemas/FormSubmissionRequest
+  - term: DeliveryStatus
+    definition: 'Object declared by the contract with fields: deliveryStatus, deliveryTime, openedStatus, openedTime.'
+    tags:
+    - Object
+    source: openapi/paubox-messages-api-openapi.yml#/components/schemas/DeliveryStatus
+  - term: MessageReceiptResponse
+    definition: 'Object declared by the contract with fields: sourceTrackingId, data.'
+    tags:
+    - Object
+    source: openapi/paubox-messages-api-openapi.yml#/components/schemas/MessageReceiptResponse
+  - term: ClickData
+    definition: 'Object declared by the contract with fields: click_count, target_url.'
+    tags:
+    - Object
+    source: openapi/paubox-messages-api-openapi.yml#/components/schemas/ClickData

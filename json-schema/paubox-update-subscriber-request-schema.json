@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-update-subscriber-request-schema.json",
+  "title": "UpdateSubscriberRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscribers-api-openapi.yml#/components/schemas/UpdateSubscriberRequest",
+  "type": "object",
+  "properties": {
+    "subscriber": {
+      "$ref": "#/$defs/UpdateSubscriberRequest_subscriber"
+    }
+  },
+  "$defs": {
+    "UpdateSubscriberRequest_subscriber": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Subscriber's email address",
+          "format": "email"
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "E.164 formatted phone number"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "Subscriber's first name"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Subscriber's last name"
+        }
+      }
+    }
+  }
+}

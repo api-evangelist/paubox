@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-message-receipt-response-schema.json",
+  "title": "MessageReceiptResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-messages-api-openapi.yml#/components/schemas/MessageReceiptResponse",
+  "required": [
+    "data",
+    "sourceTrackingId"
+  ],
+  "type": "object",
+  "properties": {
+    "sourceTrackingId": {
+      "type": "string",
+      "description": "The tracking ID for the message"
+    },
+    "data": {
+      "$ref": "#/$defs/MessageReceiptResponse_data"
+    }
+  },
+  "$defs": {
+    "ClickData": {
+      "required": [
+        "click_count",
+        "target_url"
+      ],
+      "type": "object",
+      "properties": {
+        "click_count": {
+          "type": "integer",
+          "description": "Number of clicks on this specific link"
+        },
+        "target_url": {
+          "type": "string",
+          "description": "The URL that was clicked"
+        }
+      }
+    },
+    "DeliveryStatus": {
+      "required": [
+        "deliveryStatus"
+      ],
+      "type": "object",
+      "properties": {
+        "deliveryStatus": {
+          "type": "string",
+          "description": "The delivery status of the message",
+          "enum": [
+            "processing",
+            "TLS not offered, sending via Secure Portal",
+            "soft bounced",
+            "soft bounced - mailbox full",
+            "hard bounced",
+            "Internal error. Please check back later.",
+            "delivered",
+            "delivered via secure portal"
+          ]
+        },
+        "deliveryTime": {
+          "type": "string",
+          "description": "The time when the message was delivered (if applicable)"
+        },
+        "openedStatus": {
+          "type": "string",
+          "description": "Whether the message was opened (single recipient only)",
+          "enum": [
+            "opened",
+            "not opened"
+          ]
+        },
+        "openedTime": {
+          "type": "string",
+          "description": "The time when the message was first opened (single recipient only)"
+        }
+      }
+    },
+    "MessageDelivery": {
+      "required": [
+        "recipient",
+        "status"
+      ],
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "type": "string",
+          "description": "The recipient email address"
+        },
+        "status": {
+          "$ref": "#/$defs/DeliveryStatus"
+        }
+      }
+    },
+    "MessageReceiptResponse_data": {
+      "required": [
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/MessageReceiptResponse_data_message"
+        }
+      }
+    },
+    "MessageReceiptResponse_data_message": {
+      "required": [
+        "id",
+        "message_deliveries"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The message ID"
+        },
+        "message_deliveries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MessageDelivery"
+          }
+        },
+        "total_opens": {
+          "type": "integer",
+          "description": "Total number of opens (single recipient only)"
+        },
+        "distinct_opens": {
+          "type": "integer",
+          "description": "Number of distinct opens (single recipient only)"
+        },
+        "total_click_count": {
+          "type": "integer",
+          "description": "Total number of clicks (single recipient only)"
+        },
+        "clicks_per_link": {
+          "type": "array",
+          "description": "Click tracking data per link (single recipient only)",
+          "items": {
+            "$ref": "#/$defs/ClickData"
+          }
+        },
+        "unsubscribed": {
+          "type": "boolean",
+          "description": "Whether the recipient has unsubscribed (single recipient only)"
+        }
+      }
+    }
+  }
+}

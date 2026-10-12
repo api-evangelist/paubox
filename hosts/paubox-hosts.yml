@@ -1,0 +1,115 @@
+generated: '2026-10-12'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 8
+  own: 7
+  other_domain: 0
+  platform: 1
+  roles:
+  - api
+  - identity
+  - other
+  - portal
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api.paubox.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: paubox.com
+  role: api
+  relation: own
+- host: docs.paubox.com
+  found_by:
+  - pointer
+  - apis[]
+  - vendor-detect
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  serves:
+  - docs
+  - hosting
+  vendor: vercel
+  registrable_domain: paubox.com
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  - vendor-detect
+  types:
+  - HelpCenter
+  - GitHubOrganization
+  serves:
+  - community
+  vendor: github-discussions
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: mcp.paubox.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: paubox.com
+  role: other
+  relation: own
+- host: next.paubox.com
+  found_by:
+  - pointer
+  types:
+  - Login
+  serves: []
+  registrable_domain: paubox.com
+  role: identity
+  relation: own
+- host: status.paubox.com
+  found_by:
+  - pointer
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: paubox.com
+  role: status
+  relation: own
+- host: support.paubox.com
+  found_by:
+  - pointer
+  types:
+  - Support
+  serves: []
+  registrable_domain: paubox.com
+  role: support
+  relation: own
+- host: www.paubox.com
+  found_by:
+  - pointer
+  - vendor-detect
+  types:
+  - Security
+  - BlogRSS
+  - Website
+  - Blog
+  - Pricing
+  - SignUp
+  - TermsOfService
+  - PrivacyPolicy
+  - Compliance
+  serves:
+  - cdn
+  - hosting
+  vendor: cloudflare
+  registrable_domain: paubox.com
+  role: website
+  relation: own

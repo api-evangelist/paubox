@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-subscription-response-schema.json",
+  "title": "CreateSubscriptionResponse",
+  "description": "Returned with HTTP 200 in both the success and the validation-failure case. Check for the presence of `errors`.",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscriptions-api-openapi.yml#/components/schemas/CreateSubscriptionResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/Subscription"
+    },
+    "errors": {
+      "type": "array",
+      "description": "Validation messages, present only when the create failed",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Internal numeric identifier for the subscription"
+        },
+        "uuid": {
+          "type": "string",
+          "description": "Public identifier for the subscription. Use this value as `subscription_id` in path parameters."
+        },
+        "subscription_list_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "UUID of the subscription list. Null when the subscription belongs to a dynamic list."
+        },
+        "dynamic_list_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Identifier of the dynamic list. Null when the subscription belongs to a subscription list."
+        },
+        "subscriber_id": {
+          "type": "integer",
+          "description": "Internal numeric identifier of the subscriber"
+        },
+        "unsubscribed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the subscriber opted out of this list. Null while the subscription is active."
+        },
+        "delete_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the subscription is scheduled for deletion"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

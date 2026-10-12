@@ -1,0 +1,36 @@
+generated: '2026-10-12'
+method: searched
+source:
+- https://n8n.io/integrations/paubox/
+checked:
+- https://composio.dev/toolkits/paubox
+- https://monid.ai/tools/paubox
+- https://n8n.io/integrations/paubox/
+- https://www.paubox.com/integrations
+- https://zapier.com/apps/paubox/integrations
+summary: null
+marketplace_apps:
+- marketplace: n8n
+  channel: open-source-node
+  app: paubox
+  url: https://n8n.io/integrations/paubox/
+  identity: title
+  pair_pages: 0
+  pairs: []
+edges:
+- partner: salesforce
+  type: claimed
+  direction: unknown
+  evidence: https://www.paubox.com/integrations
+  partner_name: Salesforce CRM
+- partner: zendesk
+  type: claimed
+  direction: unknown
+  evidence: https://www.paubox.com/integrations
+  partner_name: Zendesk
+- partner: null
+  type: claimed
+  direction: unknown
+  evidence: https://www.paubox.com/integrations
+  partner_name: Keragon
+templates: []

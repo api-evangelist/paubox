@@ -1,0 +1,787 @@
+{
+  "@context": {
+    "@vocab": "https://paubox.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "paubox": "https://paubox.com/schema#",
+    "TrackingLinksResponse": "paubox:TrackingLinksResponse",
+    "data": {
+      "@id": "paubox:data",
+      "@container": "@list"
+    },
+    "Error": "paubox:Error",
+    "error": {
+      "@id": "paubox:error",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "paubox:code",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "paubox:details"
+    },
+    "CampaignTableResponse_data": "paubox:CampaignTableResponse_data",
+    "id": {
+      "@id": "paubox:id",
+      "@type": "xsd:string"
+    },
+    "marketing_email_id": {
+      "@id": "paubox:marketing_email_id",
+      "@type": "xsd:string"
+    },
+    "campaign_mailing_id": {
+      "@id": "paubox:campaign_mailing_id",
+      "@type": "xsd:string"
+    },
+    "campaign_mailing_created_at": {
+      "@id": "paubox:campaign_mailing_created_at",
+      "@type": "xsd:dateTime"
+    },
+    "sent_at": {
+      "@id": "paubox:sent_at",
+      "@type": "xsd:dateTime"
+    },
+    "subscription_list_name": {
+      "@id": "paubox:subscription_list_name",
+      "@type": "xsd:string"
+    },
+    "SubscribersByTrackingLinkResponse": "paubox:SubscribersByTrackingLinkResponse",
+    "TrackingLinksResponse_data": "paubox:TrackingLinksResponse_data",
+    "html_id": {
+      "@id": "paubox:html_id",
+      "@type": "xsd:integer"
+    },
+    "target_url": {
+      "@id": "paubox:target_url",
+      "@type": "xsd:string"
+    },
+    "clicked": {
+      "@id": "paubox:clicked",
+      "@type": "xsd:integer"
+    },
+    "CampaignTableResponse": "paubox:CampaignTableResponse",
+    "CampaignDeliveriesTableResponse": "paubox:CampaignDeliveriesTableResponse",
+    "CampaignAnalyticsResponse_data": "paubox:CampaignAnalyticsResponse_data",
+    "delivered": {
+      "@id": "paubox:delivered",
+      "@type": "xsd:integer"
+    },
+    "viewed": {
+      "@id": "paubox:viewed",
+      "@type": "xsd:integer"
+    },
+    "bounced": {
+      "@id": "paubox:bounced",
+      "@type": "xsd:integer"
+    },
+    "soft_bounced": {
+      "@id": "paubox:soft_bounced",
+      "@type": "xsd:integer"
+    },
+    "hard_bounced": {
+      "@id": "paubox:hard_bounced",
+      "@type": "xsd:integer"
+    },
+    "unsubscribed": {
+      "@id": "paubox:unsubscribed",
+      "@type": "xsd:integer"
+    },
+    "global_unsubscribed": {
+      "@id": "paubox:global_unsubscribed",
+      "@type": "xsd:integer"
+    },
+    "CampaignDeliveriesTableResponse_data": "paubox:CampaignDeliveriesTableResponse_data",
+    "recipient": {
+      "@id": "paubox:recipient",
+      "@type": "xsd:string"
+    },
+    "created_at": {
+      "@id": "paubox:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "tracking_links": {
+      "@id": "paubox:tracking_links"
+    },
+    "SubscribersByTrackingLinkResponse_data": "paubox:SubscribersByTrackingLinkResponse_data",
+    "type": {
+      "@id": "paubox:type",
+      "@type": "xsd:string"
+    },
+    "attributes": {
+      "@id": "paubox:attributes",
+      "@type": "@id"
+    },
+    "SubscribersByTrackingLinkResponse_attributes": "paubox:SubscribersByTrackingLinkResponse_attributes",
+    "email": {
+      "@id": "paubox:email",
+      "@type": "xsd:string"
+    },
+    "first_name": {
+      "@id": "paubox:first_name",
+      "@type": "xsd:string"
+    },
+    "last_name": {
+      "@id": "paubox:last_name",
+      "@type": "xsd:string"
+    },
+    "custom_fields": {
+      "@id": "paubox:custom_fields",
+      "@container": "@list"
+    },
+    "SubscribersByTrackingLinkResponse_attributes_custom_fields": "paubox:SubscribersByTrackingLinkResponse_attributes_custom_fields",
+    "subscriber_custom_field_type_id": {
+      "@id": "paubox:subscriber_custom_field_type_id",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "paubox:value",
+      "@type": "xsd:string"
+    },
+    "CampaignAnalyticsResponse": "paubox:CampaignAnalyticsResponse",
+    "inline_response_400": "paubox:inline_response_400",
+    "errors": {
+      "@id": "paubox:errors",
+      "@type": "xsd:string"
+    },
+    "CampaignMailingWriteResponse_data": "paubox:CampaignMailingWriteResponse_data",
+    "SendCampaignMailingRequest": "paubox:SendCampaignMailingRequest",
+    "campaign_mailing_send": {
+      "@id": "paubox:campaign_mailing_send",
+      "@type": "@id"
+    },
+    "SendCampaignMailingRequest_campaign_mailing_send": "paubox:SendCampaignMailingRequest_campaign_mailing_send",
+    "sender_email": {
+      "@id": "paubox:sender_email",
+      "@type": "xsd:string"
+    },
+    "subscription_list_id": {
+      "@id": "paubox:subscription_list_id",
+      "@type": "xsd:string"
+    },
+    "recipient_emails": {
+      "@id": "paubox:recipient_emails",
+      "@container": "@list"
+    },
+    "customer_name": {
+      "@id": "paubox:customer_name",
+      "@type": "xsd:string"
+    },
+    "from_email": {
+      "@id": "paubox:from_email",
+      "@type": "xsd:string"
+    },
+    "from_name": {
+      "@id": "paubox:from_name",
+      "@type": "xsd:string"
+    },
+    "subject": {
+      "@id": "paubox:subject",
+      "@type": "xsd:string"
+    },
+    "CreateCampaignMailingRequest_campaign_mailing": "paubox:CreateCampaignMailingRequest_campaign_mailing",
+    "default_subject": {
+      "@id": "paubox:default_subject",
+      "@type": "xsd:string"
+    },
+    "from": {
+      "@id": "paubox:from",
+      "@type": "xsd:string"
+    },
+    "reply_to": {
+      "@id": "paubox:reply_to",
+      "@type": "xsd:string"
+    },
+    "html_part": {
+      "@id": "paubox:html_part",
+      "@type": "xsd:string"
+    },
+    "text_part": {
+      "@id": "paubox:text_part",
+      "@type": "xsd:string"
+    },
+    "form_data": {
+      "@id": "paubox:form_data",
+      "@type": "xsd:string"
+    },
+    "template_type": {
+      "@id": "paubox:template_type",
+      "@type": "xsd:string"
+    },
+    "CampaignMailingWriteResponse": "paubox:CampaignMailingWriteResponse",
+    "UpdateCampaignMailingRequest_campaign_mailing": "paubox:UpdateCampaignMailingRequest_campaign_mailing",
+    "CampaignMailingsResponse": "paubox:CampaignMailingsResponse",
+    "CampaignMailingResponse": "paubox:CampaignMailingResponse",
+    "BulkDeleteCampaignMailingsRequest": "paubox:BulkDeleteCampaignMailingsRequest",
+    "campaign_mailing_ids": {
+      "@id": "paubox:campaign_mailing_ids",
+      "@container": "@list"
+    },
+    "UpdateCampaignMailingRequest": "paubox:UpdateCampaignMailingRequest",
+    "campaign_mailing": {
+      "@id": "paubox:campaign_mailing",
+      "@type": "@id"
+    },
+    "CampaignMailing_attributes": "paubox:CampaignMailing_attributes",
+    "updated_at": {
+      "@id": "paubox:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "image_data": {
+      "@id": "paubox:image_data",
+      "@type": "xsd:string"
+    },
+    "CampaignMailingsResponse_attributes": "paubox:CampaignMailingsResponse_attributes",
+    "sent_count": {
+      "@id": "paubox:sent_count",
+      "@type": "xsd:integer"
+    },
+    "delivered_count": {
+      "@id": "paubox:delivered_count",
+      "@type": "xsd:integer"
+    },
+    "viewed_count": {
+      "@id": "paubox:viewed_count",
+      "@type": "xsd:integer"
+    },
+    "clicked_count": {
+      "@id": "paubox:clicked_count",
+      "@type": "xsd:integer"
+    },
+    "bounced_count": {
+      "@id": "paubox:bounced_count",
+      "@type": "xsd:integer"
+    },
+    "unsubscribed_count": {
+      "@id": "paubox:unsubscribed_count",
+      "@type": "xsd:integer"
+    },
+    "CampaignMailingsResponse_data": "paubox:CampaignMailingsResponse_data",
+    "CreateCampaignMailingRequest": "paubox:CreateCampaignMailingRequest",
+    "ScheduleCampaignMailingResponse": "paubox:ScheduleCampaignMailingResponse",
+    "ScheduleCampaignMailingRequest": "paubox:ScheduleCampaignMailingRequest",
+    "send_at": {
+      "@id": "paubox:send_at",
+      "@type": "xsd:dateTime"
+    },
+    "dynamic_list_id": {
+      "@id": "paubox:dynamic_list_id",
+      "@type": "xsd:string"
+    },
+    "CampaignMailing": "paubox:CampaignMailing",
+    "ScheduleCampaignMailingResponse_data": "paubox:ScheduleCampaignMailingResponse_data",
+    "send_at_timestamp": {
+      "@id": "paubox:send_at_timestamp",
+      "@type": "xsd:string"
+    },
+    "jid": {
+      "@id": "paubox:jid",
+      "@type": "xsd:string"
+    },
+    "DripCampaignResponse_data": "paubox:DripCampaignResponse_data",
+    "DripCampaignsResponse_data": "paubox:DripCampaignsResponse_data",
+    "UpdateDripCampaignRequest_drip_campaign": "paubox:UpdateDripCampaignRequest_drip_campaign",
+    "name": {
+      "@id": "paubox:name",
+      "@type": "xsd:string"
+    },
+    "start_trigger": {
+      "@id": "paubox:start_trigger",
+      "@type": "xsd:string"
+    },
+    "drip_campaign_nodes": {
+      "@id": "paubox:drip_campaign_nodes",
+      "@type": "xsd:string"
+    },
+    "PauseDripCampaignResponse_data": "paubox:PauseDripCampaignResponse_data",
+    "drip_campaign_id": {
+      "@id": "paubox:drip_campaign_id",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "paubox:status",
+      "@type": "xsd:string"
+    },
+    "PauseDripCampaignResponse": "paubox:PauseDripCampaignResponse",
+    "UpdateDripCampaignRequest": "paubox:UpdateDripCampaignRequest",
+    "drip_campaign": {
+      "@id": "paubox:drip_campaign",
+      "@type": "@id"
+    },
+    "DripCampaignsResponse": "paubox:DripCampaignsResponse",
+    "StartDripCampaignResponse_data": "paubox:StartDripCampaignResponse_data",
+    "jids": {
+      "@id": "paubox:jids",
+      "@container": "@list"
+    },
+    "StartDripCampaignResponse": "paubox:StartDripCampaignResponse",
+    "DripCampaignsResponse_attributes": "paubox:DripCampaignsResponse_attributes",
+    "state": {
+      "@id": "paubox:state",
+      "@type": "xsd:string"
+    },
+    "subscriber_count": {
+      "@id": "paubox:subscriber_count",
+      "@type": "xsd:integer"
+    },
+    "subscriber_completed_count": {
+      "@id": "paubox:subscriber_completed_count",
+      "@type": "xsd:integer"
+    },
+    "DripCampaignResponse_data_attributes": "paubox:DripCampaignResponse_data_attributes",
+    "drip_campaign_tree_blob": {
+      "@id": "paubox:drip_campaign_tree_blob",
+      "@type": "xsd:string"
+    },
+    "DripCampaignResponse": "paubox:DripCampaignResponse",
+    "dynamic_templates_body": "paubox:dynamic_templates_body",
+    "TemplatedMessageHeaders": "paubox:TemplatedMessageHeaders",
+    "reply-to": {
+      "@id": "paubox:reply-to",
+      "@type": "xsd:string"
+    },
+    "List-Unsubscribe": {
+      "@id": "paubox:List-Unsubscribe",
+      "@type": "xsd:string"
+    },
+    "List-Unsubscribe-Post": {
+      "@id": "paubox:List-Unsubscribe-Post",
+      "@type": "xsd:string"
+    },
+    "additionalProperties": {
+      "@id": "paubox:additionalProperties",
+      "@type": "xsd:string"
+    },
+    "SingleSendResponse": "paubox:SingleSendResponse",
+    "sourceTrackingId": {
+      "@id": "paubox:sourceTrackingId",
+      "@type": "xsd:string"
+    },
+    "customHeaders": {
+      "@id": "paubox:customHeaders"
+    },
+    "TemplatedMessageRequest": "paubox:TemplatedMessageRequest",
+    "Attachment": "paubox:Attachment",
+    "fileName": {
+      "@id": "paubox:fileName",
+      "@type": "xsd:string"
+    },
+    "contentType": {
+      "@id": "paubox:contentType",
+      "@type": "xsd:string"
+    },
+    "content": {
+      "@id": "paubox:content",
+      "@type": "xsd:string"
+    },
+    "DynamicTemplateListResponse": "paubox:DynamicTemplateListResponse",
+    "templates": {
+      "@id": "paubox:templates",
+      "@container": "@list"
+    },
+    "ErrorResponse": "paubox:ErrorResponse",
+    "TemplatedMessageRequest_data": "paubox:TemplatedMessageRequest_data",
+    "template_name": {
+      "@id": "paubox:template_name",
+      "@type": "xsd:string"
+    },
+    "template_values": {
+      "@id": "paubox:template_values",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "paubox:message",
+      "@type": "@id"
+    },
+    "inline_response_200": "paubox:inline_response_200",
+    "DynamicTemplateResponse": "paubox:DynamicTemplateResponse",
+    "body": {
+      "@id": "paubox:body",
+      "@type": "xsd:string"
+    },
+    "TemplatedMessage": "paubox:TemplatedMessage",
+    "recipients": {
+      "@id": "paubox:recipients",
+      "@container": "@list"
+    },
+    "bcc": {
+      "@id": "paubox:bcc",
+      "@container": "@list"
+    },
+    "cc": {
+      "@id": "paubox:cc",
+      "@container": "@list"
+    },
+    "headers": {
+      "@id": "paubox:headers",
+      "@type": "@id"
+    },
+    "allowNonTLS": {
+      "@id": "paubox:allowNonTLS",
+      "@type": "xsd:boolean"
+    },
+    "forceSecureNotification": {
+      "@id": "paubox:forceSecureNotification",
+      "@type": "xsd:boolean"
+    },
+    "attachments": {
+      "@id": "paubox:attachments",
+      "@container": "@list"
+    },
+    "ErrorResponse_errors": "paubox:ErrorResponse_errors",
+    "title": {
+      "@id": "paubox:title",
+      "@type": "xsd:string"
+    },
+    "dynamic_templates_id_body": "paubox:dynamic_templates_id_body",
+    "FormStats": "paubox:FormStats",
+    "active_form_count": {
+      "@id": "paubox:active_form_count",
+      "@type": "xsd:integer"
+    },
+    "total_submission_count": {
+      "@id": "paubox:total_submission_count",
+      "@type": "xsd:integer"
+    },
+    "submissions_last_7_days": {
+      "@id": "paubox:submissions_last_7_days",
+      "@type": "xsd:integer"
+    },
+    "FormListResponse": "paubox:FormListResponse",
+    "results": {
+      "@id": "paubox:results",
+      "@container": "@list"
+    },
+    "page_info": {
+      "@id": "paubox:page_info",
+      "@type": "@id"
+    },
+    "PageInfo": "paubox:PageInfo",
+    "count": {
+      "@id": "paubox:count",
+      "@type": "xsd:integer"
+    },
+    "pages": {
+      "@id": "paubox:pages",
+      "@type": "xsd:integer"
+    },
+    "page": {
+      "@id": "paubox:page",
+      "@type": "xsd:integer"
+    },
+    "items": {
+      "@id": "paubox:items",
+      "@type": "xsd:integer"
+    },
+    "UpdateFormRequest": "paubox:UpdateFormRequest",
+    "description": {
+      "@id": "paubox:description",
+      "@type": "xsd:string"
+    },
+    "form_json": {
+      "@id": "paubox:form_json"
+    },
+    "vanity_url": {
+      "@id": "paubox:vanity_url",
+      "@type": "xsd:string"
+    },
+    "active": {
+      "@id": "paubox:active",
+      "@type": "xsd:boolean"
+    },
+    "Form": "paubox:Form",
+    "form_html": {
+      "@id": "paubox:form_html",
+      "@type": "xsd:string"
+    },
+    "form_css": {
+      "@id": "paubox:form_css",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "paubox:version",
+      "@type": "xsd:integer"
+    },
+    "customer_id": {
+      "@id": "paubox:customer_id",
+      "@type": "xsd:integer"
+    },
+    "old_form_id": {
+      "@id": "paubox:old_form_id",
+      "@type": "xsd:integer"
+    },
+    "signable": {
+      "@id": "paubox:signable",
+      "@type": "xsd:boolean"
+    },
+    "signature_confirmation_label": {
+      "@id": "paubox:signature_confirmation_label",
+      "@type": "xsd:string"
+    },
+    "submission_count": {
+      "@id": "paubox:submission_count",
+      "@type": "xsd:integer"
+    },
+    "deleted": {
+      "@id": "paubox:deleted",
+      "@type": "xsd:boolean"
+    },
+    "archived": {
+      "@id": "paubox:archived",
+      "@type": "xsd:boolean"
+    },
+    "CreateFormRequest": "paubox:CreateFormRequest",
+    "CopyFormRequest": "paubox:CopyFormRequest",
+    "form_id": {
+      "@id": "paubox:form_id",
+      "@type": "xsd:string"
+    },
+    "FormSubmissionRequest": "paubox:FormSubmissionRequest",
+    "DeliveryStatus": "paubox:DeliveryStatus",
+    "deliveryStatus": {
+      "@id": "paubox:deliveryStatus",
+      "@type": "xsd:string"
+    },
+    "deliveryTime": {
+      "@id": "paubox:deliveryTime",
+      "@type": "xsd:string"
+    },
+    "openedStatus": {
+      "@id": "paubox:openedStatus",
+      "@type": "xsd:string"
+    },
+    "openedTime": {
+      "@id": "paubox:openedTime",
+      "@type": "xsd:string"
+    },
+    "MessageReceiptResponse": "paubox:MessageReceiptResponse",
+    "ClickData": "paubox:ClickData",
+    "click_count": {
+      "@id": "paubox:click_count",
+      "@type": "xsd:integer"
+    },
+    "SingleSendRequest_data": "paubox:SingleSendRequest_data",
+    "override_open_tracking": {
+      "@id": "paubox:override_open_tracking",
+      "@type": "xsd:boolean"
+    },
+    "override_link_tracking": {
+      "@id": "paubox:override_link_tracking",
+      "@type": "xsd:boolean"
+    },
+    "unsubscribe_url": {
+      "@id": "paubox:unsubscribe_url",
+      "@type": "@id"
+    },
+    "Message": "paubox:Message",
+    "MessageContent": "paubox:MessageContent",
+    "MessageReceiptErrorResponse": "paubox:MessageReceiptErrorResponse",
+    "MessageDelivery": "paubox:MessageDelivery",
+    "BulkSendResponse": "paubox:BulkSendResponse",
+    "messages": {
+      "@id": "paubox:messages",
+      "@container": "@list"
+    },
+    "BulkSendRequest": "paubox:BulkSendRequest",
+    "BulkSendRequest_data": "paubox:BulkSendRequest_data",
+    "MessageReceiptResponse_data_message": "paubox:MessageReceiptResponse_data_message",
+    "message_deliveries": {
+      "@id": "paubox:message_deliveries",
+      "@container": "@list"
+    },
+    "total_opens": {
+      "@id": "paubox:total_opens",
+      "@type": "xsd:integer"
+    },
+    "distinct_opens": {
+      "@id": "paubox:distinct_opens",
+      "@type": "xsd:integer"
+    },
+    "total_click_count": {
+      "@id": "paubox:total_click_count",
+      "@type": "xsd:integer"
+    },
+    "clicks_per_link": {
+      "@id": "paubox:clicks_per_link",
+      "@container": "@list"
+    },
+    "MessageReceiptResponse_data": "paubox:MessageReceiptResponse_data",
+    "BulkSendResponse_messages": "paubox:BulkSendResponse_messages",
+    "MessageHeaders": "paubox:MessageHeaders",
+    "x-custom-header": {
+      "@id": "paubox:x-custom-header",
+      "@type": "xsd:string"
+    },
+    "SingleSendRequest": "paubox:SingleSendRequest",
+    "FormSubmissionListResponse": "paubox:FormSubmissionListResponse",
+    "total": {
+      "@id": "paubox:total",
+      "@type": "xsd:integer"
+    },
+    "FormSubmission": "paubox:FormSubmission",
+    "storage_type": {
+      "@id": "paubox:storage_type",
+      "@type": "xsd:string"
+    },
+    "storage_url": {
+      "@id": "paubox:storage_url",
+      "@type": "xsd:string"
+    },
+    "submitter_email": {
+      "@id": "paubox:submitter_email",
+      "@type": "xsd:string"
+    },
+    "attachment_name": {
+      "@id": "paubox:attachment_name",
+      "@type": "xsd:string"
+    },
+    "attachment_url": {
+      "@id": "paubox:attachment_url",
+      "@type": "xsd:string"
+    },
+    "attachment_type": {
+      "@id": "paubox:attachment_type",
+      "@type": "xsd:string"
+    },
+    "attachment": {
+      "@id": "paubox:attachment"
+    },
+    "UpdateSubscriberRequest_subscriber": "paubox:UpdateSubscriberRequest_subscriber",
+    "phone_number": {
+      "@id": "paubox:phone_number",
+      "@type": "xsd:string"
+    },
+    "SubscriberResponse": "paubox:SubscriberResponse",
+    "CreateSubscriberRequest_subscriber": "paubox:CreateSubscriberRequest_subscriber",
+    "DetailedSubscriber": "paubox:DetailedSubscriber",
+    "DetailedSubscriberResponse": "paubox:DetailedSubscriberResponse",
+    "DetailedSubscriber_attributes_custom_fields": "paubox:DetailedSubscriber_attributes_custom_fields",
+    "custom_field_name": {
+      "@id": "paubox:custom_field_name",
+      "@type": "xsd:string"
+    },
+    "custom_field_value": {
+      "@id": "paubox:custom_field_value",
+      "@type": "xsd:string"
+    },
+    "UpdateSubscriberRequest": "paubox:UpdateSubscriberRequest",
+    "subscriber": {
+      "@id": "paubox:subscriber",
+      "@type": "@id"
+    },
+    "BulkCreateSubscribersRequest_subscribers": "paubox:BulkCreateSubscribersRequest_subscribers",
+    "DetailedSubscriber_attributes": "paubox:DetailedSubscriber_attributes",
+    "subscription_lists": {
+      "@id": "paubox:subscription_lists",
+      "@container": "@list"
+    },
+    "statistics": {
+      "@id": "paubox:statistics",
+      "@type": "@id"
+    },
+    "SubscribersResponse": "paubox:SubscribersResponse",
+    "BulkCreateResponse_data": "paubox:BulkCreateResponse_data",
+    "num_subscribers_added": {
+      "@id": "paubox:num_subscribers_added",
+      "@type": "xsd:integer"
+    },
+    "DetailedSubscriber_attributes_statistics": "paubox:DetailedSubscriber_attributes_statistics",
+    "deliveries": {
+      "@id": "paubox:deliveries",
+      "@type": "xsd:integer"
+    },
+    "opened": {
+      "@id": "paubox:opened",
+      "@type": "xsd:integer"
+    },
+    "CreateSubscriberRequest": "paubox:CreateSubscriberRequest",
+    "Subscriber": "paubox:Subscriber",
+    "BulkCreateResponse": "paubox:BulkCreateResponse",
+    "DetailedSubscriber_attributes_subscription_lists": "paubox:DetailedSubscriber_attributes_subscription_lists",
+    "BulkCreateSubscribersRequest": "paubox:BulkCreateSubscribersRequest",
+    "subscribers": {
+      "@id": "paubox:subscribers",
+      "@container": "@list"
+    },
+    "Subscriber_attributes": "paubox:Subscriber_attributes",
+    "UpdateSubscriptionListRequest": "paubox:UpdateSubscriptionListRequest",
+    "CreateSubscriptionListRequest": "paubox:CreateSubscriptionListRequest",
+    "SubscriptionListsResponse_data": "paubox:SubscriptionListsResponse_data",
+    "SubscriptionListResponse": "paubox:SubscriptionListResponse",
+    "SubscriptionListsResponse": "paubox:SubscriptionListsResponse",
+    "SubscriptionListsResponse_attributes": "paubox:SubscriptionListsResponse_attributes",
+    "is_default": {
+      "@id": "paubox:is_default",
+      "@type": "xsd:boolean"
+    },
+    "CreateSubscriptionResponse": "paubox:CreateSubscriptionResponse",
+    "BulkSubscriptionChangeResponse": "paubox:BulkSubscriptionChangeResponse",
+    "SubscriptionChangeRequest": "paubox:SubscriptionChangeRequest",
+    "subscriber_ids": {
+      "@id": "paubox:subscriber_ids",
+      "@container": "@list"
+    },
+    "subscription_list_ids": {
+      "@id": "paubox:subscription_list_ids",
+      "@container": "@list"
+    },
+    "BulkSubscriptionJob": "paubox:BulkSubscriptionJob",
+    "SubscriptionResponse": "paubox:SubscriptionResponse",
+    "SubscriptionsResponse": "paubox:SubscriptionsResponse",
+    "CreateSubscriptionRequest_subscription": "paubox:CreateSubscriptionRequest_subscription",
+    "subscriber_id": {
+      "@id": "paubox:subscriber_id",
+      "@type": "xsd:integer"
+    },
+    "BulkSubscriptionChangeRequest": "paubox:BulkSubscriptionChangeRequest",
+    "from_subscription_list_id": {
+      "@id": "paubox:from_subscription_list_id",
+      "@type": "xsd:string"
+    },
+    "search": {
+      "@id": "paubox:search",
+      "@type": "xsd:string"
+    },
+    "filters": {
+      "@id": "paubox:filters",
+      "@type": "xsd:string"
+    },
+    "except_ids": {
+      "@id": "paubox:except_ids",
+      "@container": "@list"
+    },
+    "SubscriptionChangeResponse": "paubox:SubscriptionChangeResponse",
+    "CreateSubscriptionRequest": "paubox:CreateSubscriptionRequest",
+    "subscription": {
+      "@id": "paubox:subscription",
+      "@type": "@id"
+    },
+    "Subscription": "paubox:Subscription",
+    "uuid": {
+      "@id": "paubox:uuid",
+      "@type": "xsd:string"
+    },
+    "unsubscribed_at": {
+      "@id": "paubox:unsubscribed_at",
+      "@type": "xsd:dateTime"
+    },
+    "delete_at": {
+      "@id": "paubox:delete_at",
+      "@type": "xsd:dateTime"
+    },
+    "TrackingLinksDetailResponse": "paubox:TrackingLinksDetailResponse",
+    "TrackingLinksDetailResponse_data": "paubox:TrackingLinksDetailResponse_data"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Paubox API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Paubox's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-12) from openapi/paubox-analytics-api-openapi.yml, openapi/paubox-campaign-mailings-api-openapi.yml, openapi/paubox-drip-campaigns-api-openapi.yml.",
+  "dcterms:created": "2026-10-12",
+  "dcterms:source": [
+    "openapi/paubox-analytics-api-openapi.yml",
+    "openapi/paubox-campaign-mailings-api-openapi.yml",
+    "openapi/paubox-drip-campaigns-api-openapi.yml",
+    "openapi/paubox-dynamic-templates-api-openapi.yml",
+    "openapi/paubox-form-management-api-openapi.yml"
+  ]
+}

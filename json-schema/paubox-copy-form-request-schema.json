@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-copy-form-request-schema.json",
+  "title": "CopyFormRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-form-management-api-openapi.yml#/components/schemas/CopyFormRequest",
+  "type": "object",
+  "required": [
+    "form_id",
+    "title"
+  ],
+  "properties": {
+    "form_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID of the form to copy"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title for the copy"
+    }
+  }
+}

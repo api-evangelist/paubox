@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-send-campaign-mailing-request-schema.json",
+  "title": "SendCampaignMailingRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/SendCampaignMailingRequest",
+  "required": [
+    "campaign_mailing_id",
+    "campaign_mailing_send"
+  ],
+  "type": "object",
+  "properties": {
+    "campaign_mailing_id": {
+      "type": "string",
+      "description": "UUID string, can be retrieved from the id= part of the URL when editing a marketing email",
+      "format": "uuid"
+    },
+    "campaign_mailing_send": {
+      "$ref": "#/$defs/SendCampaignMailingRequest_campaign_mailing_send"
+    }
+  },
+  "$defs": {
+    "SendCampaignMailingRequest_campaign_mailing_send": {
+      "required": [
+        "sender_email",
+        "subscription_list_id"
+      ],
+      "type": "object",
+      "properties": {
+        "sender_email": {
+          "type": "string",
+          "description": "Email for a Paubox Marketing user to track who sent it. This is NOT the \"From email\" that will be used to send the message",
+          "format": "email"
+        },
+        "subscription_list_id": {
+          "type": "string",
+          "description": "UUID string, can be retrieved from the listId= part of the URL of any Contact List page",
+          "format": "uuid"
+        },
+        "recipient_emails": {
+          "type": "array",
+          "description": "Optional - will send preview message equivalent (no smart text replacements)",
+          "items": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "customer_name": {
+          "type": "string",
+          "description": "Optional for footer. Leave empty to use default information"
+        },
+        "from_email": {
+          "type": "string",
+          "description": "Optional - the email the user will see the email is sent from. Leave empty to use default information",
+          "format": "email"
+        },
+        "from_name": {
+          "type": "string",
+          "description": "Optional - the name the user will see the email is from. Leave empty to use default information"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Optional - the subject of the email. Will use the marketing email unique ID if not specified"
+        }
+      }
+    }
+  }
+}

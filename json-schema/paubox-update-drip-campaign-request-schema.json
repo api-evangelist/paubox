@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-update-drip-campaign-request-schema.json",
+  "title": "UpdateDripCampaignRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/UpdateDripCampaignRequest",
+  "type": "object",
+  "properties": {
+    "drip_campaign": {
+      "$ref": "#/$defs/UpdateDripCampaignRequest_drip_campaign"
+    }
+  },
+  "$defs": {
+    "UpdateDripCampaignRequest_drip_campaign": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the drip campaign"
+        },
+        "subscription_list_id": {
+          "type": "string",
+          "description": "Subscription list ID",
+          "format": "uuid"
+        },
+        "start_trigger": {
+          "type": "string",
+          "description": "Trigger condition to start the drip campaign"
+        },
+        "drip_campaign_nodes": {
+          "type": "string",
+          "description": "JSON string containing drip campaign node configuration"
+        }
+      }
+    }
+  }
+}

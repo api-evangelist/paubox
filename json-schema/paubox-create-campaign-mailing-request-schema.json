@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-create-campaign-mailing-request-schema.json",
+  "title": "CreateCampaignMailingRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CreateCampaignMailingRequest",
+  "type": "object",
+  "properties": {
+    "campaign_mailing": {
+      "$ref": "#/$defs/CreateCampaignMailingRequest_campaign_mailing"
+    }
+  },
+  "$defs": {
+    "CreateCampaignMailingRequest_campaign_mailing": {
+      "required": [
+        "subject"
+      ],
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Subject line. Required, and must be unique within your account."
+        },
+        "default_subject": {
+          "type": "string",
+          "description": "Fallback subject used when no subject is set on a send"
+        },
+        "from": {
+          "type": "string",
+          "description": "From address for the mailing"
+        },
+        "reply_to": {
+          "type": "string",
+          "description": "Reply-to address for the mailing"
+        },
+        "html_part": {
+          "type": "string",
+          "description": "HTML body. An unsubscribe footer is appended automatically on save."
+        },
+        "text_part": {
+          "type": "string",
+          "description": "Plain-text body"
+        },
+        "form_data": {
+          "type": "string",
+          "description": "JSON-encoded editor state, for mailings built in an editor"
+        },
+        "template_type": {
+          "type": "string",
+          "description": "Editor the mailing is authored in, for example `quill`, `bee` or `html`. Defaults to `quill`.",
+          "default": "quill"
+        }
+      }
+    }
+  }
+}

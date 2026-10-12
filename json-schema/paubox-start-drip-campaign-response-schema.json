@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-start-drip-campaign-response-schema.json",
+  "title": "StartDripCampaignResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/StartDripCampaignResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/StartDripCampaignResponse_data"
+    }
+  },
+  "$defs": {
+    "StartDripCampaignResponse_data": {
+      "type": "object",
+      "properties": {
+        "jids": {
+          "type": "array",
+          "description": "Array of job IDs for the started drip campaign",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

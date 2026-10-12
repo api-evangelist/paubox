@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-drip-campaigns-response-schema.json",
+  "title": "DripCampaignsResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-drip-campaigns-api-openapi.yml#/components/schemas/DripCampaignsResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DripCampaignsResponse_data"
+      }
+    }
+  },
+  "$defs": {
+    "DripCampaignsResponse_attributes": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the drip campaign"
+        },
+        "subscription_list_id": {
+          "type": "string",
+          "description": "Subscription list ID"
+        },
+        "subscription_list_name": {
+          "type": "string",
+          "description": "Name of the subscription list"
+        },
+        "state": {
+          "type": "string",
+          "description": "Current state of the drip campaign"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "format": "date-time"
+        },
+        "start_trigger": {
+          "type": "string",
+          "description": "Trigger condition to start the drip campaign"
+        },
+        "subscriber_count": {
+          "type": "integer",
+          "description": "Number of subscribers in the campaign"
+        },
+        "subscriber_completed_count": {
+          "type": "integer",
+          "description": "Number of subscribers who completed the campaign"
+        }
+      }
+    },
+    "DripCampaignsResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Drip campaign ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type",
+          "enum": [
+            "drip_campaign"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/DripCampaignsResponse_attributes"
+        }
+      }
+    }
+  }
+}

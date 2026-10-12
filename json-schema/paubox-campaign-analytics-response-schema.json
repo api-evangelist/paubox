@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-campaign-analytics-response-schema.json",
+  "title": "CampaignAnalyticsResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignAnalyticsResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/CampaignAnalyticsResponse_data"
+    }
+  },
+  "$defs": {
+    "CampaignAnalyticsResponse_data": {
+      "type": "object",
+      "properties": {
+        "delivered": {
+          "type": "integer",
+          "description": "Number of delivered emails"
+        },
+        "viewed": {
+          "type": "integer",
+          "description": "Number of viewed emails"
+        },
+        "clicked": {
+          "type": "integer",
+          "description": "Number of clicked emails"
+        },
+        "bounced": {
+          "type": "integer",
+          "description": "Number of bounced emails"
+        },
+        "soft_bounced": {
+          "type": "integer",
+          "description": "Number of soft bounced emails"
+        },
+        "hard_bounced": {
+          "type": "integer",
+          "description": "Number of hard bounced emails"
+        },
+        "unsubscribed": {
+          "type": "integer",
+          "description": "Number of unsubscribed emails"
+        },
+        "global_unsubscribed": {
+          "type": "integer",
+          "description": "Number of global unsubscribed emails"
+        }
+      }
+    }
+  }
+}

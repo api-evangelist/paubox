@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-campaign-deliveries-table-response-schema.json",
+  "title": "CampaignDeliveriesTableResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-analytics-api-openapi.yml#/components/schemas/CampaignDeliveriesTableResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CampaignDeliveriesTableResponse_data"
+      }
+    }
+  },
+  "$defs": {
+    "CampaignDeliveriesTableResponse_data": {
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "type": "string",
+          "description": "Email recipient"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "format": "date-time"
+        },
+        "delivered": {
+          "type": "boolean",
+          "description": "Whether email was delivered"
+        },
+        "viewed": {
+          "type": "boolean",
+          "description": "Whether email was viewed"
+        },
+        "clicked": {
+          "type": "boolean",
+          "description": "Whether email was clicked"
+        },
+        "bounced": {
+          "type": "boolean",
+          "description": "Whether email bounced"
+        },
+        "unsubscribed": {
+          "type": "boolean",
+          "description": "Whether recipient unsubscribed"
+        },
+        "tracking_links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Tracking link information (dynamic property names based on actual URLs)"
+        }
+      }
+    }
+  }
+}

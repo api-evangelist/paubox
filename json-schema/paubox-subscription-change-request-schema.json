@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-subscription-change-request-schema.json",
+  "title": "SubscriptionChangeRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-subscriptions-api-openapi.yml#/components/schemas/SubscriptionChangeRequest",
+  "required": [
+    "subscriber_ids"
+  ],
+  "type": "object",
+  "properties": {
+    "subscriber_ids": {
+      "type": "array",
+      "description": "UUIDs of the subscribers to update",
+      "items": {
+        "type": "string"
+      }
+    },
+    "subscription_list_ids": {
+      "type": "array",
+      "description": "UUIDs of the subscription lists to update the subscribers on. Omit to act on the subscribers' global opt-out instead.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

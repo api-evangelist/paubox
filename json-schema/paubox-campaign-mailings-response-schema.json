@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-campaign-mailings-response-schema.json",
+  "title": "CampaignMailingsResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-campaign-mailings-api-openapi.yml#/components/schemas/CampaignMailingsResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CampaignMailingsResponse_data"
+      }
+    }
+  },
+  "$defs": {
+    "CampaignMailingsResponse_attributes": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string",
+          "description": "Campaign mailing subject"
+        },
+        "default_subject": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Fallback subject used when no subject is set on a send"
+        },
+        "template_type": {
+          "type": "string",
+          "description": "Editor the mailing was authored in, for example `quill`, `bee` or `html`"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Last update timestamp",
+          "format": "date-time"
+        },
+        "sent_count": {
+          "type": "integer",
+          "description": "Number of emails sent"
+        },
+        "delivered_count": {
+          "type": "integer",
+          "description": "Number of emails delivered"
+        },
+        "viewed_count": {
+          "type": "integer",
+          "description": "Number of emails viewed"
+        },
+        "clicked_count": {
+          "type": "integer",
+          "description": "Number of emails clicked"
+        },
+        "bounced_count": {
+          "type": "integer",
+          "description": "Number of emails bounced"
+        },
+        "unsubscribed_count": {
+          "type": "integer",
+          "description": "Number of emails that resulted in unsubscribes"
+        }
+      }
+    },
+    "CampaignMailingsResponse_data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Campaign mailing ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Resource type",
+          "enum": [
+            "campaign_mailing"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/CampaignMailingsResponse_attributes"
+        }
+      }
+    }
+  }
+}

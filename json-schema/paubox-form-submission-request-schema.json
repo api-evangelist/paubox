@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-form-submission-request-schema.json",
+  "title": "FormSubmissionRequest",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-forms-api-openapi.yml#/components/schemas/FormSubmissionRequest",
+  "type": "object",
+  "required": [
+    "form_data"
+  ],
+  "properties": {
+    "form_data": {
+      "type": "object",
+      "description": "Key-value pairs matching the form's field schema (`form_json`). Structure varies per form.\n"
+    },
+    "attachments": {
+      "type": "array",
+      "description": "Optional file attachments",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "content"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Filename"
+          },
+          "content": {
+            "type": "string",
+            "description": "Base64-encoded file content"
+          }
+        }
+      }
+    }
+  }
+}

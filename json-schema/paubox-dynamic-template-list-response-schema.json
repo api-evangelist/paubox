@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-dynamic-template-list-response-schema.json",
+  "title": "DynamicTemplateListResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-dynamic-templates-api-openapi.yml#/components/schemas/DynamicTemplateListResponse",
+  "type": "object",
+  "properties": {
+    "templates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DynamicTemplateResponse"
+      }
+    }
+  },
+  "$defs": {
+    "DynamicTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Template ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Template name"
+        },
+        "body": {
+          "type": "string",
+          "description": "Template content (Handlebars)"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Template creation timestamp",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Template last update timestamp",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/paubox/main/json-schema/paubox-form-submission-list-response-schema.json",
+  "title": "FormSubmissionListResponse",
+  "x-generated": "2026-10-12",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/paubox-submissions-api-openapi.yml#/components/schemas/FormSubmissionListResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FormSubmission"
+      }
+    },
+    "total": {
+      "type": "integer",
+      "description": "Total number of matching submissions"
+    },
+    "page": {
+      "type": "integer",
+      "description": "Current page number"
+    },
+    "items": {
+      "type": "integer",
+      "description": "Number of items per page"
+    }
+  },
+  "$defs": {
+    "FormSubmission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "form_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "form_data": {
+          "type": "string",
+          "description": "JSON-encoded object of the respondent's answers.\n"
+        },
+        "storage_type": {
+          "type": "string"
+        },
+        "storage_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "submitter_email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recipients": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment": {},
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
