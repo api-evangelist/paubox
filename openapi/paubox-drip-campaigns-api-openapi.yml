@@ -210,86 +210,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    DripCampaignResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Drip campaign ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - drip_campaign
-        attributes:
-          $ref: '#/components/schemas/DripCampaignResponse_data_attributes'
-    DripCampaignsResponse_data:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Drip campaign ID
-        type:
-          type: string
-          description: Resource type
-          enum:
-          - drip_campaign
-        attributes:
-          $ref: '#/components/schemas/DripCampaignsResponse_attributes'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-        code:
-          type: string
-          description: Error code
-        details:
-          type: object
-          description: Additional error details
-    UpdateDripCampaignRequest_drip_campaign:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the drip campaign
-        subscription_list_id:
-          type: string
-          description: Subscription list ID
-          format: uuid
-        start_trigger:
-          type: string
-          description: Trigger condition to start the drip campaign
-        drip_campaign_nodes:
-          type: string
-          description: JSON string containing drip campaign node configuration
-    PauseDripCampaignResponse_data:
-      type: object
-      properties:
-        drip_campaign_id:
-          type: string
-          description: ID of the paused drip campaign
-        status:
-          type: string
-          description: Status of the drip campaign after pausing
-    PauseDripCampaignResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PauseDripCampaignResponse_data'
-    UpdateDripCampaignRequest:
-      type: object
-      properties:
-        drip_campaign:
-          $ref: '#/components/schemas/UpdateDripCampaignRequest_drip_campaign'
-    DripCampaignsResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DripCampaignsResponse_data'
     StartDripCampaignResponse_data:
       type: object
       properties:
@@ -303,34 +223,27 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/StartDripCampaignResponse_data'
-    DripCampaignsResponse_attributes:
+    PauseDripCampaignResponse_data:
       type: object
       properties:
-        name:
+        drip_campaign_id:
           type: string
-          description: Name of the drip campaign
-        subscription_list_id:
+          description: ID of the paused drip campaign
+        status:
           type: string
-          description: Subscription list ID
-        subscription_list_name:
-          type: string
-          description: Name of the subscription list
-        state:
-          type: string
-          description: Current state of the drip campaign
-        updated_at:
-          type: string
-          description: Last update timestamp
-          format: date-time
-        start_trigger:
-          type: string
-          description: Trigger condition to start the drip campaign
-        subscriber_count:
-          type: integer
-          description: Number of subscribers in the campaign
-        subscriber_completed_count:
-          type: integer
-          description: Number of subscribers who completed the campaign
+          description: Status of the drip campaign after pausing
+    DripCampaignsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DripCampaignsResponse_data'
+    DripCampaignResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DripCampaignResponse_data'
     DripCampaignResponse_data_attributes:
       type: object
       properties:
@@ -365,14 +278,101 @@ components:
         drip_campaign_tree_blob:
           type: string
           description: JSON string containing drip campaign tree structure
-    DripCampaignResponse:
+    DripCampaignsResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drip campaign ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - drip_campaign
+        attributes:
+          $ref: '#/components/schemas/DripCampaignsResponse_attributes'
+    UpdateDripCampaignRequest_drip_campaign:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+          format: uuid
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        drip_campaign_nodes:
+          type: string
+          description: JSON string containing drip campaign node configuration
+    DripCampaignsResponse_attributes:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the drip campaign
+        subscription_list_id:
+          type: string
+          description: Subscription list ID
+        subscription_list_name:
+          type: string
+          description: Name of the subscription list
+        state:
+          type: string
+          description: Current state of the drip campaign
+        updated_at:
+          type: string
+          description: Last update timestamp
+          format: date-time
+        start_trigger:
+          type: string
+          description: Trigger condition to start the drip campaign
+        subscriber_count:
+          type: integer
+          description: Number of subscribers in the campaign
+        subscriber_completed_count:
+          type: integer
+          description: Number of subscribers who completed the campaign
+    UpdateDripCampaignRequest:
+      type: object
+      properties:
+        drip_campaign:
+          $ref: '#/components/schemas/UpdateDripCampaignRequest_drip_campaign'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error details
+    DripCampaignResponse_data:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Drip campaign ID
+        type:
+          type: string
+          description: Resource type
+          enum:
+          - drip_campaign
+        attributes:
+          $ref: '#/components/schemas/DripCampaignResponse_data_attributes'
+    PauseDripCampaignResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/DripCampaignResponse_data'
+          $ref: '#/components/schemas/PauseDripCampaignResponse_data'
   responses:
-    InternalServerError:
-      description: Internal server error
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -383,8 +383,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
@@ -395,8 +395,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:

@@ -254,6 +254,32 @@ paths:
       - PauboxToken: []
 components:
   schemas:
+    MessageReceiptResponse:
+      required:
+      - data
+      - sourceTrackingId
+      type: object
+      properties:
+        sourceTrackingId:
+          type: string
+          description: The tracking ID for the message
+          example: 6e1cf9a4-7bde-4834-8200-ed424b50c8a7
+        data:
+          $ref: '#/components/schemas/MessageReceiptResponse_data'
+    ClickData:
+      required:
+      - click_count
+      - target_url
+      type: object
+      properties:
+        click_count:
+          type: integer
+          description: Number of clicks on this specific link
+          example: 1
+        target_url:
+          type: string
+          description: The URL that was clicked
+          example: amazon.com
     DeliveryStatus:
       required:
       - deliveryStatus
@@ -287,32 +313,33 @@ components:
           type: string
           description: The time when the message was first opened (single recipient only)
           example: Mon, 23 Apr 2018 13:27:51 -0700
-    MessageReceiptResponse:
+    BulkSendRequest:
       required:
       - data
-      - sourceTrackingId
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BulkSendRequest_data'
+    SingleSendRequest:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SingleSendRequest_data'
+    SingleSendResponse:
       type: object
       properties:
         sourceTrackingId:
           type: string
-          description: The tracking ID for the message
-          example: 6e1cf9a4-7bde-4834-8200-ed424b50c8a7
+          description: Identifier for tracking the message source.
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
         data:
-          $ref: '#/components/schemas/MessageReceiptResponse_data'
-    ClickData:
-      required:
-      - click_count
-      - target_url
-      type: object
-      properties:
-        click_count:
-          type: integer
-          description: Number of clicks on this specific link
-          example: 1
-        target_url:
           type: string
-          description: The URL that was clicked
-          example: amazon.com
+          example: Service OK
     SingleSendRequest_data:
       required:
       - message
@@ -330,6 +357,136 @@ components:
           type: string
           description: URL to redirect unsubscribe requests for unsubscribe tracking.
           format: uri
+    MessageHeaders:
+      required:
+      - from
+      - subject
+      type: object
+      properties:
+        subject:
+          type: string
+        from:
+          type: string
+          description: Must match the verified domain of your API key.
+        reply-to:
+          type: string
+          description: Reply-to address; must match a verified domain if different from from.
+        List-Unsubscribe:
+          type: string
+          description: 'Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.
+
+            '
+        List-Unsubscribe-Post:
+          type: string
+          description: Used in conjunction with List-Unsubscribe header.
+        x-custom-header:
+          type: string
+          description: Example custom header; any custom header may be added with an X- prefix.
+        additionalProperties:
+          type: string
+          description: Any additional X- prefixed custom header values.
+    MessageContent:
+      type: object
+      properties:
+        text/plain:
+          type: string
+          description: Plain text message body. Required if text/html is not provided.
+        text/html:
+          type: string
+          description: 'HTML message body. May be HTML-escaped, base64-encoded, or a valid unescaped string. CSS in <style> tags will be rendered inline.
+
+            '
+      oneOf:
+      - required:
+        - text/plain
+      - required:
+        - text/html
+    BulkSendResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkSendResponse_messages'
+    BulkSendRequest_data:
+      required:
+      - messages
+      type: object
+      properties:
+        messages:
+          type: array
+          description: Recommended 50 or fewer per request.
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse_errors:
+      type: object
+      properties:
+        code:
+          type: integer
+        title:
+          type: string
+        details:
+          type: string
+    Attachment:
+      required:
+      - content
+      - contentType
+      - fileName
+      type: object
+      properties:
+        fileName:
+          type: string
+        contentType:
+          type: string
+          description: Valid MIME type, e.g., application/pdf.
+        content:
+          type: string
+          description: Base64-encoded file contents.
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errors'
+    MessageDelivery:
+      required:
+      - recipient
+      - status
+      type: object
+      properties:
+        recipient:
+          type: string
+          description: The recipient email address
+          example: recipient@host.com
+        status:
+          $ref: '#/components/schemas/DeliveryStatus'
+    BulkSendResponse_messages:
+      type: object
+      properties:
+        sourceTrackingId:
+          type: string
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        data:
+          type: string
+          example: Service OK
+    MessageReceiptErrorResponse:
+      required:
+      - errors
+      - sourceTrackingId
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorResponse_errors'
+        sourceTrackingId:
+          type: string
+          description: The tracking ID for the message
+          example: 6e1cf9a4-7bde-4834-8d200-ed424b50c8a7
     Message:
       required:
       - content
@@ -371,92 +528,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Attachment'
-    MessageContent:
-      type: object
-      properties:
-        text/plain:
-          type: string
-          description: Plain text message body. Required if text/html is not provided.
-        text/html:
-          type: string
-          description: 'HTML message body. May be HTML-escaped, base64-encoded, or a valid unescaped string. CSS in <style> tags will be rendered inline.
-
-            '
-      oneOf:
-      - required:
-        - text/plain
-      - required:
-        - text/html
-    MessageReceiptErrorResponse:
-      required:
-      - errors
-      - sourceTrackingId
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errors'
-        sourceTrackingId:
-          type: string
-          description: The tracking ID for the message
-          example: 6e1cf9a4-7bde-4834-8d200-ed424b50c8a7
-    MessageDelivery:
-      required:
-      - recipient
-      - status
-      type: object
-      properties:
-        recipient:
-          type: string
-          description: The recipient email address
-          example: recipient@host.com
-        status:
-          $ref: '#/components/schemas/DeliveryStatus'
-    SingleSendResponse:
-      type: object
-      properties:
-        sourceTrackingId:
-          type: string
-          description: Identifier for tracking the message source.
-        customHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        data:
-          type: string
-          example: Service OK
-    BulkSendResponse:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/BulkSendResponse_messages'
-    BulkSendRequest:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BulkSendRequest_data'
-    ErrorResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorResponse_errors'
-    BulkSendRequest_data:
-      required:
-      - messages
-      type: object
-      properties:
-        messages:
-          type: array
-          description: Recommended 50 or fewer per request.
-          items:
-            $ref: '#/components/schemas/Message'
     MessageReceiptResponse_data_message:
       required:
       - id
@@ -492,21 +563,6 @@ components:
           type: boolean
           description: Whether the recipient has unsubscribed (single recipient only)
           example: false
-    Attachment:
-      required:
-      - content
-      - contentType
-      - fileName
-      type: object
-      properties:
-        fileName:
-          type: string
-        contentType:
-          type: string
-          description: Valid MIME type, e.g., application/pdf.
-        content:
-          type: string
-          description: Base64-encoded file contents.
     MessageReceiptResponse_data:
       required:
       - message
@@ -514,62 +570,6 @@ components:
       properties:
         message:
           $ref: '#/components/schemas/MessageReceiptResponse_data_message'
-    BulkSendResponse_messages:
-      type: object
-      properties:
-        sourceTrackingId:
-          type: string
-        customHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        data:
-          type: string
-          example: Service OK
-    MessageHeaders:
-      required:
-      - from
-      - subject
-      type: object
-      properties:
-        subject:
-          type: string
-        from:
-          type: string
-          description: Must match the verified domain of your API key.
-        reply-to:
-          type: string
-          description: Reply-to address; must match a verified domain if different from from.
-        List-Unsubscribe:
-          type: string
-          description: 'Insert a List-Unsubscribe header (mailto and/or http). See RFC guidance for syntax.
-
-            '
-        List-Unsubscribe-Post:
-          type: string
-          description: Used in conjunction with List-Unsubscribe header.
-        x-custom-header:
-          type: string
-          description: Example custom header; any custom header may be added with an X- prefix.
-        additionalProperties:
-          type: string
-          description: Any additional X- prefixed custom header values.
-    SingleSendRequest:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/SingleSendRequest_data'
-    ErrorResponse_errors:
-      type: object
-      properties:
-        code:
-          type: integer
-        title:
-          type: string
-        details:
-          type: string
   securitySchemes:
     PauboxToken:
       type: http

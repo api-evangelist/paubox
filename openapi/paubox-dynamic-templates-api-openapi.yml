@@ -235,20 +235,90 @@ paths:
       - PauboxToken: []
 components:
   schemas:
-    dynamic_templates_body:
+    DynamicTemplateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Template ID
+          example: template_123
+        name:
+          type: string
+          description: Template name
+          example: welcome_template
+        body:
+          type: string
+          description: Template content (Handlebars)
+          example: Hello {{name}}, welcome to our service!
+        created_at:
+          type: string
+          description: Template creation timestamp
+          format: date-time
+        updated_at:
+          type: string
+          description: Template last update timestamp
+          format: date-time
+    ErrorResponse_errors:
+      type: object
+      properties:
+        code:
+          type: integer
+        title:
+          type: string
+        details:
+          type: string
+    Attachment:
       required:
-      - data[body]
-      - data[name]
+      - content
+      - contentType
+      - fileName
+      type: object
+      properties:
+        fileName:
+          type: string
+        contentType:
+          type: string
+          description: Valid MIME type, e.g., application/pdf.
+        content:
+          type: string
+          description: Base64-encoded file contents.
+    dynamic_templates_id_body:
       type: object
       properties:
         data[name]:
           type: string
-          description: Name for the template
-          example: welcome_template
+          description: Updated name for the template
+          example: updated_welcome_template
         data[body]:
           type: string
-          description: Handlebars template file (.hbs)
+          description: Updated Handlebars template file (.hbs)
           format: binary
+    SingleSendResponse:
+      type: object
+      properties:
+        sourceTrackingId:
+          type: string
+          description: Identifier for tracking the message source.
+        customHeaders:
+          type: object
+          additionalProperties:
+            type: string
+        data:
+          type: string
+          example: Service OK
+    TemplatedMessageRequest:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TemplatedMessageRequest_data'
+    inline_response_200:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Template deleted successfully
     TemplatedMessageHeaders:
       required:
       - from
@@ -275,48 +345,6 @@ components:
         additionalProperties:
           type: string
           description: Any additional custom header values.
-    SingleSendResponse:
-      type: object
-      properties:
-        sourceTrackingId:
-          type: string
-          description: Identifier for tracking the message source.
-        customHeaders:
-          type: object
-          additionalProperties:
-            type: string
-        data:
-          type: string
-          example: Service OK
-    TemplatedMessageRequest:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/TemplatedMessageRequest_data'
-    Attachment:
-      required:
-      - content
-      - contentType
-      - fileName
-      type: object
-      properties:
-        fileName:
-          type: string
-        contentType:
-          type: string
-          description: Valid MIME type, e.g., application/pdf.
-        content:
-          type: string
-          description: Base64-encoded file contents.
-    DynamicTemplateListResponse:
-      type: object
-      properties:
-        templates:
-          type: array
-          items:
-            $ref: '#/components/schemas/DynamicTemplateResponse'
     ErrorResponse:
       type: object
       properties:
@@ -324,52 +352,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ErrorResponse_errors'
-    TemplatedMessageRequest_data:
+    DynamicTemplateListResponse:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DynamicTemplateResponse'
+    dynamic_templates_body:
       required:
-      - message
-      - template_name
-      - template_values
+      - data[body]
+      - data[name]
       type: object
       properties:
-        template_name:
+        data[name]:
           type: string
-          description: The name of the template to use (must match exactly)
-          example: detailed_test
-        template_values:
-          type: string
-          description: JSON-formatted string containing template variable values
-          example: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
-        message:
-          $ref: '#/components/schemas/TemplatedMessage'
-    inline_response_200:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Template deleted successfully
-    DynamicTemplateResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Template ID
-          example: template_123
-        name:
-          type: string
-          description: Template name
+          description: Name for the template
           example: welcome_template
-        body:
+        data[body]:
           type: string
-          description: Template content (Handlebars)
-          example: Hello {{name}}, welcome to our service!
-        created_at:
-          type: string
-          description: Template creation timestamp
-          format: date-time
-        updated_at:
-          type: string
-          description: Template last update timestamp
-          format: date-time
+          description: Handlebars template file (.hbs)
+          format: binary
     TemplatedMessage:
       required:
       - headers
@@ -408,26 +411,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Attachment'
-    ErrorResponse_errors:
+    TemplatedMessageRequest_data:
+      required:
+      - message
+      - template_name
+      - template_values
       type: object
       properties:
-        code:
-          type: integer
-        title:
+        template_name:
           type: string
-        details:
+          description: The name of the template to use (must match exactly)
+          example: detailed_test
+        template_values:
           type: string
-    dynamic_templates_id_body:
-      type: object
-      properties:
-        data[name]:
-          type: string
-          description: Updated name for the template
-          example: updated_welcome_template
-        data[body]:
-          type: string
-          description: Updated Handlebars template file (.hbs)
-          format: binary
+          description: JSON-formatted string containing template variable values
+          example: '{ "name": "Howard", "conditional":"true","items":["one","two","three"] }'
+        message:
+          $ref: '#/components/schemas/TemplatedMessage'
   securitySchemes:
     PauboxToken:
       type: http
