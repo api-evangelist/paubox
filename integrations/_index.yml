@@ -29,3 +29,127 @@
   source: edge
   status: pending-partner-spec
   arazzo: null
+- slug: paubox-a2a-protocol-own-agent-card
+  label: A2A protocol (own Agent Card)
+  partner_name: A2A protocol (own Agent Card)
+  category: A2A agent
+  type: register
+  channel: provider-built
+  evidence: https://docs.paubox.com/.well-known/agent-card.json
+  source: edge
+  relationship: compatible
+  contract_reference:
+    register: provider's own /.well-known/agent-card.json
+    spec_file: null
+    standard: A2A
+    role: a2a-agent-card
+    registered_name: Paubox API Docs
+    organization: Paubox API Docs
+    matched_domain: paubox.com
+    matched_by: own-domain
+    detected_by: sweep-ai-agents.py
+    detected: '2026-10-15'
+  status: not-a-workflow
+  arazzo: null
+- slug: paubox-crates-io
+  label: crates.io
+  partner: crates-io
+  partner_name: crates.io
+  category: official SDK (Rust)
+  type: register
+  channel: package-registry
+  evidence: https://crates.io/crates/paubox
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: crates.io (public registry JSON)
+    spec_file: null
+    language: Rust
+    packages:
+    - name: paubox
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/paubox
+      repo_leg: domain:paubox.com
+      publisher_leg: org:paubox
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: paubox-npm-registry
+  label: npm registry
+  partner: npm
+  partner_name: npm registry
+  category: official SDK (JavaScript/TypeScript)
+  type: register
+  channel: package-registry
+  evidence: https://www.npmjs.com/package/paubox-cli
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: paubox-cli
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-cli
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    - name: paubox-node
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-node
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: paubox-pypi
+  label: PyPI
+  partner: pypi
+  partner_name: PyPI
+  category: official SDK (Python)
+  type: register
+  channel: package-registry
+  evidence: https://pypi.org/project/paubox-python3/
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: paubox-python3
+      version: 1.0.1
+      released: '2021-06-09'
+      released_field: upload_time
+      lapsed: true
+      page: https://pypi.org/project/paubox-python3/
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null

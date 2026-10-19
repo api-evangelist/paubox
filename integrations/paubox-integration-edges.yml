@@ -4,9 +4,16 @@ source:
 - https://n8n.io/integrations/paubox/
 checked:
 - https://a2aregistry.org/api/agents
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/paubox
+- https://crates.io/api/v1
 - https://monid.ai/tools/paubox
 - https://n8n.io/integrations/paubox/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://www.paubox.com/integrations
 - https://zapier.com/apps/paubox/integrations
 summary: null
@@ -67,4 +74,103 @@ edges:
     detected: '2026-10-15'
   detected_by: sweep-ai-agents.py
   first_seen: '2026-10-15'
+- partner_name: crates.io
+  partner: crates-io
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Rust)
+  evidence: https://crates.io/crates/paubox
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: crates.io (public registry JSON)
+    spec_file: null
+    language: Rust
+    packages:
+    - name: paubox
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: updated_at
+      lapsed: false
+      page: https://crates.io/crates/paubox
+      repo_leg: domain:paubox.com
+      publisher_leg: org:paubox
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/paubox-cli
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: paubox-cli
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-cli
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    - name: paubox-node
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-node
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/paubox-python3/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: paubox-python3
+      version: 1.0.1
+      released: '2021-06-09'
+      released_field: upload_time
+      lapsed: true
+      page: https://pypi.org/project/paubox-python3/
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
