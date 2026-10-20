@@ -5,8 +5,13 @@ source:
 checked:
 - https://a2aregistry.org/api/agents
 - https://api.nuget.org/v3
+- https://cdn.winget.microsoft.com/cache
 - https://composio.dev/toolkits/paubox
 - https://crates.io/api/v1
+- https://formulae.brew.sh/api/cask.json
+- https://formulae.brew.sh/api/formula.json
+- https://github.com/ScoopInstaller/Extras
+- https://github.com/ScoopInstaller/Main
 - https://monid.ai/tools/paubox
 - https://n8n.io/integrations/paubox/
 - https://proxy.golang.org
@@ -41,39 +46,6 @@ edges:
   direction: unknown
   evidence: https://www.paubox.com/integrations
   partner_name: Keragon
-- partner_name: A2A protocol (own Agent Card)
-  partner: null
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: A2A agent
-  evidence: https://docs.paubox.com/.well-known/agent-card.json
-  channel: provider-built
-  relationship: compatible
-  shape: a2a
-  evidence_kind: own-wellknown
-  degree: conformant
-  report_only: true
-  a2a_card:
-    grade: conformant
-    verdict: live
-    protocol_version: '0.3'
-    deviations:
-    - supportedInterfaces-instead-of-additionalInterfaces
-    card_subject: docs
-  contract_reference:
-    register: provider's own /.well-known/agent-card.json
-    spec_file: null
-    standard: A2A
-    role: a2a-agent-card
-    registered_name: Paubox API Docs
-    organization: Paubox API Docs
-    matched_domain: paubox.com
-    matched_by: own-domain
-    detected_by: sweep-ai-agents.py
-    detected: '2026-10-15'
-  detected_by: sweep-ai-agents.py
-  first_seen: '2026-10-15'
 - partner_name: crates.io
   partner: crates-io
   partner_match: register
@@ -173,4 +145,67 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official CLI (npm registry)
+  evidence: https://www.npmjs.com/package/paubox-cli
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public package index)
+    spec_file: null
+    packages:
+    - name: paubox-cli
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-cli
+      cli: bin paubox
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: true
+    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
+      lapsed = no release in 24 months or deprecated / disabled by the manager'
+    detected_by: sweep-official-clis.py
+    detected: '2026-10-20'
+  detected_by: sweep-official-clis.py
+  first_seen: '2026-10-20'
+- partner_name: A2A protocol (own Agent Card)
+  partner: null
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: A2A agent
+  evidence: https://docs.paubox.com/.well-known/agent-card.json
+  channel: provider-built
+  relationship: compatible
+  shape: a2a
+  evidence_kind: own-wellknown
+  degree: conformant
+  report_only: true
+  a2a_card:
+    grade: conformant
+    verdict: live
+    protocol_version: '0.3'
+    deviations:
+    - supportedInterfaces-instead-of-additionalInterfaces
+    card_subject: docs
+  contract_reference:
+    register: provider's own /.well-known/agent-card.json
+    spec_file: null
+    standard: A2A
+    role: a2a-agent-card
+    registered_name: Paubox API Docs
+    organization: Paubox API Docs
+    matched_domain: paubox.com
+    matched_by: own-domain
+    detected_by: sweep-ai-agents.py
+    detected: '2026-10-15'
+  detected_by: sweep-ai-agents.py
+  first_seen: '2026-10-15'
 templates: []
