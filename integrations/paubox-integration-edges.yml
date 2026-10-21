@@ -5,13 +5,8 @@ source:
 checked:
 - https://a2aregistry.org/api/agents
 - https://api.nuget.org/v3
-- https://cdn.winget.microsoft.com/cache
 - https://composio.dev/toolkits/paubox
 - https://crates.io/api/v1
-- https://formulae.brew.sh/api/cask.json
-- https://formulae.brew.sh/api/formula.json
-- https://github.com/ScoopInstaller/Extras
-- https://github.com/ScoopInstaller/Main
 - https://monid.ai/tools/paubox
 - https://n8n.io/integrations/paubox/
 - https://proxy.golang.org
@@ -21,6 +16,16 @@ checked:
 - https://rubygems.org/api/v1
 - https://www.paubox.com/integrations
 - https://zapier.com/apps/paubox/integrations
+- https://cdn.winget.microsoft.com/cache
+- https://formulae.brew.sh/api/cask.json
+- https://formulae.brew.sh/api/formula.json
+- https://github.com/ScoopInstaller/Extras
+- https://github.com/ScoopInstaller/Main
+- https://500.co/api/startups
+- https://500.co/companies
+- https://www.antler.co/portfolio
+- https://www.techstars.com/portfolio
+- https://www.ycombinator.com/companies
 summary: null
 marketplace_apps:
 - marketplace: n8n
@@ -145,36 +150,6 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
-- partner_name: npm registry
-  partner: npm
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official CLI (npm registry)
-  evidence: https://www.npmjs.com/package/paubox-cli
-  channel: package-registry
-  relationship: distribution-channel
-  contract_reference:
-    register: npm registry (public package index)
-    spec_file: null
-    packages:
-    - name: paubox-cli
-      version: 2.0.0
-      released: '2026-10-14'
-      released_field: modified
-      lapsed: false
-      page: https://www.npmjs.com/package/paubox-cli
-      cli: bin paubox
-      repo_leg: github-org:paubox
-      publisher_leg: email:paubox.com
-      matched_by: domain
-    current: true
-    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
-      lapsed = no release in 24 months or deprecated / disabled by the manager'
-    detected_by: sweep-official-clis.py
-    detected: '2026-10-20'
-  detected_by: sweep-official-clis.py
-  first_seen: '2026-10-20'
 - partner_name: A2A protocol (own Agent Card)
   partner: null
   partner_match: register
@@ -205,7 +180,65 @@ edges:
     matched_domain: paubox.com
     matched_by: own-domain
     detected_by: sweep-ai-agents.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-ai-agents.py
   first_seen: '2026-10-15'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official CLI (npm registry)
+  evidence: https://www.npmjs.com/package/paubox-cli
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public package index)
+    spec_file: null
+    packages:
+    - name: paubox-cli
+      version: 2.0.0
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/paubox-cli
+      cli: bin paubox
+      repo_leg: github-org:paubox
+      publisher_leg: email:paubox.com
+      matched_by: domain
+    current: true
+    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
+      lapsed = no release in 24 months or deprecated / disabled by the manager'
+    detected_by: sweep-official-clis.py
+    detected: '2026-10-20'
+  detected_by: sweep-official-clis.py
+  first_seen: '2026-10-20'
+- partner_name: 500 Global
+  partner: 500-global
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://500.co/companies
+  category: accelerator portfolio participation
+  contract_reference:
+    register: 500 Global portfolio (500.co/companies; the page's own JSON 500.co/api/startups)
+    standard: null
+    spec_file: null
+    role: accelerator-portfolio-company
+    registered_name: Paubox
+    register_id: https://500.co/companies
+    register_country: United States
+    register_website: paubox.com
+    matched_domain: paubox.com
+    matched_by: domain
+    signal_note: 'participation only: the accelerator''s own portfolio register lists the company (cohort / investment);
+      an ownership and participation record, not conformance or certification'
+    detected_by: sweep-accelerator-portfolios.py
+    detected: '2026-10-21'
+    batch: GA 18
+    year: '2016'
+  detected_by: sweep-accelerator-portfolios.py
+  first_seen: '2026-10-21'
 templates: []
