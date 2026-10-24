@@ -9,6 +9,9 @@ artifacts:
   a2a/paubox-agent-card.json:
     method: unknown
     evidence: no authorship recorded
+  agentic-access/paubox-agentic-access.yml:
+    method: generated
+    evidence: declared in the artifact
   asyncapi/paubox-email-webhooks.yml:
     method: searched
     evidence: declared in the artifact
@@ -36,115 +39,172 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  hosts/paubox-hosts.yml:
+    method: derived
+    evidence: declared in the artifact
+  integrations/_index.yml:
     method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+    evidence: carries an API Evangelist house phrase
+  integrations/paubox-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  json-ld/paubox-context.jsonld:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-create-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-create-subscribers-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-delete-campaign-mailings-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-send-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-send-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-subscription-change-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-bulk-subscription-change-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-campaign-analytics-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-campaign-deliveries-table-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-campaign-mailing-write-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-campaign-mailings-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-campaign-table-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-copy-form-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-campaign-mailing-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-form-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-subscriber-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-subscription-list-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-subscription-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-create-subscription-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-detailed-subscriber-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-drip-campaign-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-drip-campaigns-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-dynamic-template-list-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-dynamic-template-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-dynamic-templates-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-dynamic-templates-id-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-form-list-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-form-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-form-stats-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-form-submission-list-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-form-submission-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-message-receipt-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-pause-drip-campaign-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-schedule-campaign-mailing-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-send-campaign-mailing-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-single-send-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-single-send-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-start-drip-campaign-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscribers-by-tracking-link-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscribers-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscription-change-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscription-change-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscription-list-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-subscription-lists-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-templated-message-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-tracking-links-detail-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-tracking-links-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-update-drip-campaign-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-update-form-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-update-subscriber-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/paubox-update-subscription-list-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -228,9 +288,27 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/paubox-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
+  llms/paubox-llms-provenance.yml:
+    method: searched
+    evidence: 'derive-llms-provenance.py: harvested'
   llms/paubox-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
@@ -288,13 +366,49 @@ artifacts:
   openapi/paubox-tracking-links-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/paubox-analytics-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-campaign-mailings-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-drip-campaigns-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-dynamic-templates-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/paubox-email-api-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/paubox-form-management-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/paubox-forms-api-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/paubox-forms-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/paubox-marketing-api-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/paubox-messages-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-submissions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-subscribers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-subscription-lists-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-subscriptions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/paubox-tracking-links-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   packages/paubox-packages.yml:
@@ -305,6 +419,9 @@ artifacts:
     evidence: declared in the artifact
   rate-limits/paubox-rate-limits.yml:
     method: searched
+    evidence: declared in the artifact
+  rules/paubox-rules.yml:
+    method: generated
     evidence: declared in the artifact
   security/paubox-domain-security.yml:
     method: unknown
@@ -329,6 +446,12 @@ artifacts:
     evidence: declared in the artifact
   skills/paubox-send-hipaa-email.md:
     method: generated
+    evidence: declared in the artifact
+  vendors/paubox-vendors.yml:
+    method: unknown
+    evidence: no authorship recorded
+  vocabulary/paubox-vocabulary.yml:
+    method: derived
     evidence: declared in the artifact
   well-known/paubox-mcp-oauth-authorization-server.json:
     method: unknown
